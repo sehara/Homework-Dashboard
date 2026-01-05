@@ -1149,7 +1149,14 @@ CRITICAL:
 renderTasks();
 // Display last updated timestamp in Central Time
 function updateTimestamp() {
-    const now = new Date();
+    // Use the lastUpdated timestamp from data.js if available
+    let updateTime;
+    if (typeof lastUpdated !== 'undefined') {
+        updateTime = new Date(lastUpdated);
+    } else {
+        updateTime = new Date(); // Fallback to current time
+    }
+    
     const options = { 
         weekday: 'short', 
         month: 'short', 
@@ -1160,9 +1167,21 @@ function updateTimestamp() {
         hour12: true,
         timeZone: 'America/Chicago'  // Central Time
     };
-    const timeStr = now.toLocaleString('en-US', options);
+    const timeStr = updateTime.toLocaleString('en-US', options);
     document.getElementById('dateRange').textContent = `Last Updated: ${timeStr} CT`;
 }
 
 // Call it on page load
 updateTimestamp();
+```
+
+---
+
+### **Step 3: Update your Gem prompt**
+
+Add this instruction to your Gem prompt (in the "Output Format" section):
+```
+7. Timestamp Update:
+   - At the end of the file (before the exports), update the lastUpdated constant
+   - Format: const lastUpdated = "YYYY-MM-DDTHH:MM:SS"; (ISO format, current Central Time)
+   - Example: const lastUpdated = "2026-01-06T22:45:00";
