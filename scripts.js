@@ -1147,34 +1147,3 @@ CRITICAL:
 
 // Initialize on page load
 renderTasks();
-// Display last updated timestamp in Central Time
-function updateTimestamp() {
-    // Use the lastUpdated timestamp from data.js if available
-    let updateTime;
-    if (typeof lastUpdated !== 'undefined') {
-        updateTime = new Date(lastUpdated);
-    } else {
-        updateTime = new Date(); // Fallback to current time
-    }
-    
-    const options = { 
-        weekday: 'short', 
-        month: 'short', 
-        day: 'numeric', 
-        year: 'numeric',
-        hour: 'numeric', 
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'America/Chicago'  // Central Time
-    };
-const lastUpdated = "2026-01-06T23:00:00";
-
-// Make available globally for browser
-if (typeof window !== 'undefined') {
-    window.lastUpdated = lastUpdated;
-}
-
-// Export for Node.js
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { courseData, courseInfo, classEndTimes, lastUpdated };
-}
