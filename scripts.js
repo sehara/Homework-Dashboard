@@ -1147,3 +1147,22 @@ CRITICAL:
 
 // Initialize on page load
 renderTasks();
+// Display last updated timestamp in Central Time
+function updateTimestamp() {
+    const now = new Date();
+    const options = { 
+        weekday: 'short', 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric',
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/Chicago'  // Central Time
+    };
+    const timeStr = now.toLocaleString('en-US', options);
+    document.getElementById('dateRange').textContent = `Last Updated: ${timeStr} CT`;
+}
+
+// Call it on page load
+updateTimestamp();
