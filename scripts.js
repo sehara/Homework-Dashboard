@@ -1167,21 +1167,14 @@ function updateTimestamp() {
         hour12: true,
         timeZone: 'America/Chicago'  // Central Time
     };
-    const timeStr = updateTime.toLocaleString('en-US', options);
-    document.getElementById('dateRange').textContent = `Last Updated: ${timeStr} CT`;
+const lastUpdated = "2026-01-06T23:00:00";
+
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+    window.lastUpdated = lastUpdated;
 }
 
-// Call it on page load
-updateTimestamp();
-```
-
----
-
-### **Step 3: Update your Gem prompt**
-
-Add this instruction to your Gem prompt (in the "Output Format" section):
-```
-7. Timestamp Update:
-   - At the end of the file (before the exports), update the lastUpdated constant
-   - Format: const lastUpdated = "YYYY-MM-DDTHH:MM:SS"; (ISO format, current Central Time)
-   - Example: const lastUpdated = "2026-01-06T22:45:00";
+// Export for Node.js
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { courseData, courseInfo, classEndTimes, lastUpdated };
+}
