@@ -1,7 +1,7 @@
 // Course data with all assignments and readings
 const courseData = {
-    "Sunday, January 5, 2026": {
-        "PE VC Lab|||Due: Sunday, Jan 5 at 11:59 PM": {
+    "Monday, January 5, 2026": {
+        "PE VC Lab|||Due: Monday, Jan 5 at 6:00 PM": {
             submit: [
                 {
                     title: "Assignment 1: Submit Student Bio",
@@ -91,8 +91,8 @@ const courseData = {
             optional: []
         }
     },
-    "Thursday, January 9, 2026": {
-        "Corporate Governance|||Due: Thursday, Jan 9 at 12:01 AM": {
+    "Friday, January 9, 2026": {
+        "Corporate Governance|||Due: Friday, Jan 9 at 12:01 AM": {
             submit: [
                 {
                     title: "Week 1: Reading Assignment",
@@ -138,8 +138,8 @@ const courseData = {
             optional: []
         }
     },
-    "Sunday, January 12, 2026": {
-        "PE VC Lab|||Due: Sunday, Jan 12 at 11:59 PM": {
+    "Monday, January 12, 2026": {
+        "PE VC Lab|||Due: Monday, Jan 12 at 6:00 PM": {
             submit: [
                 {
                     title: "Case 1: Andreessen-Horowitz",
@@ -160,12 +160,12 @@ const courseData = {
             optional: []
         }
     },
-    "Monday, January 13, 2026": {
-        "Managing in Organizations|||Due: Monday, Jan 13 at 8:30 AM": {
+    "Tuesday, January 13, 2026": {
+        "Managing in Organizations|||Due: Tuesday, Jan 13 at 8:30 AM": {
             submit: [
                 {
                     title: "Thought paper 1 - Week 2",
-                    time: 2.0,
+                    time: 1.5,
                     points: 4,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments/818416"
                 }
@@ -189,8 +189,8 @@ const courseData = {
             ]
         }
     },
-    "Tuesday, January 14, 2026": {
-        "Negotiation|||Due: Tuesday, Jan 14 at 11:59 PM": {
+    "Wednesday, January 14, 2026": {
+        "Negotiation|||Due: Wednesday, Jan 14 at 11:59 PM": {
             submit: [
                 {
                     title: "Prep Sheet - New Recruit Negotiation",
@@ -211,14 +211,29 @@ const courseData = {
             optional: []
         }
     },
-    "Thursday, January 16, 2026": {
-        "Corporate Governance|||Due: Thursday, Jan 16 at 12:00 PM": {
+    "Friday, January 16, 2026": {
+        "Corporate Governance|||Due: Friday, Jan 16 at 12:00 PM": {
             submit: [
                 {
                     title: "Week 2: Morgan Stanley/Sears",
-                    time: 3.0,
+                    time: 2.0,
                     points: 36,
                     link: "https://canvas.uchicago.edu/courses/69195/assignments/831824"
+                }
+            ],
+            reading: [],
+            required: [],
+            optional: []
+        }
+    },
+    "Tuesday, January 20, 2026": {
+        "Managing in Organizations|||Due: Tuesday, Jan 20 at 8:30 AM": {
+            submit: [
+                {
+                    title: "Thought paper 2 - Week 3",
+                    time: 1.5,
+                    points: 4,
+                    link: "https://canvas.uchicago.edu/courses/67742/assignments"
                 }
             ],
             reading: [],
@@ -231,7 +246,7 @@ const courseData = {
 // Course information with due dates and links
 const courseInfo = {
     "PE VC Lab": {
-        due: "Sunday, Jan 5 at 11:59 PM",
+        due: "Monday, Jan 5 at 6:00 PM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/65932/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/65932/assignments"
     },
@@ -246,7 +261,7 @@ const courseInfo = {
         assignmentsUrl: "https://canvas.uchicago.edu/courses/67439/assignments"
     },
     "Corporate Governance": {
-        due: "Thursday, Jan 9 at 12:01 AM",
+        due: "Friday, Jan 9 at 12:01 AM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/69195/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/69195/assignments"
     }
@@ -259,3 +274,5 @@ const classEndTimes = {
     'Negotiation': { day: 4, hour: 11, minute: 30 }, // Thursday 11:30 AM
     'Corporate Governance': { day: 5, hour: 11, minute: 30 } // Friday 11:30 AM
 };
+
+if (typeof module !== 'undefined' && module.exports) { module.exports = { courseData, courseInfo, classEndTimes }; }
