@@ -268,6 +268,7 @@ const courseInfo = {
 };
 
 // Class end times for auto-archiving
+
 const classEndTimes = {
     'Managing in Organizations': { day: 2, hour: 11, minute: 30 }, // Tuesday 11:30 AM
     'PE VC Lab': { day: 1, hour: 21, minute: 0 }, // Monday 9:00 PM
@@ -276,3 +277,8 @@ const classEndTimes = {
 };
 
 if (typeof module !== 'undefined' && module.exports) { module.exports = { courseData, courseInfo, classEndTimes }; }
+const lastUpdated = "2026-01-06T22:45:00"; // ISO format timestamp
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { courseData, courseInfo, classEndTimes, lastUpdated };
+}
