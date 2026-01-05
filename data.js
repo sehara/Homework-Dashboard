@@ -275,8 +275,14 @@ const classEndTimes = {
     'Corporate Governance': { day: 5, hour: 11, minute: 30 } // Friday 11:30 AM
 };
 
-const lastUpdated = "2026-01-06T22:45:00";
+const lastUpdated = "2026-01-06T23:00:00";
 
+// Make available globally for browser
+if (typeof window !== 'undefined') {
+    window.lastUpdated = lastUpdated;
+}
+
+// Export for Node.js
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { courseData, courseInfo, classEndTimes, lastUpdated };
 }
