@@ -1,3 +1,4 @@
+<!-- CACHE_BUST: 1767595215692 -->
 <!-- CACHE_BUST: [1767594260825] -->
 <!DOCTYPE html>
 <html lang="en">
@@ -760,20 +761,20 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📚 Homework</h1>
-            <p id="dateRange">UChicago MBA | Next 14 Days</p>
-            <button id="updateButton" class="update-button" onclick="updateHomework()">🔄 Update Homework</button>
+            <h1>ð Homework</h1>
+            <p id="dateRange">UChicago MBA | Until Next Class</p>
+            <button id="updateButton" class="update-button" onclick="updateHomework()">ð Update Homework</button>
         </div>
 
         <div class="summary-section">
-            <div class="summary-title">⚠️ Remaining Work This Week</div>
+            <div class="summary-title">â ï¸ Remaining Work This Week</div>
             
             <div class="course-cards" id="courseCards">
                 <!-- Course cards dynamically generated -->
             </div>
 
             <div class="pro-tip">
-                <div class="pro-tip-title">💡 Pro Tip</div>
+                <div class="pro-tip-title">ð¡ Pro Tip</div>
                 <div class="pro-tip-text">Start Corporate Governance readings today (Saturday) - spread 2-3 hours per day to avoid cramming Thursday night!</div>
             </div>
         </div>
@@ -1289,7 +1290,7 @@ const courseInfo = {
                 if (collapsedDays.includes(day)) {
                     dayHeader.classList.add('collapsed');
                 }
-                dayHeader.innerHTML = `<span>${day}</span><span class="arrow">▼</span>`;
+                dayHeader.innerHTML = `<span>${day}</span><span class="arrow">â¼</span>`;
                 dayHeader.addEventListener('click', () => await toggleDay(day));
                 daySection.appendChild(dayHeader);
 
@@ -1317,11 +1318,11 @@ const courseInfo = {
                         <div>
                             <div class="course-title">
                                 ${courseName}
-                                ${syllabusUrl ? `<a href="${syllabusUrl}" target="_blank" class="course-syllabus-link" onclick="event.stopPropagation()" title="View Syllabus">📄</a>` : ''}
+                                ${syllabusUrl ? `<a href="${syllabusUrl}" target="_blank" class="course-syllabus-link" onclick="event.stopPropagation()" title="View Syllabus">ð</a>` : ''}
                             </div>
                             <div class="course-due">${due}</div>
                         </div>
-                        <span class="course-arrow">▼</span>
+                        <span class="course-arrow">â¼</span>
                     `;
                     courseHeader.addEventListener('click', () => await toggleCourse(courseId));
                     courseSection.appendChild(courseHeader);
@@ -1337,10 +1338,10 @@ const courseInfo = {
                     const order = categoryOrder[courseId] || defaultOrder;
 
                     const categoryTitles = {
-                        'submit': '🎯 SUBMIT (Actual Submission Required)',
-                        'reading': '📖 READING (Required for Class)',
-                        'required': '📖 REQUIRED READINGS',
-                        'optional': '💡 OPTIONAL READINGS'
+                        'submit': 'ð¯ SUBMIT (Actual Submission Required)',
+                        'reading': 'ð READING (Required for Class)',
+                        'required': 'ð REQUIRED READINGS',
+                        'optional': 'ð¡ OPTIONAL READINGS'
                     };
 
                     const deletedInCourse = [];
@@ -1375,12 +1376,12 @@ const courseInfo = {
                             categoryTitle.classList.add('grayed-out');
                         }
                         
-                        const statusIcon = (allCompleted && !isEmpty) ? '✓ ' : '';
+                        const statusIcon = (allCompleted && !isEmpty) ? 'â ' : '';
                         
                         const leftDiv = document.createElement('div');
                         leftDiv.className = 'category-title-left';
                         const assignmentsUrl = courseInfo[courseName] ? courseInfo[courseName].assignmentsUrl : '';
-                        const assignmentsLink = (category === 'submit' && assignmentsUrl) ? `<a href="${assignmentsUrl}" target="_blank" class="category-assignments-link" onclick="event.stopPropagation()" title="View Assignments">🔗</a>` : '';
+                        const assignmentsLink = (category === 'submit' && assignmentsUrl) ? `<a href="${assignmentsUrl}" target="_blank" class="category-assignments-link" onclick="event.stopPropagation()" title="View Assignments">ð</a>` : '';
                         leftDiv.innerHTML = `
                             <span class="category-status">${statusIcon}</span>
                             <span>${categoryTitles[category]}</span>
@@ -1395,7 +1396,7 @@ const courseInfo = {
                         
                         const upBtn = document.createElement('button');
                         upBtn.className = 'category-btn';
-                        upBtn.textContent = '↑';
+                        upBtn.textContent = 'â';
                         upBtn.onclick = (e) => {
                             e.stopPropagation();
                             await moveCategoryUp(day, courseKey, category);
@@ -1403,7 +1404,7 @@ const courseInfo = {
                         
                         const downBtn = document.createElement('button');
                         downBtn.className = 'category-btn';
-                        downBtn.textContent = '↓';
+                        downBtn.textContent = 'â';
                         downBtn.onclick = (e) => {
                             e.stopPropagation();
                             await moveCategoryDown(day, courseKey, category);
@@ -1415,7 +1416,7 @@ const courseInfo = {
                         if (shouldGrayOut) {
                             const deleteBtn = document.createElement('button');
                             deleteBtn.className = 'category-btn delete-btn';
-                            deleteBtn.textContent = '🗑️';
+                            deleteBtn.textContent = 'ðï¸';
                             deleteBtn.onclick = (e) => {
                                 e.stopPropagation();
                                 await deleteCategory(day, courseKey, category);
@@ -1427,7 +1428,7 @@ const courseInfo = {
                         
                         const arrow = document.createElement('span');
                         arrow.className = 'category-arrow';
-                        arrow.textContent = '▼';
+                        arrow.textContent = 'â¼';
                         rightDiv.appendChild(arrow);
 
                         categoryTitle.appendChild(leftDiv);
@@ -1520,7 +1521,7 @@ const courseInfo = {
                                 const linkIcon = document.createElement('a');
                                 linkIcon.href = item.link;
                                 linkIcon.target = '_blank';
-                                linkIcon.textContent = '🔗';
+                                linkIcon.textContent = 'ð';
                                 linkIcon.style.fontSize = '0.9em';
                                 linkIcon.style.opacity = '0.5';
                                 linkIcon.style.textDecoration = 'none';
@@ -1542,7 +1543,7 @@ const courseInfo = {
                                 timeOptions.forEach(optTime => {
                                     const option = document.createElement('option');
                                     option.value = optTime;
-                                    option.textContent = `⏱️ ${formatTime(optTime)}`;
+                                    option.textContent = `â±ï¸ ${formatTime(optTime)}`;
                                     if (optTime === currentTime) {
                                         option.selected = true;
                                     }
@@ -1564,9 +1565,9 @@ const courseInfo = {
                                 calendarBtn.className = 'task-calendar-link';
                                 if (isScheduled) {
                                     calendarBtn.classList.add('scheduled');
-                                    calendarBtn.textContent = '✓ Scheduled';
+                                    calendarBtn.textContent = 'â Scheduled';
                                 } else {
-                                    calendarBtn.textContent = '📅 Add to Calendar';
+                                    calendarBtn.textContent = 'ð Add to Calendar';
                                 }
                                 calendarBtn.onclick = (e) => {
                                     e.preventDefault();
@@ -1590,7 +1591,7 @@ const courseInfo = {
                                 if (hasNotes) {
                                     notesBtn.classList.add('has-notes');
                                 }
-                                notesBtn.textContent = hasNotes ? '📝 Notes' : '📝';
+                                notesBtn.textContent = hasNotes ? 'ð Notes' : 'ð';
                                 notesBtn.onclick = (e) => {
                                     e.stopPropagation();
                                     const notesArea = taskItem.querySelector('.task-notes-area');
@@ -1607,7 +1608,7 @@ const courseInfo = {
                                     }
                                 };
 
-                                // Reorder: Points → Time → Notes → Calendar
+                                // Reorder: Points â Time â Notes â Calendar
                                 meta.appendChild(timeSelect);
                                 meta.appendChild(notesBtn);
                                 meta.appendChild(calendarBtn);
@@ -1652,7 +1653,7 @@ const courseInfo = {
 
                                 const taskUpBtn = document.createElement('button');
                                 taskUpBtn.className = 'task-btn';
-                                taskUpBtn.textContent = '↑';
+                                taskUpBtn.textContent = 'â';
                                 taskUpBtn.onclick = (e) => {
                                     e.stopPropagation();
                                     await moveTaskUp(day, courseKey, category, itemIndex);
@@ -1660,7 +1661,7 @@ const courseInfo = {
 
                                 const taskDownBtn = document.createElement('button');
                                 taskDownBtn.className = 'task-btn';
-                                taskDownBtn.textContent = '↓';
+                                taskDownBtn.textContent = 'â';
                                 taskDownBtn.onclick = (e) => {
                                     e.stopPropagation();
                                     await moveTaskDown(day, courseKey, category, itemIndex);
@@ -1688,7 +1689,7 @@ const courseInfo = {
                         
                         const restoreTitle = document.createElement('div');
                         restoreTitle.className = 'restore-title';
-                        restoreTitle.textContent = '🔄 Deleted Sections (Click to Restore)';
+                        restoreTitle.textContent = 'ð Deleted Sections (Click to Restore)';
                         restoreSection.appendChild(restoreTitle);
 
                         deletedInCourse.forEach(({ category, title }) => {
@@ -1723,7 +1724,7 @@ const courseInfo = {
                 if (archiveCollapsed) {
                     archiveHeader.classList.add('collapsed');
                 }
-                archiveHeader.innerHTML = `<span>📦 Archived Tasks (Past Due)</span><span class="arrow">▼</span>`;
+                archiveHeader.innerHTML = `<span>ð¦ Archived Tasks (Past Due)</span><span class="arrow">â¼</span>`;
                 archiveHeader.addEventListener('click', () => await toggleDay('__archive__'));
                 archiveSection.appendChild(archiveHeader);
 
@@ -1841,7 +1842,7 @@ const courseInfo = {
                 const minutes = Math.floor(secondsLeft / 60);
                 const seconds = secondsLeft % 60;
                 banner.innerHTML = `
-                    <div style="margin-bottom: 10px;">⏳ Updating homework...</div>
+                    <div style="margin-bottom: 10px;">â³ Updating homework...</div>
                     <div style="font-size: 2em; text-align: center;">${minutes}:${seconds.toString().padStart(2, '0')}</div>
                     <div style="font-size: 0.8em; opacity: 0.8; margin-top: 10px; text-align: center;">Auto-refresh in progress</div>
                 `;
@@ -1856,15 +1857,15 @@ const courseInfo = {
                 
                 if (secondsLeft <= 0) {
                     clearInterval(countdownInterval);
-                    banner.innerHTML = '<div>🔄 Refreshing...</div>';
+                    banner.innerHTML = '<div>ð Refreshing...</div>';
                     
                     // Refresh the page
                     setTimeout(() => {
                         // Show notification
                         if (Notification.permission === 'granted') {
-                            new Notification('🎓 Homework Updated!', {
+                            new Notification('ð Homework Updated!', {
                                 body: 'Your tracker has been refreshed with new assignments.',
-                                icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📚</text></svg>'
+                                icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">ð</text></svg>'
                             });
                         }
                         location.reload();
@@ -1874,7 +1875,7 @@ const courseInfo = {
             
             // Add cancel button
             const cancelBtn = document.createElement('button');
-            cancelBtn.textContent = '❌ Cancel';
+            cancelBtn.textContent = 'â Cancel';
             cancelBtn.style.cssText = `
                 background: white;
                 color: #800000;
@@ -1976,9 +1977,9 @@ CRITICAL:
             `.trim();
             
             modalContent.innerHTML = `
-                <h2 style="color: #800000; margin-bottom: 20px;">🔄 Update Homework</h2>
+                <h2 style="color: #800000; margin-bottom: 20px;">ð Update Homework</h2>
                 <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-                    <p style="margin: 0; font-weight: bold; color: #856404;">📎 IMPORTANT: When you paste into Manus, attach your current <code>homework_tracker_updated.html</code> file!</p>
+                    <p style="margin: 0; font-weight: bold; color: #856404;">ð IMPORTANT: When you paste into Manus, attach your current <code>homework_tracker_updated.html</code> file!</p>
                 </div>
                 <p style="margin-bottom: 20px; font-size: 1.1em;">Copy these instructions and paste them in a new Manus chat:</p>
                 <textarea readonly id="instructionsText" style="
@@ -2032,7 +2033,7 @@ CRITICAL:
                         font-weight: bold;
                         border-radius: 8px;
                         cursor: pointer;
-                    ">📋 Copy & Open Manus</button>
+                    ">ð Copy & Open Manus</button>
                 </div>
             `;
             
