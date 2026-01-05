@@ -1,4 +1,3 @@
-// Course data with all assignments and readings
 const courseData = {
     "Monday, January 5, 2026": {
         "PE VC Lab|||Due: Monday, Jan 5 at 6:00 PM": {
@@ -7,7 +6,7 @@ const courseData = {
                     title: "Assignment 1: Submit Student Bio",
                     time: 0.5,
                     points: 0,
-                    link: "https://canvas.uchicago.edu/courses/65932/modules/items/2817542"
+                    link: "https://canvas.uchicago.edu/courses/65932/assignments/824364"
                 }
             ],
             reading: [
@@ -15,7 +14,7 @@ const courseData = {
                     title: "Readings and Videos - Week 1",
                     time: 2.0,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/65932/modules/items/2817541"
+                    link: "https://canvas.uchicago.edu/courses/65932/modules"
                 }
             ],
             required: [],
@@ -24,7 +23,13 @@ const courseData = {
                     title: "Week 0 - Inflection Points in VC.pdf",
                     time: 1.0,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/65932/modules/items/2817538"
+                    link: "https://canvas.uchicago.edu/courses/65932/modules"
+                },
+                {
+                    title: "week zero video.mp4",
+                    time: 0.5,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/65932/modules"
                 }
             ]
         }
@@ -36,27 +41,27 @@ const courseData = {
                     title: "First class assignment",
                     time: 0.5,
                     points: 0,
-                    link: "https://canvas.uchicago.edu/courses/67742/modules/items/2909560"
+                    link: "https://canvas.uchicago.edu/courses/67742/assignments/818414"
                 }
             ],
             reading: [
                 {
                     title: "Thaler & Sunstein: Nudge, Introduction",
-                    time: 1.0,
+                    time: 1.5,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/67742/modules/items/2909556"
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
                 },
                 {
                     title: "Grant: Think again, Chapter 1",
-                    time: 1.0,
+                    time: 1.5,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/67742/modules/items/2909557"
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
                 },
                 {
                     title: "Golden careers: Money isn't everything",
-                    time: 0.5,
+                    time: 1.0,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/67742/modules/items/2909558"
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
                 }
             ],
             required: [],
@@ -65,30 +70,9 @@ const courseData = {
                     title: "Work from home or return to office?",
                     time: 0.5,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/67742/modules/items/2909562"
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
                 }
             ]
-        }
-    },
-    "Thursday, January 8, 2026": {
-        "Negotiation|||Due: Thursday, Jan 8 at 8:30 AM": {
-            submit: [],
-            reading: [
-                {
-                    title: "What is Social Capital, and Why Should You Care.pdf",
-                    time: 1.0,
-                    points: null,
-                    link: "https://canvas.uchicago.edu/courses/67439/modules/items/2979467"
-                },
-                {
-                    title: "Granovetter - 1973 - The Strength of Weak Ties.pdf",
-                    time: 1.5,
-                    points: null,
-                    link: "https://canvas.uchicago.edu/courses/67439/modules/items/2979466"
-                }
-            ],
-            required: [],
-            optional: []
         }
     },
     "Friday, January 9, 2026": {
@@ -103,36 +87,48 @@ const courseData = {
             ],
             reading: [
                 {
-                    title: "Ray Corey at Norton (Case)",
-                    time: 1.5,
+                    title: "Case: Ray Corey at Norton",
+                    time: 2.0,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/69195/modules/items/2957770"
+                    link: "https://canvas.uchicago.edu/courses/69195/modules"
                 },
                 {
-                    title: "The Evolution of the Southwest Airlines Board (Case)",
+                    title: "Case: The Evolution of the Southwest Airlines Board",
                     time: 1.5,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/69195/modules/items/2957771"
+                    link: "https://canvas.uchicago.edu/courses/69195/modules"
                 },
                 {
-                    title: "The Ford Pinto Case",
+                    title: "Reading: Evolution of Corporate Governance in the US",
                     time: 1.0,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/69195/modules/items/2957777"
+                    link: "https://canvas.uchicago.edu/courses/69195/modules"
+                },
+                {
+                    title: "Reading: The Global History of Corporate Governance",
+                    time: 1.0,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/69195/modules"
+                },
+                {
+                    title: "Case: The Ford Pinto Case",
+                    time: 1.5,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/69195/modules"
                 }
             ],
             required: [
                 {
-                    title: "HBR Article: What Makes Great Boards Great",
-                    time: 1.0,
-                    points: null,
-                    link: "https://canvas.uchicago.edu/courses/69195/modules/items/2957783"
-                },
-                {
                     title: "Week 1 - Combined Frameworks",
                     time: 1.0,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/69195/modules/items/2957767"
+                    link: "https://canvas.uchicago.edu/courses/69195/modules"
+                },
+                {
+                    title: "HBR Article: What Makes Great Boards Great",
+                    time: 1.0,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/69195/modules"
                 }
             ],
             optional: []
@@ -145,7 +141,7 @@ const courseData = {
                     title: "Case 1: Andreessen-Horowitz",
                     time: 2.0,
                     points: 30,
-                    link: "https://canvas.uchicago.edu/courses/65932/modules/items/2817544"
+                    link: "https://canvas.uchicago.edu/courses/65932/assignments/824365"
                 }
             ],
             reading: [
@@ -153,7 +149,7 @@ const courseData = {
                     title: "Readings - Week 2",
                     time: 2.0,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/65932/modules/items/2817543"
+                    link: "https://canvas.uchicago.edu/courses/65932/modules"
                 }
             ],
             required: [],
@@ -168,6 +164,12 @@ const courseData = {
                     time: 1.5,
                     points: 4,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments/818416"
+                },
+                {
+                    title: "Class participation - Week 2",
+                    time: 0.5,
+                    points: 1.5,
+                    link: "https://canvas.uchicago.edu/courses/67742/assignments"
                 }
             ],
             reading: [
@@ -194,9 +196,9 @@ const courseData = {
             submit: [
                 {
                     title: "Prep Sheet - New Recruit Negotiation",
-                    time: 1.5,
+                    time: 1.0,
                     points: 3,
-                    link: "https://canvas.uchicago.edu/courses/67439/modules/items/2979672"
+                    link: "https://canvas.uchicago.edu/courses/67439/assignments"
                 }
             ],
             reading: [
@@ -204,7 +206,7 @@ const courseData = {
                     title: "HBR T-Shaped Managers.pdf",
                     time: 1.0,
                     points: null,
-                    link: "https://canvas.uchicago.edu/courses/67439/modules/items/2979474"
+                    link: "https://canvas.uchicago.edu/courses/67439/modules"
                 }
             ],
             required: [],
@@ -234,16 +236,59 @@ const courseData = {
                     time: 1.5,
                     points: 4,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments"
+                },
+                {
+                    title: "Class participation - Week 3",
+                    time: 0.5,
+                    points: 1.5,
+                    link: "https://canvas.uchicago.edu/courses/67742/assignments"
                 }
             ],
-            reading: [],
+            reading: [
+                {
+                    title: "Gilovich: How do we know what isn't so?, Chapter 4",
+                    time: 1.5,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
+                },
+                {
+                    title: "Sloman & Fernbach: The knowledge illusion, Introduction",
+                    time: 1.0,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
+                },
+                {
+                    title: "Rosenzweig: The halo effect, Chapter 4",
+                    time: 1.5,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
+                },
+                {
+                    title: "Coaching Makena Lane (prepare for discussion)",
+                    time: 1.5,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
+                }
+            ],
             required: [],
-            optional: []
+            optional: [
+                {
+                    title: "How (Un)ethical Are You?",
+                    time: 0.5,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
+                },
+                {
+                    title: "Awareness of racial bias",
+                    time: 0.5,
+                    points: null,
+                    link: "https://canvas.uchicago.edu/courses/67742/modules"
+                }
+            ]
         }
     }
 };
 
-// Course information with due dates and links
 const courseInfo = {
     "PE VC Lab": {
         due: "Monday, Jan 5 at 6:00 PM",
@@ -256,7 +301,7 @@ const courseInfo = {
         assignmentsUrl: "https://canvas.uchicago.edu/courses/67742/assignments"
     },
     "Negotiation": {
-        due: "Thursday, Jan 8 at 8:30 AM",
+        due: "Wednesday, Jan 14 at 11:59 PM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/67439/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/67439/assignments"
     },
@@ -267,7 +312,6 @@ const courseInfo = {
     }
 };
 
-// Class end times for auto-archiving
 const classEndTimes = {
     'Managing in Organizations': { day: 2, hour: 11, minute: 30 }, // Tuesday 11:30 AM
     'PE VC Lab': { day: 1, hour: 21, minute: 0 }, // Monday 9:00 PM
@@ -275,14 +319,12 @@ const classEndTimes = {
     'Corporate Governance': { day: 5, hour: 11, minute: 30 } // Friday 11:30 AM
 };
 
-const lastUpdated = "2026-01-06T23:00:00";
+const lastUpdated = "2026-01-05T12:02:00";
 
-// Make available globally for browser
 if (typeof window !== 'undefined') {
     window.lastUpdated = lastUpdated;
 }
 
-// Export for Node.js
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { courseData, courseInfo, classEndTimes, lastUpdated };
 }
