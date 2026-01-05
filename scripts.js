@@ -286,11 +286,37 @@ function renderCourseCards() {
 
     const courseStats = {};
     
+    // NEW: Build map of NEXT (future) class date for each course
+    const nextClassDates = {};
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    
+    // First pass: find the earliest FUTURE date for each course
     Object.keys(courseData).forEach(day => {
-        if (!isWithinSevenDays(day)) return;
+        const taskDate = new Date(day);
+        taskDate.setHours(0, 0, 0, 0);
+        
+        // Skip past dates
+        if (taskDate < now) return;
         
         Object.keys(courseData[day]).forEach(courseKey => {
             const [courseName] = courseKey.split('|||');
+            
+            // Store the first future date we find for this course
+            if (!nextClassDates[courseName]) {
+                nextClassDates[courseName] = day;
+            }
+        });
+    });
+    
+    // Second pass: count tasks ONLY for the next class date
+    Object.keys(courseData).forEach(day => {
+        Object.keys(courseData[day]).forEach(courseKey => {
+            const [courseName] = courseKey.split('|||');
+            
+            // NEW: Only count if this is the NEXT class date
+            if (day !== nextClassDates[courseName]) return;
+            
             if (!courseStats[courseName]) {
                 courseStats[courseName] = { 
                     total: 0, 
