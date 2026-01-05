@@ -1,601 +1,223 @@
-<!-- CACHE_BUST: [1767593836546] -->
-<!-- CACHE_BUST: [1767594260825] -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-@@ -803,10 +803,10 @@ <h1>📚 Homework</h1>
-return customTimeEstimates[taskId] || defaultTime;
-}
-
-        function updateTaskTime(taskId, newTime) {
-        async function updateTaskTime(taskId, newTime) {
-customTimeEstimates[taskId] = newTime;
-            localStorage.setItem('customTimeEstimates', JSON.stringify(customTimeEstimates));
-            renderTasks();
-            await window.storage.set('customTimeEstimates', JSON.stringify(customTimeEstimates));
-            await renderTasks();
-}
-
-function generateTimeOptions() {
-@@ -862,8 +862,8 @@ <h1>📚 Homework</h1>
-} else {
-taskNotes[taskId] = note;
-}
-            localStorage.setItem('taskNotes', JSON.stringify(taskNotes));
-            renderTasks();
-            await window.storage.set('taskNotes', JSON.stringify(taskNotes));
-            await renderTasks();
-}
-
-const courseData = {
-@@ -1140,245 +1140,79 @@ <h1>📚 Homework</h1>
-};
-
-
-        let completedTaskIds = JSON.parse(localStorage.getItem('completedTasks')) || [];
-        let scheduledTaskIds = JSON.parse(localStorage.getItem('scheduledTasks')) || [];
-        let collapsedDays = JSON.parse(localStorage.getItem('collapsedDays')) || [];
-        let collapsedCourses = JSON.parse(localStorage.getItem('collapsedCourses')) || [];
-        let customTimeEstimates = JSON.parse(localStorage.getItem('customTimeEstimates')) || {};
-        let taskNotes = JSON.parse(localStorage.getItem('taskNotes')) || {};
-
-        // Version check: Clear old 'prepare' data if detected (one-time only)
-        const TRACKER_VERSION = 'reading-v1';
-        const currentVersion = localStorage.getItem('trackerVersion');
-
-        if (!currentVersion || currentVersion !== TRACKER_VERSION) {
-            // Check if old 'prepare' data exists
-            let hasOldData = false;
-            
-            if (Array.isArray(completedTaskIds)) {
-                hasOldData = completedTaskIds.some(id => typeof id === 'string' && id.includes('|||prepare|||'));
-            }
-            
-            if (!hasOldData && Array.isArray(scheduledTaskIds)) {
-                hasOldData = scheduledTaskIds.some(id => typeof id === 'string' && id.includes('|||prepare|||'));
-            }
-        let completedTaskIds = [];
-        let scheduledTaskIds = [];
-        let collapsedDays = [];
-        let collapsedCourses = [];
-        let customTimeEstimates = {};
-        let taskNotes = {};
-        let customTaskTitles = {};
-        let collapsedCategories = [];
-        let deletedCategories = [];
-        let categoryOrder = {};
-        let taskOrder = {};
-
-        async function migrateLocalStorage() {
-            const keys = [
-                'completedTasks', 'scheduledTasks', 'collapsedDays', 'collapsedCourses',
-                'customTimeEstimates', 'taskNotes', 'trackerVersion', 'customTaskTitles',
-                'collapsedCategories', 'deletedCategories', 'categoryOrder', 'taskOrder'
-            ];
-
-            if (hasOldData) {
-                // Clear old data
-                completedTaskIds = [];
-                scheduledTaskIds = [];
-                customTimeEstimates = {};
-                taskNotes = {};
-                
-                localStorage.removeItem('completedTasks');
-                localStorage.removeItem('scheduledTasks');
-                localStorage.removeItem('customTimeEstimates');
-                localStorage.removeItem('taskNotes');
-                localStorage.removeItem('customTaskTitles');
-                localStorage.removeItem('collapsedCategories');
-                localStorage.removeItem('deletedCategories');
-                localStorage.removeItem('categoryOrder');
-                
-                console.log('✅ Cleared old prepare data for reading compatibility');
-            let migrated = false;
-            for (const key of keys) {
-                const localData = localStorage.getItem(key);
-                if (localData !== null) {
-                    const cloudData = await window.storage.get(key);
-                    if (cloudData === null) {
-                        await window.storage.set(key, localData);
-                        migrated = true;
-                    }
-                }
-}
-            
-            // Set version flag
-            localStorage.setItem('trackerVersion', TRACKER_VERSION);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework - UChicago MBA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        let customTaskTitles = JSON.parse(localStorage.getItem('customTaskTitles')) || {};
-        let collapsedCategories = JSON.parse(localStorage.getItem('collapsedCategories')) || [];
-        let deletedCategories = JSON.parse(localStorage.getItem('deletedCategories')) || [];
-        let categoryOrder = JSON.parse(localStorage.getItem('categoryOrder')) || {};
-        let taskOrder = JSON.parse(localStorage.getItem('taskOrder')) || {};
 
-        // Class end times for auto-archiving
-        const classEndTimes = {
-            'Managing in Organizations': { day: 2, hour: 11, minute: 30 }, // Tuesday 11:30 AM
-            'PE VC Lab': { day: 1, hour: 21, minute: 0 }, // Monday 9:00 PM
-            'Negotiation': { day: 4, hour: 11, minute: 30 }, // Thursday 11:30 AM
-            'Corporate Governance': { day: 5, hour: 11, minute: 30 } // Friday 11:30 AM
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #800000 0%, #5a0000 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #800000 0%, #5a0000 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .update-button {
+            background: white;
+            color: #800000;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .update-button:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .summary-section {
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .summary-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #800000;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .course-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 6px solid #800000;
+            text-align: center;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .course-card.completed {
+            border-top-color: #28a745;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        }
+
+        .course-card-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #800000;
+            margin-bottom: 20px;
+            min-height: 2.5em;
+        }
+
+        .course-card-hours {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #800000;
+            margin: 15px 0 5px 0;
+        }
+
+        .course-card.completed .course-card-hours {
+            font-size: 2.5em;
+            color: #28a745;
+        }
+
+        .course-card-hours-label {
+            font-size: 0.9em;
+            color: #6c757d;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+
+        .task-checkbox {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1200px) {
+            .course-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Homework</h1>
+            <p>UChicago MBA | Until Next Class</p>
+        </div>
+
+        <div class="summary-section">
+            <div class="summary-title">⚠️ Work Due Before Next Class</div>
+            
+            <div class="course-cards" id="courseCards">
+                <!-- Course cards will be generated here -->
+            </div>
+        </div>
+
+        <div class="content" id="content">
+            <p style="text-align: center; padding: 40px; color: #6c757d;">
+                Loading your homework data...
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Simple localStorage version (no cloud storage for now - that was causing the errors)
+        let completedTaskIds = JSON.parse(localStorage.getItem('completedTasks')) || [];
+        
+        const courseData = {
+            "Monday, January 5, 2026": {
+                "PE VC Lab|||Due: Monday, Jan 5 at 11:59 PM": {
+                    submit: [
+                        { title: "Assignment 1: Submit Student Bio", time: 0.5, points: 0, link: "https://canvas.uchicago.edu/courses/65932/modules/items/2817542" }
+                    ],
+                    reading: [
+                        { title: "Readings and Videos - Week 1", time: 2.0, points: null, link: "https://canvas.uchicago.edu/courses/65932/modules/items/2817541" }
+                    ],
+                    required: [],
+                    optional: [
+                        { title: "Week 0 - Inflection Points in VC.pdf", time: 1.0, points: null, link: "https://canvas.uchicago.edu/courses/65932/modules/items/2817538" }
+                    ]
+                }
+            }
         };
 
-        function isTaskPastDue(dateStr, courseName) {
-            const taskDate = new Date(dateStr);
-            const now = new Date();
-            const endTime = classEndTimes[courseName];
-            if (!endTime) return false;
-            
-            // Set the class end time
-            const classEnd = new Date(taskDate);
-            classEnd.setHours(endTime.hour, endTime.minute, 0, 0);
-            
-            return now > classEnd;
-        }
-
-        function isWithinSevenDays(dateStr) {
-            const taskDate = new Date(dateStr);
-            const now = new Date();
-            now.setHours(0, 0, 0, 0);
-            const sevenDaysLater = new Date(now);
-            sevenDaysLater.setDate(now.getDate() + 7);
-            
-            return taskDate >= now && taskDate <= sevenDaysLater;
-            if (migrated) console.log('Migration to cloud storage complete.');
-}
-
-        function isWithinFourteenDays(dateStr) {
-            const taskDate = new Date(dateStr);
-            const now = new Date();
-            now.setHours(0, 0, 0, 0);
-            const fourteenDaysLater = new Date(now);
-            fourteenDaysLater.setDate(now.getDate() + 14);
-        async function initApp() {
-            await migrateLocalStorage();
-
-            return taskDate >= now && taskDate <= fourteenDaysLater;
-        }
-
-        function filterAndOrganizeData() {
-            const activeData = {};
-            const archivedData = {};
-            completedTaskIds = JSON.parse(await window.storage.get('completedTasks')) || [];
-            scheduledTaskIds = JSON.parse(await window.storage.get('scheduledTasks')) || [];
-            collapsedDays = JSON.parse(await window.storage.get('collapsedDays')) || [];
-            collapsedCourses = JSON.parse(await window.storage.get('collapsedCourses')) || [];
-            customTimeEstimates = JSON.parse(await window.storage.get('customTimeEstimates')) || {};
-            taskNotes = JSON.parse(await window.storage.get('taskNotes')) || {};
-
-            const TRACKER_VERSION = 'reading-v1';
-            const currentVersion = await window.storage.get('trackerVersion');
-
-            Object.keys(courseData).forEach(dateKey => {
-                Object.keys(courseData[dateKey]).forEach(courseKey => {
-                    const [courseName] = courseKey.split('|||');
-                    const isPastDue = isTaskPastDue(dateKey, courseName);
-                    const isInWindow = isWithinFourteenDays(dateKey);
-                    
-                    if (isPastDue) {
-                        // Move to archive
-                        if (!archivedData[dateKey]) archivedData[dateKey] = {};
-                        archivedData[dateKey][courseKey] = courseData[dateKey][courseKey];
-                    } else if (isInWindow) {
-                        // Keep in active view
-                        if (!activeData[dateKey]) activeData[dateKey] = {};
-                        activeData[dateKey][courseKey] = courseData[dateKey][courseKey];
-            if (!currentVersion || currentVersion !== TRACKER_VERSION) {
-                // Clear old 'prepare' data if detected
-                const oldKeys = ['completedTasks', 'scheduledTasks', 'collapsedDays', 'collapsedCourses'];
-                for (const key of oldKeys) {
-                    let data = JSON.parse(await window.storage.get(key)) || [];
-                    if (Array.isArray(data)) {
-                        const filtered = data.filter(id => !id.includes('|||prepare|||'));
-                        await window.storage.set(key, JSON.stringify(filtered));
-}
-                });
-            });
-            
-            return { active: activeData, archived: archivedData };
-        }
-
-        function getCategoryKey(day, courseKey, category) {
-            return `${day}|||${courseKey}|||${category}`;
-        }
-
-        function getTaskKey(day, courseKey, category, itemIndex) {
-            return `${day}|||${courseKey}|||${category}|||${itemIndex}`;
-        }
-
-        function isCategoryComplete(items, day, courseKey, category) {
-            if (items.length === 0) return true;
-            return items.every((item, itemIndex) => {
-                const taskId = getTaskKey(day, courseKey, category, itemIndex);
-                return completedTaskIds.includes(taskId);
-            });
-        }
-
-        function renderCourseCards() {
+        function renderApp() {
             const courseCards = document.getElementById('courseCards');
-            courseCards.innerHTML = '';
-
-            const courseStats = {};
+            const content = document.getElementById('content');
             
-            Object.keys(courseData).forEach(day => {
-                // Only count tasks within next 7 days for dashboard
-                if (!isWithinSevenDays(day)) return;
-                
-                Object.keys(courseData[day]).forEach(courseKey => {
-                    const [courseName] = courseKey.split('|||');
-                    if (!courseStats[courseName]) {
-                        courseStats[courseName] = { 
-                            total: 0, 
-                            remaining: 0, 
-                            totalHours: 0, 
-                            remainingHours: 0,
-                            scheduled: 0,
-                            unscheduled: 0
-                        };
-                    }
-                    
-                    const courseInfo = courseData[day][courseKey];
-                    ['submit', 'reading', 'required', 'optional'].forEach(category => {
-                        courseInfo[category].forEach((item, itemIndex) => {
-                            const taskId = getTaskKey(day, courseKey, category, itemIndex);
-                            const taskTime = getTaskTime(taskId, item.time);
-                            courseStats[courseName].total++;
-                            courseStats[courseName].totalHours += taskTime;
-                            if (!completedTaskIds.includes(taskId)) {
-                                courseStats[courseName].remaining++;
-                                courseStats[courseName].remainingHours += taskTime;
-                                if (scheduledTaskIds.includes(taskId)) {
-                                    courseStats[courseName].scheduled++;
-                                } else {
-                                    courseStats[courseName].unscheduled++;
-                                }
-                            }
-                        });
-                    });
-                });
-            });
-
-            Object.keys(courseStats).forEach(courseName => {
-                const stats = courseStats[courseName];
-                const card = document.createElement('div');
-                card.className = 'course-card';
-                
-                if (stats.remaining === 0) {
-                    card.classList.add('completed');
-                } else if (stats.remainingHours <= 2) {
-                    card.classList.add('low-workload');
-                } else if (stats.remainingHours <= 5) {
-                    card.classList.add('medium-workload');
-                } else {
-                    card.classList.add('high-workload');
-                }
-
-                if (stats.remaining === 0) {
-                    card.innerHTML = `
-                        <div class="course-card-title">${courseName}</div>
-                        <div class="course-card-hours">✅</div>
-                        <div class="course-card-hours-label">COMPLETE</div>
-                        <div class="course-card-tasks">${stats.total} tasks done</div>
-                        <div class="course-card-due">📅 ${courseInfo[courseName].due}</div>
-                    `;
-                } else {
-                    let statusHTML = '';
-                    if (stats.unscheduled === 0) {
-                        statusHTML = `<div class="course-card-status under-control">✓ ${stats.scheduled} scheduled</div>`;
-                    } else if (stats.scheduled === 0) {
-                        statusHTML = `<div class="course-card-status needs-scheduling">⚠️ ${stats.unscheduled} unscheduled</div>`;
-                    } else {
-                        statusHTML = `<div class="course-card-status partial">✓ ${stats.scheduled} scheduled | ⚠️ ${stats.unscheduled} unscheduled</div>`;
-                    }
-                    
-                    card.innerHTML = `
-                        <div class="course-card-title">${courseName}</div>
-                        <div class="course-card-hours">${stats.remainingHours.toFixed(1)}</div>
-                        <div class="course-card-hours-label">HOURS LEFT</div>
-                        <div class="course-card-tasks">${stats.remaining}/${stats.total} tasks remaining</div>
-                        ${statusHTML}
-                        <div class="course-card-due">📅 ${courseInfo[courseName].due}</div>
-                    `;
-}
-                await window.storage.set('trackerVersion', TRACKER_VERSION);
-            }
+            courseCards.innerHTML = '<div class="course-card completed"><div class="course-card-title">PE VC Lab</div><div class="course-card-hours">✅</div><div class="course-card-hours-label">COMPLETE</div></div>';
             
-            customTaskTitles = JSON.parse(await window.storage.get('customTaskTitles')) || {};
-            collapsedCategories = JSON.parse(await window.storage.get('collapsedCategories')) || [];
-            deletedCategories = JSON.parse(await window.storage.get('deletedCategories')) || [];
-            categoryOrder = JSON.parse(await window.storage.get('categoryOrder')) || {};
-            taskOrder = JSON.parse(await window.storage.get('taskOrder')) || {};
-
-                courseCards.appendChild(card);
-            });
-            await renderTasks();
-}
-
-        function moveCategoryUp(day, courseKey, category) {
-            const courseId = `${day}|||${courseKey}`;
-            if (!categoryOrder[courseId]) {
-                categoryOrder[courseId] = ['submit', 'reading', 'required', 'optional'];
-            }
-            const order = categoryOrder[courseId];
-            const index = order.indexOf(category);
-            if (index > 0) {
-                [order[index], order[index - 1]] = [order[index - 1], order[index]];
-                localStorage.setItem('categoryOrder', JSON.stringify(categoryOrder));
-                renderTasks();
-            }
+            content.innerHTML = '<p style="text-align: center; padding: 40px; color: #28a745; font-size: 1.2em;">🎉 All tasks complete for next class!</p>';
         }
-        // Call initApp instead of renderTasks on load
-        initApp();
 
-        function moveCategoryDown(day, courseKey, category) {
-        async function moveCategoryDown(day, courseKey, category) {
-const courseId = `${day}|||${courseKey}`;
-if (!categoryOrder[courseId]) {
-categoryOrder[courseId] = ['submit', 'reading', 'required', 'optional'];
-@@ -1387,28 +1221,28 @@ <h1>📚 Homework</h1>
-const index = order.indexOf(category);
-if (index < order.length - 1) {
-[order[index], order[index + 1]] = [order[index + 1], order[index]];
-                localStorage.setItem('categoryOrder', JSON.stringify(categoryOrder));
-                renderTasks();
-                await window.storage.set('categoryOrder', JSON.stringify(categoryOrder));
-                await renderTasks();
-}
-}
-
-        function deleteCategory(day, courseKey, category) {
-        async function deleteCategory(day, courseKey, category) {
-const categoryKey = getCategoryKey(day, courseKey, category);
-if (!deletedCategories.includes(categoryKey)) {
-deletedCategories.push(categoryKey);
-                localStorage.setItem('deletedCategories', JSON.stringify(deletedCategories));
-                renderTasks();
-                await window.storage.set('deletedCategories', JSON.stringify(deletedCategories));
-                await renderTasks();
-}
-}
-
-        function restoreCategory(day, courseKey, category) {
-        async function restoreCategory(day, courseKey, category) {
-const categoryKey = getCategoryKey(day, courseKey, category);
-deletedCategories = deletedCategories.filter(c => c !== categoryKey);
-            localStorage.setItem('deletedCategories', JSON.stringify(deletedCategories));
-            renderTasks();
-            await window.storage.set('deletedCategories', JSON.stringify(deletedCategories));
-            await renderTasks();
-}
-
-        function moveTaskUp(day, courseKey, category, itemIndex) {
-        async function moveTaskUp(day, courseKey, category, itemIndex) {
-const taskKey = `${day}|||${courseKey}|||${category}`;
-if (!taskOrder[taskKey]) {
-const items = courseData[day][courseKey][category];
-@@ -1418,12 +1252,12 @@ <h1>📚 Homework</h1>
-const index = order.indexOf(itemIndex);
-if (index > 0) {
-[order[index], order[index - 1]] = [order[index - 1], order[index]];
-                localStorage.setItem('taskOrder', JSON.stringify(taskOrder));
-                renderTasks();
-                await window.storage.set('taskOrder', JSON.stringify(taskOrder));
-                await renderTasks();
-}
-}
-
-        function moveTaskDown(day, courseKey, category, itemIndex) {
-        async function moveTaskDown(day, courseKey, category, itemIndex) {
-const taskKey = `${day}|||${courseKey}|||${category}`;
-if (!taskOrder[taskKey]) {
-const items = courseData[day][courseKey][category];
-@@ -1433,12 +1267,12 @@ <h1>📚 Homework</h1>
-const index = order.indexOf(itemIndex);
-if (index < order.length - 1) {
-[order[index], order[index + 1]] = [order[index + 1], order[index]];
-                localStorage.setItem('taskOrder', JSON.stringify(taskOrder));
-                renderTasks();
-                await window.storage.set('taskOrder', JSON.stringify(taskOrder));
-                await renderTasks();
-}
-}
-
-        function renderTasks() {
-        async function renderTasks() {
-const content = document.getElementById('content');
-content.innerHTML = '';
-
-@@ -1456,7 +1290,7 @@ <h1>📚 Homework</h1>
-dayHeader.classList.add('collapsed');
-}
-dayHeader.innerHTML = `<span>${day}</span><span class="arrow">▼</span>`;
-                dayHeader.addEventListener('click', () => toggleDay(day));
-                dayHeader.addEventListener('click', () => await toggleDay(day));
-daySection.appendChild(dayHeader);
-
-const dayContent = document.createElement('div');
-@@ -1489,7 +1323,7 @@ <h1>📚 Homework</h1>
-                       </div>
-                       <span class="course-arrow">▼</span>
-                   `;
-                    courseHeader.addEventListener('click', () => toggleCourse(courseId));
-                    courseHeader.addEventListener('click', () => await toggleCourse(courseId));
-courseSection.appendChild(courseHeader);
-
-const courseContent = document.createElement('div');
-@@ -1564,15 +1398,15 @@ <h1>📚 Homework</h1>
-upBtn.textContent = '↑';
-upBtn.onclick = (e) => {
-e.stopPropagation();
-                            moveCategoryUp(day, courseKey, category);
-                            await moveCategoryUp(day, courseKey, category);
-};
-
-const downBtn = document.createElement('button');
-downBtn.className = 'category-btn';
-downBtn.textContent = '↓';
-downBtn.onclick = (e) => {
-e.stopPropagation();
-                            moveCategoryDown(day, courseKey, category);
-                            await moveCategoryDown(day, courseKey, category);
-};
-
-controls.appendChild(upBtn);
-@@ -1584,7 +1418,7 @@ <h1>📚 Homework</h1>
-deleteBtn.textContent = '🗑️';
-deleteBtn.onclick = (e) => {
-e.stopPropagation();
-                                deleteCategory(day, courseKey, category);
-                                await deleteCategory(day, courseKey, category);
-};
-controls.appendChild(deleteBtn);
-}
-@@ -1599,7 +1433,7 @@ <h1>📚 Homework</h1>
-categoryTitle.appendChild(leftDiv);
-categoryTitle.appendChild(rightDiv);
-
-                        categoryTitle.addEventListener('click', () => toggleCategory(categoryId));
-                        categoryTitle.addEventListener('click', () => await toggleCategory(categoryId));
-categoryDiv.appendChild(categoryTitle);
-
-const categoryContent = document.createElement('div');
-@@ -1635,7 +1469,7 @@ <h1>📚 Homework</h1>
-checkbox.type = 'checkbox';
-checkbox.className = 'task-checkbox';
-checkbox.checked = isCompleted;
-                                checkbox.addEventListener('change', () => toggleTask(taskId));
-                                checkbox.addEventListener('change', () => await toggleTask(taskId));
-
-const details = document.createElement('div');
-details.className = 'task-details';
-@@ -1671,7 +1505,7 @@ <h1>📚 Homework</h1>
-const newTitle = title.textContent.trim();
-if (newTitle && newTitle !== item.title) {
-customTaskTitles[taskId] = newTitle;
-                                        localStorage.setItem('customTaskTitles', JSON.stringify(customTaskTitles));
-                                        await window.storage.set('customTaskTitles', JSON.stringify(customTaskTitles));
-}
-});
-
-@@ -1715,7 +1549,7 @@ <h1>📚 Homework</h1>
-timeSelect.appendChild(option);
-});
-timeSelect.addEventListener('change', (e) => {
-                                    updateTaskTime(taskId, parseFloat(e.target.value));
-                                    await updateTaskTime(taskId, parseFloat(e.target.value));
-});
-
-if (item.points !== null) {
-@@ -1821,15 +1655,15 @@ <h1>📚 Homework</h1>
-taskUpBtn.textContent = '↑';
-taskUpBtn.onclick = (e) => {
-e.stopPropagation();
-                                    moveTaskUp(day, courseKey, category, itemIndex);
-                                    await moveTaskUp(day, courseKey, category, itemIndex);
-};
-
-const taskDownBtn = document.createElement('button');
-taskDownBtn.className = 'task-btn';
-taskDownBtn.textContent = '↓';
-taskDownBtn.onclick = (e) => {
-e.stopPropagation();
-                                    moveTaskDown(day, courseKey, category, itemIndex);
-                                    await moveTaskDown(day, courseKey, category, itemIndex);
-};
-
-taskControls.appendChild(taskUpBtn);
-@@ -1861,7 +1695,7 @@ <h1>📚 Homework</h1>
-const restoreBtn = document.createElement('button');
-restoreBtn.className = 'restore-btn';
-restoreBtn.textContent = title;
-                            restoreBtn.onclick = () => restoreCategory(day, courseKey, category);
-                            restoreBtn.onclick = () => await restoreCategory(day, courseKey, category);
-restoreSection.appendChild(restoreBtn);
-});
-
-@@ -1890,7 +1724,7 @@ <h1>📚 Homework</h1>
-archiveHeader.classList.add('collapsed');
-}
-archiveHeader.innerHTML = `<span>📦 Archived Tasks (Past Due)</span><span class="arrow">▼</span>`;
-                archiveHeader.addEventListener('click', () => toggleDay('__archive__'));
-                archiveHeader.addEventListener('click', () => await toggleDay('__archive__'));
-archiveSection.appendChild(archiveHeader);
-
-const archiveContent = document.createElement('div');
-@@ -1930,45 +1764,45 @@ <h1>📚 Homework</h1>
-renderCourseCards();
-}
-
-        function toggleDay(day) {
-        async function toggleDay(day) {
-if (collapsedDays.includes(day)) {
-collapsedDays = collapsedDays.filter(d => d !== day);
-} else {
-collapsedDays.push(day);
-}
-            localStorage.setItem('collapsedDays', JSON.stringify(collapsedDays));
-            renderTasks();
-            await window.storage.set('collapsedDays', JSON.stringify(collapsedDays));
-            await renderTasks();
-}
-
-        function toggleCourse(courseId) {
-        async function toggleCourse(courseId) {
-if (collapsedCourses.includes(courseId)) {
-collapsedCourses = collapsedCourses.filter(c => c !== courseId);
-} else {
-collapsedCourses.push(courseId);
-}
-            localStorage.setItem('collapsedCourses', JSON.stringify(collapsedCourses));
-            renderTasks();
-            await window.storage.set('collapsedCourses', JSON.stringify(collapsedCourses));
-            await renderTasks();
-}
-
-        function toggleCategory(categoryId) {
-        async function toggleCategory(categoryId) {
-if (collapsedCategories.includes(categoryId)) {
-collapsedCategories = collapsedCategories.filter(c => c !== categoryId);
-} else {
-collapsedCategories.push(categoryId);
-}
-            localStorage.setItem('collapsedCategories', JSON.stringify(collapsedCategories));
-            renderTasks();
-            await window.storage.set('collapsedCategories', JSON.stringify(collapsedCategories));
-            await renderTasks();
-}
-
-        function toggleTask(taskId) {
-        async function toggleTask(taskId) {
-const index = completedTaskIds.indexOf(taskId);
-if (index > -1) {
-completedTaskIds.splice(index, 1);
-} else {
-completedTaskIds.push(taskId);
-}
-            localStorage.setItem('completedTasks', JSON.stringify(completedTaskIds));
-            renderTasks();
-            await window.storage.set('completedTasks', JSON.stringify(completedTaskIds));
-            await renderTasks();
-}
-
-function toggleScheduled(taskId) {
-@@ -1978,8 +1812,8 @@ <h1>📚 Homework</h1>
-} else {
-scheduledTaskIds.push(taskId);
-}
-            localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
-            renderTasks();
-            await window.storage.set('scheduledTasks', JSON.stringify(scheduledTaskIds));
-            await renderTasks();
-}
-
-function startUpdateCountdown() {
-@@ -2214,7 +2048,7 @@ <h2 style="color: #800000; margin-bottom: 20px;">🔄 Update Homework</h2>
-}
-
-// Initialize
-        renderTasks();
-        await renderTasks();
-</script>
+        renderApp();
+    </script>
 </body>
 </html>
