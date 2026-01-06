@@ -439,7 +439,7 @@ function renderTasks() {
             courseHeader.innerHTML = `
                 <div>
                     <div class="course-title">
-                        ${courseName}
+                        ${courseName === "Managing in Organizations" ? "Managing in Organizations (no AI)" : courseName}
                         ${syllabusUrl ? `<a href="${syllabusUrl}" target="_blank" class="course-syllabus-link" onclick="event.stopPropagation()" title="View Syllabus">📄</a>` : ''}
                     </div>
                     <div class="course-due">${due}</div>
