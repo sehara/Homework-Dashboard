@@ -11,27 +11,29 @@
         <div class="header">
             <h1>📚 Homework</h1>
             <p id="dateRange">UChicago MBA | Next 14 Days</p>
-            <button id="updateButton" class="update-button" onclick="updateHomework()">🔄 Update Homework</button>
         </div>
-
         <div class="summary-section">
             <div class="summary-title">⚠️ Remaining Work This Week</div>
             
             <div class="course-cards" id="courseCards">
                 <!-- Course cards dynamically generated -->
             </div>
-
-            <div class="pro-tip">
-                <div class="pro-tip-title">💡 Pro Tip</div>
-                <div class="pro-tip-text">Start Corporate Governance readings today (Saturday) - spread 2-3 hours per day to avoid cramming Thursday night!</div>
+            
+            <div class="personal-notes">
+                <div class="personal-notes-title">📌 Personal Notes</div>
+                <textarea 
+                    id="personalNotesText" 
+                    class="personal-notes-textarea" 
+                    placeholder="Type your notes here... (e.g., priorities, reminders, study plans)"
+                    oninput="autoExpandNotes()"
+                ></textarea>
+                <button id="saveNotesBtn" class="personal-notes-save" onclick="savePersonalNotes()">💾 Save Notes</button>
             </div>
         </div>
-
         <div class="content" id="content">
             <!-- Tasks dynamically inserted -->
         </div>
     </div>
-
     <script src="data.js"></script>
     <script src="scripts.js"></script>
 </body>
