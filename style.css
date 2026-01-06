@@ -39,30 +39,6 @@ body {
 .header p {
     font-size: 1.2em;
     opacity: 0.9;
-    margin-bottom: 15px;
-}
-
-.update-button {
-    background: white;
-    color: #800000;
-    border: none;
-    padding: 12px 30px;
-    font-size: 1.1em;
-    font-weight: bold;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.update-button:hover {
-    background: #f8f9fa;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-}
-
-.update-button:active {
-    transform: translateY(0);
 }
 
 .summary-section {
@@ -201,24 +177,57 @@ body {
     margin-top: 15px;
 }
 
-.pro-tip {
+.personal-notes {
     background: white;
     padding: 20px;
     border-radius: 15px;
-    border-left: 6px solid #28a745;
+    border-left: 6px solid #dc3545;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.pro-tip-title {
+.personal-notes-title {
     font-size: 1.2em;
     font-weight: bold;
-    color: #28a745;
-    margin-bottom: 10px;
+    color: #dc3545;
+    margin-bottom: 15px;
 }
 
-.pro-tip-text {
-    color: #495057;
-    font-size: 1.05em;
+.personal-notes-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1em;
+    resize: none;
+    overflow: hidden;
+    box-sizing: border-box;
+    min-height: 80px;
+    transition: border-color 0.2s;
+}
+
+.personal-notes-textarea:focus {
+    outline: none;
+    border-color: #dc3545;
+}
+
+.personal-notes-save {
+    margin-top: 12px;
+    background: #800000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.personal-notes-save:hover {
+    background: #5a0000;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
 .content {
