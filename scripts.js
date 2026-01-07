@@ -133,6 +133,31 @@ function saveTaskNote(taskId, note) {
     renderTasks();
 }
 
+function formatDueDate(dateStr, courseName) {
+    const date = new Date(dateStr);
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    const dayName = days[date.getDay()];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    
+    // Get time from courseData by finding the matching course entry
+    let timeStr = '';
+    Object.keys(courseData).forEach(d => {
+        Object.keys(courseData[d]).forEach(courseKey => {
+            if (d === dateStr && courseKey.includes(courseName)) {
+                const parts = courseKey.split('|||');
+                if (parts[1]) {
+                    timeStr = parts[1].replace('Due: ', '').replace(dayName + ', ', '');
+                }
+            }
+        });
+    });
+    
+    return `${dayName}, ${month} ${day} ${timeStr}`;
+}
+
 function isTaskPastDue(dateStr, courseName) {
     const taskDate = new Date(dateStr);
     const now = new Date();
@@ -370,7 +395,7 @@ function renderCourseCards() {
                 <div class="course-card-hours">✅</div>
                 <div class="course-card-hours-label">COMPLETE</div>
                 <div class="course-card-tasks">${stats.total} tasks done</div>
-                <div class="course-card-due">📅 ${courseInfo[courseName].due}</div>
+                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : courseInfo[courseName].due}</div>
             `;
         } else {
             let statusHTML = '';
@@ -388,7 +413,7 @@ function renderCourseCards() {
                 <div class="course-card-hours-label">HOURS LEFT</div>
                 <div class="course-card-tasks">${stats.remaining}/${stats.total} tasks remaining</div>
                 ${statusHTML}
-                <div class="course-card-due">📅 ${courseInfo[courseName].due}</div>
+                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : courseInfo[courseName].due}</div>
             `;
         }
 
