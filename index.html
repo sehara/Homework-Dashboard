@@ -19,15 +19,39 @@
                 <!-- Course cards dynamically generated -->
             </div>
             
-            <div class="personal-notes">
-                <div class="personal-notes-title">📌 Personal Notes</div>
-                <textarea 
-                    id="personalNotesText" 
-                    class="personal-notes-textarea" 
-                    placeholder="Type your notes here... (e.g., priorities, reminders, study plans)"
-                    oninput="autoExpandNotes()"
-                ></textarea>
-                <button id="saveNotesBtn" class="personal-notes-save" onclick="savePersonalNotes()">💾 Save Notes</button>
+            <div class="notes-grid">
+                <div class="note-section personal">
+                    <div class="note-title">📌 Personal Notes</div>
+                    <textarea 
+                        id="personalNotesText" 
+                        class="note-textarea" 
+                        placeholder="Type your personal notes here..."
+                        oninput="autoExpandNote('personalNotesText')"
+                    ></textarea>
+                    <button class="note-save-btn" onclick="saveNote('personal', 'personalNotesText')">💾 Save</button>
+                </div>
+            
+                <div class="note-section job-hunting">
+                    <div class="note-title">💼 Job Hunting</div>
+                    <textarea 
+                        id="jobHuntingNotesText" 
+                        class="note-textarea" 
+                        placeholder="Track job applications..."
+                        oninput="autoExpandNote('jobHuntingNotesText')"
+                    ></textarea>
+                    <button class="note-save-btn" onclick="saveNote('jobHunting', 'jobHuntingNotesText')">💾 Save</button>
+                </div>
+            
+                <div class="note-section internship">
+                    <div class="note-title">🎯 Internship</div>
+                    <textarea 
+                        id="internshipNotesText" 
+                        class="note-textarea" 
+                        placeholder="Internship deadlines..."
+                        oninput="autoExpandNote('internshipNotesText')"
+                    ></textarea>
+                    <button class="note-save-btn" onclick="saveNote('internship', 'internshipNotesText')">💾 Save</button>
+                </div>
             </div>
         </div>
         <div class="content" id="content">

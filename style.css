@@ -177,31 +177,60 @@ body {
     margin-top: 15px;
 }
 
-.personal-notes {
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.note-section {
     background: white;
-    padding: 25px;
+    padding: 20px;
     border-radius: 15px;
-    border-left: 6px solid #dc3545;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.personal-notes:hover {
+.note-section:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-.personal-notes-title {
+.note-section.personal {
+    border-top: 6px solid #dc3545;
+}
+
+.note-section.job-hunting {
+    border-top: 6px solid #0d6efd;
+}
+
+.note-section.internship {
+    border-top: 6px solid #198754;
+}
+
+.note-title {
     font-size: 1.3em;
     font-weight: bold;
-    color: #dc3545;
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.personal-notes-textarea {
+.note-section.personal .note-title {
+    color: #dc3545;
+}
+
+.note-section.job-hunting .note-title {
+    color: #0d6efd;
+}
+
+.note-section.internship .note-title {
+    color: #198754;
+}
+
+.note-textarea {
     width: 100%;
     padding: 15px;
     border: 2px solid #e9ecef;
@@ -217,19 +246,32 @@ body {
     background: #fafafa;
 }
 
-.personal-notes-textarea:focus {
+.note-textarea:focus {
     outline: none;
-    border-color: #dc3545;
     background: white;
+}
+
+.note-section.personal .note-textarea:focus {
+    border-color: #dc3545;
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
 }
 
-.personal-notes-textarea::placeholder {
+.note-section.job-hunting .note-textarea:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.note-section.internship .note-textarea:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.1);
+}
+
+.note-textarea::placeholder {
     color: #adb5bd;
     font-style: italic;
 }
 
-.personal-notes-save {
+.note-save-btn {
     margin-top: 15px;
     background: linear-gradient(135deg, #800000 0%, #5a0000 100%);
     color: white;
@@ -241,15 +283,16 @@ body {
     font-weight: bold;
     transition: all 0.3s;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    width: 100%;
 }
 
-.personal-notes-save:hover {
+.note-save-btn:hover {
     background: linear-gradient(135deg, #5a0000 0%, #400000 100%);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
-.personal-notes-save:active {
+.note-save-btn:active {
     transform: translateY(0);
 }
 
@@ -500,33 +543,22 @@ body {
 }
 
 .task-item:hover {
-    background: #f8f9fa;
-    transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-color: #800000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .task-item.completed {
-    opacity: 0.35;
-    background-color: #f8f9fa;
-}
-
-.task-item.scheduled {
-    background-color: #e3f2fd;
-    border-left: 3px solid #2196F3;
-}
-
-.task-item.completed:hover {
-    transform: scale(0.98) translateX(5px);
-    opacity: 0.5;
+    background: #f8f9fa;
+    opacity: 0.6;
 }
 
 .task-checkbox {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     margin-right: 15px;
-    cursor: pointer;
-    flex-shrink: 0;
     margin-top: 2px;
+    cursor: pointer;
+    accent-color: #800000;
 }
 
 .task-details {
@@ -534,219 +566,116 @@ body {
 }
 
 .task-title {
-    font-weight: 500;
-    margin-bottom: 8px;
-    font-size: 1.05em;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 5px;
+    display: block;
+    text-decoration: none;
+}
+
+.task-title:hover {
+    color: #800000;
+    text-decoration: underline;
 }
 
 .task-item.completed .task-title {
     text-decoration: line-through;
+    color: #6c757d;
 }
 
 .task-meta {
     display: flex;
-    flex-wrap: wrap;
     gap: 15px;
+    font-size: 0.85em;
+    color: #6c757d;
     align-items: center;
 }
 
-.task-time {
-    color: #6c757d;
-    font-size: 0.95em;
-}
-
-.task-time-select {
-    color: #6c757d;
-    font-size: 0.9em;
-    padding: 4px 8px;
-    border: 1px solid #dee2e6;
-    border-radius: 5px;
-    background: white;
-    cursor: pointer;
-    transition: border-color 0.2s;
-}
-
-.task-time-select:hover {
-    border-color: #800000;
-}
-
-.task-time-select:focus {
-    outline: none;
-    border-color: #800000;
-}
-
 .task-points {
-    color: #800000;
-    font-size: 0.95em;
+    color: #28a745;
     font-weight: 600;
 }
 
-.task-link {
-    color: #800000;
-    text-decoration: none;
-    font-size: 0.95em;
+.task-time {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.task-link:hover {
-    text-decoration: underline;
-}
-
-.task-calendar-link {
-    background: linear-gradient(135deg, #4CAF50, #45a049);
-    color: white;
-    padding: 4px 10px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-size: 0.85em;
-    transition: all 0.2s;
-    display: inline-block;
-}
-
-.task-calendar-link:hover {
-    background: linear-gradient(135deg, #45a049, #3d8b40);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-.task-calendar-link.scheduled {
-    background: linear-gradient(135deg, #2196F3, #1976D2);
-}
-
-.task-calendar-link.scheduled:hover {
-    background: linear-gradient(135deg, #1976D2, #1565C0);
-}
-
-.task-notes-btn {
-    background: #f8f9fa;
-    color: #adb5bd;
-    border: none;
-    padding: 4px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.85em;
-    transition: all 0.2s;
-    opacity: 0.4;
-}
-
-.task-notes-btn:hover {
-    background: #e9ecef;
-    color: #6c757d;
-    opacity: 1;
-}
-
-.task-notes-btn.has-notes {
-    color: #ffc107;
-    opacity: 0.8;
-}
-
-.task-notes-btn.has-notes:hover {
-    color: #e0a800;
-    opacity: 1;
-}
-
-.task-notes-area {
-    margin-top: 10px;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 5px;
-    border-left: 3px solid #800000;
-}
-
-.task-notes-textarea {
-    width: 100%;
-    padding: 8px;
+.time-select {
+    padding: 2px 5px;
     border: 1px solid #dee2e6;
-    border-radius: 5px;
-    font-family: inherit;
+    border-radius: 4px;
     font-size: 0.9em;
-    resize: none;
-    overflow: hidden;
-    box-sizing: border-box;
+    color: #495057;
+    background: #f8f9fa;
+    cursor: pointer;
 }
 
-.task-notes-textarea:focus {
-    outline: none;
+.time-select:hover {
     border-color: #800000;
 }
 
-.task-notes-save {
-    margin-top: 8px;
-    background: #800000;
-    color: white;
-    border: none;
-    padding: 6px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.85em;
-    transition: background 0.2s;
-}
-
-.task-notes-save:hover {
-    background: #5a0000;
-}
-
-.task-controls {
+.task-actions {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-left: 10px;
+    gap: 10px;
+    margin-left: 15px;
 }
 
 .task-btn {
-    background: #e9ecef;
-    color: #adb5bd;
+    background: none;
     border: none;
-    padding: 3px 8px;
-    border-radius: 3px;
     cursor: pointer;
-    font-size: 0.75em;
+    font-size: 1.1em;
+    padding: 5px;
+    border-radius: 4px;
     transition: all 0.2s;
-    opacity: 0.4;
+    color: #adb5bd;
+    opacity: 0.5;
 }
 
 .task-btn:hover {
-    background: #e9ecef;
-    color: #6c757d;
+    background: #f8f9fa;
+    color: #800000;
     opacity: 1;
 }
 
-.restore-section {
-    margin: 20px 0;
-    padding: 12px;
-    background: #f8f9fa;
-    border-left: 2px solid #e9ecef;
-    border-radius: 8px;
-    opacity: 0.4;
-    transition: opacity 0.2s;
+.task-btn.scheduled {
+    color: #0d6efd;
+    opacity: 1;
 }
 
-.restore-section:hover {
-    opacity: 0.8;
+.task-note-btn.has-note {
+    color: #ffc107;
+    opacity: 1;
 }
 
-.restore-title {
-    font-weight: normal;
-    color: #adb5bd;
-    margin-bottom: 8px;
-    font-size: 0.85em;
+.task-note-editor {
+    margin-top: 10px;
+    width: 100%;
 }
 
-.restore-btn {
-    background: #e9ecef;
-    color: #6c757d;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 3px;
-    font-size: 0.8em;
-    transition: all 0.2s;
+.task-note-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ffc107;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.9em;
+    resize: vertical;
+    min-height: 60px;
+    background: #fffdf5;
 }
 
-.restore-btn:hover {
-    background: #dee2e6;
-    color: #495057;
+.task-note-display {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #fffdf5;
+    border-left: 3px solid #ffc107;
+    font-size: 0.9em;
+    color: #856404;
+    border-radius: 0 4px 4px 0;
 }
 
 @media (max-width: 1200px) {
@@ -756,27 +685,15 @@ body {
 }
 
 @media (max-width: 768px) {
-    .header h1 {
-        font-size: 1.8em;
-    }
-
     .course-cards {
         grid-template-columns: 1fr;
     }
-
-    .content {
-        padding: 15px;
+    
+    .header h1 {
+        font-size: 1.8em;
     }
-
-    .day-header {
-        font-size: 1.2em;
-    }
-
-    .course-title {
-        font-size: 1.1em;
-    }
-
+    
     .task-item {
-        margin-left: 15px;
+        margin-left: 10px;
     }
 }

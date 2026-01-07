@@ -1189,43 +1189,47 @@ CRITICAL:
     });
 }
 
-// Personal Notes functionality
-function loadPersonalNotes() {
-    const savedNotes = localStorage.getItem('personalNotes') || '';
-    const notesTextarea = document.getElementById('personalNotesText');
-    if (notesTextarea) {
-        notesTextarea.value = savedNotes;
-        autoExpandNotes();
-    }
+// Notes functionality - supports multiple note sections
+function loadNotes() {
+    const noteTypes = ['personal', 'jobHunting', 'internship'];
+    noteTypes.forEach(type => {
+        const savedNotes = localStorage.getItem(`${type}Notes`) || '';
+        const textareaId = `${type}NotesText`;
+        const textarea = document.getElementById(textareaId);
+        if (textarea) {
+            textarea.value = savedNotes;
+            autoExpandNote(textareaId);
+        }
+    });
 }
 
-function savePersonalNotes() {
-    const notesTextarea = document.getElementById('personalNotesText');
-    const notes = notesTextarea.value;
-    localStorage.setItem('personalNotes', notes);
+function saveNote(noteType, textareaId) {
+    const textarea = document.getElementById(textareaId);
+    const notes = textarea.value;
+    localStorage.setItem(`${noteType}Notes`, notes);
     
     // Show saved confirmation
-    const saveBtn = document.getElementById('saveNotesBtn');
+    const saveBtn = event.target;
     const originalText = saveBtn.textContent;
     saveBtn.textContent = '✓ Saved!';
     saveBtn.style.background = '#28a745';
     
     setTimeout(() => {
         saveBtn.textContent = originalText;
-        saveBtn.style.background = '#800000';
+        saveBtn.style.background = 'linear-gradient(135deg, #800000 0%, #5a0000 100%)';
     }, 2000);
 }
 
-function autoExpandNotes() {
-    const notesTextarea = document.getElementById('personalNotesText');
-    if (notesTextarea) {
-        notesTextarea.style.height = 'auto';
-        notesTextarea.style.height = Math.max(80, notesTextarea.scrollHeight) + 'px';
+function autoExpandNote(textareaId) {
+    const textarea = document.getElementById(textareaId);
+    if (textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = Math.max(100, textarea.scrollHeight) + 'px';
     }
 }
 
 // Load notes when page loads
-document.addEventListener('DOMContentLoaded', loadPersonalNotes);
+document.addEventListener('DOMContentLoaded', loadNotes);
 
 // Initialize on page load
 renderTasks();
