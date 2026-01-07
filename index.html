@@ -26,9 +26,9 @@
                         id="personalNotesText" 
                         class="note-textarea" 
                         placeholder="Type your personal notes here..."
-                        oninput="autoExpandNote('personalNotesText')"
+                        oninput="handleNoteInput('personal', 'personalNotesText')"
                     ></textarea>
-                    <button class="note-save-btn" onclick="saveNote('personal', 'personalNotesText')">💾 Save</button>
+                    <button id="personalSaveBtn" class="note-save-btn" onclick="saveNote('personal', 'personalNotesText', 'personalSaveBtn')">💾 Save</button>
                 </div>
             
                 <div class="note-section job-hunting">
@@ -37,9 +37,9 @@
                         id="jobHuntingNotesText" 
                         class="note-textarea" 
                         placeholder="Track job applications..."
-                        oninput="autoExpandNote('jobHuntingNotesText')"
+                        oninput="handleNoteInput('jobHunting', 'jobHuntingNotesText')"
                     ></textarea>
-                    <button class="note-save-btn" onclick="saveNote('jobHunting', 'jobHuntingNotesText')">💾 Save</button>
+                    <button id="jobHuntingSaveBtn" class="note-save-btn" onclick="saveNote('jobHunting', 'jobHuntingNotesText', 'jobHuntingSaveBtn')">💾 Save</button>
                 </div>
             
                 <div class="note-section internship">
@@ -48,9 +48,9 @@
                         id="internshipNotesText" 
                         class="note-textarea" 
                         placeholder="Internship deadlines..."
-                        oninput="autoExpandNote('internshipNotesText')"
+                        oninput="handleNoteInput('internship', 'internshipNotesText')"
                     ></textarea>
-                    <button class="note-save-btn" onclick="saveNote('internship', 'internshipNotesText')">💾 Save</button>
+                    <button id="internshipSaveBtn" class="note-save-btn" onclick="saveNote('internship', 'internshipNotesText', 'internshipSaveBtn')">💾 Save</button>
                 </div>
             </div>
         </div>

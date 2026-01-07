@@ -1189,7 +1189,13 @@ CRITICAL:
     });
 }
 
-// Notes functionality - supports multiple note sections
+// Notes functionality - supports multiple note sections with unsaved indicator
+const noteStates = {
+    personal: { saved: true, content: '' },
+    jobHunting: { saved: true, content: '' },
+    internship: { saved: true, content: '' }
+};
+
 function loadNotes() {
     const noteTypes = ['personal', 'jobHunting', 'internship'];
     noteTypes.forEach(type => {
@@ -1198,25 +1204,49 @@ function loadNotes() {
         const textarea = document.getElementById(textareaId);
         if (textarea) {
             textarea.value = savedNotes;
+            noteStates[type].content = savedNotes;
+            noteStates[type].saved = true;
             autoExpandNote(textareaId);
         }
     });
 }
 
-function saveNote(noteType, textareaId) {
+function handleNoteInput(noteType, textareaId) {
     const textarea = document.getElementById(textareaId);
+    const btnId = `${noteType}SaveBtn`;
+    const btn = document.getElementById(btnId);
+    
+    // Mark as unsaved
+    noteStates[noteType].saved = false;
+    textarea.classList.add('unsaved');
+    btn.classList.add('unsaved');
+    btn.classList.remove('saved');
+    btn.textContent = '⚠️ Unsaved Changes';
+    
+    // Auto-expand
+    autoExpandNote(textareaId);
+}
+
+function saveNote(noteType, textareaId, btnId) {
+    const textarea = document.getElementById(textareaId);
+    const btn = document.getElementById(btnId);
     const notes = textarea.value;
+    
+    // Save to localStorage
     localStorage.setItem(`${noteType}Notes`, notes);
+    noteStates[noteType].content = notes;
+    noteStates[noteType].saved = true;
     
-    // Show saved confirmation
-    const saveBtn = event.target;
-    const originalText = saveBtn.textContent;
-    saveBtn.textContent = '✓ Saved!';
-    saveBtn.style.background = '#28a745';
+    // Update UI
+    textarea.classList.remove('unsaved');
+    btn.classList.remove('unsaved');
+    btn.classList.add('saved');
+    btn.textContent = '✓ Saved!';
     
+    // Reset after 2 seconds
     setTimeout(() => {
-        saveBtn.textContent = originalText;
-        saveBtn.style.background = 'linear-gradient(135deg, #800000 0%, #5a0000 100%)';
+        btn.classList.remove('saved');
+        btn.textContent = '💾 Save';
     }, 2000);
 }
 

@@ -251,6 +251,10 @@ body {
     background: white;
 }
 
+.note-textarea.unsaved {
+    border-color: #ffc107;
+}
+
 .note-section.personal .note-textarea:focus {
     border-color: #dc3545;
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
@@ -294,6 +298,14 @@ body {
 
 .note-save-btn:active {
     transform: translateY(0);
+}
+
+.note-save-btn.unsaved {
+    background: linear-gradient(135deg, #ff8c00 0%, #ff6b00 100%);
+}
+
+.note-save-btn.saved {
+    background: #28a745;
 }
 
 .content {
