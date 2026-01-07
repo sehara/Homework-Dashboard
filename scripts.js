@@ -149,7 +149,12 @@ function formatDueDate(dateStr, courseName) {
             if (d === dateStr && courseKey.includes(courseName)) {
                 const parts = courseKey.split('|||');
                 if (parts[1]) {
-                    timeStr = parts[1].replace('Due: ', '').replace(dayName + ', ', '');
+                    // Extract just the time portion after "Due: "
+                    const dueInfo = parts[1];
+                    const timeMatch = dueInfo.match(/at (.+)/);
+                    if (timeMatch) {
+                        timeStr = 'at ' + timeMatch[1];
+                    }
                 }
             }
         });
