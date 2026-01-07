@@ -79,7 +79,7 @@ const courseData = {
         "Corporate Governance|||Due: Friday, Jan 9 at 12:01 AM": {
             submit: [
                 {
-                    title: "Week 1: Reading Assignment",
+                    title: "Week 1 Reading Assignment",
                     time: 0.5,
                     points: 0,
                     link: "https://canvas.uchicago.edu/courses/69195/assignments/831823"
@@ -138,7 +138,7 @@ const courseData = {
         "PE VC Lab|||Due: Monday, Jan 12 at 6:00 PM": {
             submit: [
                 {
-                    title: "Case 1: Andreessen-Horowitz",
+                    title: "Case 1 Andreessen-Horowitz",
                     time: 2.0,
                     points: 30,
                     link: "https://canvas.uchicago.edu/courses/65932/assignments/824365"
@@ -160,13 +160,13 @@ const courseData = {
         "Managing in Organizations|||Due: Tuesday, Jan 13 at 8:30 AM": {
             submit: [
                 {
-                    title: "Thought paper 1 - Week 2",
+                    title: "Thought paper 1 Week 2",
                     time: 1.5,
                     points: 4,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments/818416"
                 },
                 {
-                    title: "Class participation - Week 2",
+                    title: "Class participation Week 2",
                     time: 0.5,
                     points: 1.5,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments"
@@ -195,7 +195,7 @@ const courseData = {
         "Negotiation|||Due: Wednesday, Jan 14 at 11:59 PM": {
             submit: [
                 {
-                    title: "Prep Sheet - New Recruit Negotiation",
+                    title: "Prep Sheet New Recruit",
                     time: 1.0,
                     points: 3,
                     link: "https://canvas.uchicago.edu/courses/67439/assignments"
@@ -217,7 +217,7 @@ const courseData = {
         "Corporate Governance|||Due: Friday, Jan 16 at 12:00 PM": {
             submit: [
                 {
-                    title: "Week 2: Morgan Stanley/Sears",
+                    title: "Week 2 Morgan Stanley/Sears",
                     time: 2.0,
                     points: 36,
                     link: "https://canvas.uchicago.edu/courses/69195/assignments/831824"
@@ -232,13 +232,13 @@ const courseData = {
         "Managing in Organizations|||Due: Tuesday, Jan 20 at 8:30 AM": {
             submit: [
                 {
-                    title: "Thought paper 2 - Week 3",
+                    title: "Thought paper 2 Week 3",
                     time: 1.5,
                     points: 4,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments"
                 },
                 {
-                    title: "Class participation - Week 3",
+                    title: "Class participation Week 3",
                     time: 0.5,
                     points: 1.5,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments"
@@ -286,17 +286,38 @@ const courseData = {
                 }
             ]
         }
+    },
+    "Wednesday, January 21, 2026": {
+        "Negotiation|||Due: Wednesday, Jan 21 at 11:59 PM": {
+            submit: [
+                {
+                    title: "Prep Sheet Madsen v Clayton",
+                    time: 1.0,
+                    points: 3,
+                    link: "https://canvas.uchicago.edu/courses/67439/assignments"
+                },
+                {
+                    title: "Prep Sheet Bullard Houses",
+                    time: 1.0,
+                    points: 3,
+                    link: "https://canvas.uchicago.edu/courses/67439/assignments"
+                }
+            ],
+            reading: [],
+            required: [],
+            optional: []
+        }
     }
 };
 
 const courseInfo = {
     "PE VC Lab": {
-        due: "Monday, Jan 5 at 6:00 PM",
+        due: "Monday, Jan 12 at 6:00 PM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/65932/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/65932/assignments"
     },
     "Managing in Organizations": {
-        due: "Tuesday, Jan 6 at 8:30 AM",
+        due: "Tuesday, Jan 13 at 8:30 AM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/67742/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/67742/assignments"
     },
@@ -319,7 +340,7 @@ const classEndTimes = {
     'Corporate Governance': { day: 5, hour: 11, minute: 30 } // Friday 11:30 AM
 };
 
-const lastUpdated = "2026-01-05T12:02:00";
+const lastUpdated = "2026-01-07T00:29:18";
 
 if (typeof window !== 'undefined') {
     window.lastUpdated = lastUpdated;
