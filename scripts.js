@@ -321,24 +321,38 @@ function renderCourseCards() {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
     
-    // First pass: find the earliest FUTURE date for each course
+    // First pass: find the earliest FUTURE class for each course
     Object.keys(courseData).forEach(day => {
-        const taskDate = new Date(day);
-        taskDate.setHours(0, 0, 0, 0);
-        
-        // Skip past dates
-        if (taskDate < now) return;
-        
         Object.keys(courseData[day]).forEach(courseKey => {
-            const [courseName] = courseKey.split('|||');
+            const [courseName, dueInfo] = courseKey.split('|||');
             
-            // Store the first future date we find for this course
+            // Parse the actual due date/time from the course key
+            const taskDate = new Date(day);
+            
+            // Extract time from "Due: Tuesday, Jan 6 at 8:30 AM"
+            const timeMatch = dueInfo.match(/at (\d+):(\d+) (AM|PM)/);
+            if (timeMatch) {
+                let hours = parseInt(timeMatch[1]);
+                const minutes = parseInt(timeMatch[2]);
+                const period = timeMatch[3];
+                
+                if (period === 'PM' && hours !== 12) hours += 12;
+                if (period === 'AM' && hours === 12) hours = 0;
+                
+                taskDate.setHours(hours, minutes, 0, 0);
+            }
+            
+            // Skip if this class time has already passed
+            const now = new Date();
+            if (taskDate < now) return;
+            
+            // Store the first future class for this course
             if (!nextClassDates[courseName]) {
                 nextClassDates[courseName] = day;
             }
         });
     });
-    
+
     // Second pass: count tasks ONLY for the next class date
     Object.keys(courseData).forEach(day => {
         Object.keys(courseData[day]).forEach(courseKey => {
