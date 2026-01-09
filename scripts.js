@@ -1268,10 +1268,11 @@ renderTasks();
 function updateTimestamp() {
     // Check if lastUpdated exists in data.js
     let updateTime;
-    if (typeof lastUpdated !== 'undefined' && lastUpdated) {
-        updateTime = new Date(lastUpdated);
-    } else if (typeof window.lastUpdated !== 'undefined' && window.lastUpdated) {
+    // Prioritize window.lastUpdated from timestamp.js
+    if (typeof window.lastUpdated !== 'undefined' && window.lastUpdated) {
         updateTime = new Date(window.lastUpdated);
+    } else if (typeof lastUpdated !== 'undefined' && lastUpdated) {
+        updateTime = new Date(lastUpdated);
     } else {
         // Fallback - show current time
         updateTime = new Date();
