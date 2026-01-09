@@ -75,7 +75,7 @@ const courseData = {
             ]
         }
     },
-    "Thursday, January 9, 2026": {
+    "Friday, January 9, 2026": {
         "Corporate Governance|||Due: Thursday, Jan 9 at 12:01 AM": {
             submit: [
                 {
