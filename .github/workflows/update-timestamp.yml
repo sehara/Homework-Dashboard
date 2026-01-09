@@ -7,6 +7,7 @@ on:
       - master
     paths-ignore:
       - 'timestamp.js'
+  workflow_dispatch:
 
 jobs:
   update-timestamp:
@@ -19,7 +20,8 @@ jobs:
         
       - name: Update timestamp in timestamp.js
         run: |
-          TIMESTAMP=$(TZ='America/Chicago' date +"%Y-%m-%dT%H:%M:%S")
+          # Get Chicago time with ISO 8601 offset
+          TIMESTAMP=$(TZ='America/Chicago' date +"%Y-%m-%dT%H:%M:%S-06:00")
           cat > timestamp.js << 'EOF'
           const lastUpdated = "TIMESTAMP_PLACEHOLDER";
           
