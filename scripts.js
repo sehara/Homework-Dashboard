@@ -1266,13 +1266,10 @@ renderTasks();
 
 // Display last updated timestamp in Central Time
 function updateTimestamp() {
-    // Check if lastUpdated exists in data.js
+    // Only use window.lastUpdated from timestamp.js (managed by GitHub Actions)
     let updateTime;
-    // Prioritize window.lastUpdated from timestamp.js
     if (typeof window.lastUpdated !== 'undefined' && window.lastUpdated) {
         updateTime = new Date(window.lastUpdated);
-    } else if (typeof lastUpdated !== 'undefined' && lastUpdated) {
-        updateTime = new Date(lastUpdated);
     } else {
         // Fallback - show current time
         updateTime = new Date();
