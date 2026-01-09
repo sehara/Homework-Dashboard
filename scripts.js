@@ -1,7 +1,7 @@
 // State management
 let completedTaskIds = JSON.parse(localStorage.getItem('completedTasks')) || [];
 let scheduledTaskIds = JSON.parse(localStorage.getItem('scheduledTasks')) || [];
-let collapsedDays = JSON.parse(localStorage.getItem('collapsedDays')) || [];
+let collapsedDays = JSON.parse(localStorage.getItem('collapsedDays')) || ['__archive__'];
 let collapsedCourses = JSON.parse(localStorage.getItem('collapsedCourses')) || [];
 let customTimeEstimates = JSON.parse(localStorage.getItem('customTimeEstimates')) || {};
 let taskNotes = JSON.parse(localStorage.getItem('taskNotes')) || {};
