@@ -1,3 +1,23 @@
+// Archive management
+const archivedCourses = JSON.parse(localStorage.getItem('archivedCourses') || '[]');
+let showArchived = false;
+
+function toggleArchive(courseName) {
+    const index = archivedCourses.indexOf(courseName);
+    if (index > -1) {
+        archivedCourses.splice(index, 1); // Unarchive
+    } else {
+        archivedCourses.push(courseName); // Archive
+    }
+    localStorage.setItem('archivedCourses', JSON.stringify(archivedCourses));
+    renderCourseCards(); // Re-render
+}
+
+function toggleShowArchived() {
+    showArchived = !showArchived;
+    renderCourseCards();
+}
+
 // State management
 let completedTaskIds = JSON.parse(localStorage.getItem('completedTasks')) || [];
 let scheduledTaskIds = JSON.parse(localStorage.getItem('scheduledTasks')) || [];
@@ -311,8 +331,8 @@ function moveTaskDown(day, courseKey, category, itemIndex) {
 
 // Render functions
 function renderCourseCards() {
-    const courseCards = document.getElementById('courseCards');
-    courseCards.innerHTML = '';
+    const container = document.getElementById('courseCards');
+    container.innerHTML = ''; // Clear existing cards
 
     const courseStats = {};
     
@@ -395,26 +415,38 @@ function renderCourseCards() {
 
     Object.keys(courseStats).forEach(courseName => {
         const stats = courseStats[courseName];
-        const card = document.createElement('div');
-        card.className = 'course-card';
-        
-        if (stats.remaining === 0) {
-            card.classList.add('completed');
-        } else if (stats.remainingHours <= 2) {
-            card.classList.add('low-workload');
-        } else if (stats.remainingHours <= 5) {
-            card.classList.add('medium-workload');
-        } else {
-            card.classList.add('high-workload');
+        const isComplete = stats.remaining === 0;
+        const isArchived = archivedCourses.includes(courseName);
+        const archiveClass = isArchived ? 'archived' : '';
+
+        // Skip archived courses if not showing archived
+        if (isArchived && !showArchived) {
+            return; // Skip this course
         }
 
-        if (stats.remaining === 0) {
+        const card = document.createElement('div');
+        card.className = `course-card ${isComplete ? 'completed' : ''} ${archiveClass}`;
+        
+        if (!isComplete) {
+            if (stats.remainingHours <= 2) {
+                card.classList.add('low-workload');
+            } else if (stats.remainingHours <= 5) {
+                card.classList.add('medium-workload');
+            } else {
+                card.classList.add('high-workload');
+            }
+        }
+
+        if (isComplete) {
             card.innerHTML = `
                 <div class="course-card-title">${courseName}</div>
                 <div class="course-card-hours">✅</div>
                 <div class="course-card-hours-label">COMPLETE</div>
                 <div class="course-card-tasks">${stats.total} tasks done</div>
-                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : courseInfo[courseName].due}</div>
+                <button class="archive-btn" onclick="toggleArchive('${courseName}')">
+                    ${isArchived ? '↩️ Unarchive' : '📦 Archive'}
+                </button>
+                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : 'No upcoming class'}</div>
             `;
         } else {
             let statusHTML = '';
@@ -432,12 +464,26 @@ function renderCourseCards() {
                 <div class="course-card-hours-label">HOURS LEFT</div>
                 <div class="course-card-tasks">${stats.remaining}/${stats.total} tasks remaining</div>
                 ${statusHTML}
-                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : courseInfo[courseName].due}</div>
+                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : 'No upcoming class'}</div>
             `;
         }
 
-        courseCards.appendChild(card);
+        container.appendChild(card);
     });
+
+    // Add show archived toggle
+    const toggleHtml = `
+        <div class="show-archived-toggle">
+            <input type="checkbox" id="showArchivedCheckbox" ${showArchived ? 'checked' : ''} onchange="toggleShowArchived()">
+            <label for="showArchivedCheckbox">Show Archived Courses (${archivedCourses.length})</label>
+        </div>
+    `;
+
+    // Insert toggle after the "Remaining Work This Week" header
+    const header = document.querySelector('.summary-title');
+    if (header && archivedCourses.length > 0) {
+        header.insertAdjacentHTML('afterend', toggleHtml);
+    }
 }
 
 function renderTasks() {
