@@ -690,54 +690,6 @@ body {
     border-radius: 0 4px 4px 0;
 }
 
-.archive-btn {
-    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9em;
-    font-weight: bold;
-    margin-top: 15px;
-    transition: all 0.3s;
-    width: 100%;
-}
-
-.archive-btn:hover {
-    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
-    transform: translateY(-2px);
-}
-
-.course-card.archived {
-    opacity: 0.5;
-    filter: grayscale(50%);
-}
-
-.show-archived-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
-    padding: 15px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.show-archived-toggle label {
-    font-weight: 600;
-    color: #495057;
-    cursor: pointer;
-}
-
-.show-archived-toggle input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
 @media (max-width: 1200px) {
     .course-cards {
         grid-template-columns: repeat(2, 1fr);
