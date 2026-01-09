@@ -1,3 +1,23 @@
+// Archive management
+const archivedCourses = JSON.parse(localStorage.getItem('archivedCourses') || '[]');
+let showArchived = false;
+
+function toggleArchive(courseName) {
+    const index = archivedCourses.indexOf(courseName);
+    if (index > -1) {
+        archivedCourses.splice(index, 1); // Unarchive
+    } else {
+        archivedCourses.push(courseName); // Archive
+    }
+    localStorage.setItem('archivedCourses', JSON.stringify(archivedCourses));
+    renderCourseCards(); // Re-render
+}
+
+function toggleShowArchived() {
+    showArchived = !showArchived;
+    renderCourseCards();
+}
+
 // State management
 let completedTaskIds = JSON.parse(localStorage.getItem('completedTasks')) || [];
 let scheduledTaskIds = JSON.parse(localStorage.getItem('scheduledTasks')) || [];
@@ -309,10 +329,66 @@ function moveTaskDown(day, courseKey, category, itemIndex) {
     }
 }
 
-// Render functions
+function toggleTask(taskId) {
+    const index = completedTaskIds.indexOf(taskId);
+    if (index > -1) {
+        completedTaskIds.splice(index, 1);
+    } else {
+        completedTaskIds.push(taskId);
+    }
+    localStorage.setItem('completedTasks', JSON.stringify(completedTaskIds));
+    renderTasks();
+    renderCourseCards();
+}
+
+function toggleScheduled(taskId) {
+    const index = scheduledTaskIds.indexOf(taskId);
+    if (index > -1) {
+        scheduledTaskIds.splice(index, 1);
+    } else {
+        scheduledTaskIds.push(taskId);
+    }
+    localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
+    renderTasks();
+    renderCourseCards();
+}
+
+function toggleDay(day) {
+    const index = collapsedDays.indexOf(day);
+    if (index > -1) {
+        collapsedDays.splice(index, 1);
+    } else {
+        collapsedDays.push(day);
+    }
+    localStorage.setItem('collapsedDays', JSON.stringify(collapsedDays));
+    renderTasks();
+}
+
+function toggleCourse(courseKey) {
+    const index = collapsedCourses.indexOf(courseKey);
+    if (index > -1) {
+        collapsedCourses.splice(index, 1);
+    } else {
+        collapsedCourses.push(courseKey);
+    }
+    localStorage.setItem('collapsedCourses', JSON.stringify(collapsedCourses));
+    renderTasks();
+}
+
+function toggleCategory(categoryKey) {
+    const index = collapsedCategories.indexOf(categoryKey);
+    if (index > -1) {
+        collapsedCategories.splice(index, 1);
+    } else {
+        collapsedCategories.push(categoryKey);
+    }
+    localStorage.setItem('collapsedCategories', JSON.stringify(collapsedCategories));
+    renderTasks();
+}
+
 function renderCourseCards() {
-    const courseCards = document.getElementById('courseCards');
-    courseCards.innerHTML = '';
+    const container = document.getElementById('courseCards');
+    container.innerHTML = ''; // Clear existing cards
 
     const courseStats = {};
     
@@ -395,26 +471,38 @@ function renderCourseCards() {
 
     Object.keys(courseStats).forEach(courseName => {
         const stats = courseStats[courseName];
-        const card = document.createElement('div');
-        card.className = 'course-card';
-        
-        if (stats.remaining === 0) {
-            card.classList.add('completed');
-        } else if (stats.remainingHours <= 2) {
-            card.classList.add('low-workload');
-        } else if (stats.remainingHours <= 5) {
-            card.classList.add('medium-workload');
-        } else {
-            card.classList.add('high-workload');
+        const isComplete = stats.remaining === 0;
+        const isArchived = archivedCourses.includes(courseName);
+        const archiveClass = isArchived ? 'archived' : '';
+
+        // Skip archived courses if not showing archived
+        if (isArchived && !showArchived) {
+            return; // Skip this course
         }
 
-        if (stats.remaining === 0) {
+        const card = document.createElement('div');
+        card.className = `course-card ${isComplete ? 'completed' : ''} ${archiveClass}`;
+        
+        if (!isComplete) {
+            if (stats.remainingHours <= 2) {
+                card.classList.add('low-workload');
+            } else if (stats.remainingHours <= 5) {
+                card.classList.add('medium-workload');
+            } else {
+                card.classList.add('high-workload');
+            }
+        }
+
+        if (isComplete) {
             card.innerHTML = `
                 <div class="course-card-title">${courseName}</div>
                 <div class="course-card-hours">✅</div>
                 <div class="course-card-hours-label">COMPLETE</div>
                 <div class="course-card-tasks">${stats.total} tasks done</div>
-                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : courseInfo[courseName].due}</div>
+                <button class="archive-btn" onclick="toggleArchive('${courseName}')">
+                    ${isArchived ? '↩️ Unarchive' : '📦 Archive'}
+                </button>
+                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : 'No upcoming class'}</div>
             `;
         } else {
             let statusHTML = '';
@@ -432,12 +520,26 @@ function renderCourseCards() {
                 <div class="course-card-hours-label">HOURS LEFT</div>
                 <div class="course-card-tasks">${stats.remaining}/${stats.total} tasks remaining</div>
                 ${statusHTML}
-                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : courseInfo[courseName].due}</div>
+                <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : 'No upcoming class'}</div>
             `;
         }
 
-        courseCards.appendChild(card);
+        container.appendChild(card);
     });
+
+    // Add show archived toggle
+    const toggleHtml = `
+        <div class="show-archived-toggle">
+            <input type="checkbox" id="showArchivedCheckbox" ${showArchived ? 'checked' : ''} onchange="toggleShowArchived()">
+            <label for="showArchivedCheckbox">Show Archived Courses (${archivedCourses.length})</label>
+        </div>
+    `;
+
+    // Insert toggle after the "Remaining Work This Week" header
+    const header = document.querySelector('.summary-title');
+    if (header && archivedCourses.length > 0) {
+        header.insertAdjacentHTML('afterend', toggleHtml);
+    }
 }
 
 function renderTasks() {
@@ -450,844 +552,164 @@ function renderTasks() {
     Object.keys(active).forEach(day => {
         const daySection = document.createElement('div');
         daySection.className = 'day-section';
-
-        const dayHeader = document.createElement('div');
-        dayHeader.className = 'day-header';
-        if (collapsedDays.includes(day)) {
-            dayHeader.classList.add('collapsed');
-        }
-        dayHeader.innerHTML = `<span>${day}</span><span class="arrow">▼</span>`;
-        dayHeader.addEventListener('click', () => toggleDay(day));
-        daySection.appendChild(dayHeader);
-
-        const dayContent = document.createElement('div');
-        dayContent.className = 'day-content';
-        if (collapsedDays.includes(day)) {
-            dayContent.classList.add('collapsed');
-        }
-
+        
+        const isCollapsed = collapsedDays.includes(day);
+        
+        daySection.innerHTML = `
+            <div class="day-header ${isCollapsed ? 'collapsed' : ''}" onclick="toggleDay('${day}')">
+                <span>${new Date(day).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</span>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="day-content ${isCollapsed ? 'collapsed' : ''}"></div>
+        `;
+        
+        const dayContent = daySection.querySelector('.day-content');
+        
         Object.keys(active[day]).forEach(courseKey => {
-            const [courseName, due] = courseKey.split('|||');
-            const courseId = `${day}|||${courseKey}`;
-            const courseTaskData = active[day][courseKey];
-            
+            const [courseName] = courseKey.split('|||');
             const courseSection = document.createElement('div');
             courseSection.className = 'course-section';
-
-            const courseHeader = document.createElement('div');
-            courseHeader.className = 'course-header';
-            if (collapsedCourses.includes(courseId)) {
-                courseHeader.classList.add('collapsed');
-            }
-            const syllabusUrl = courseInfo[courseName] ? courseInfo[courseName].syllabusUrl : '';
-            courseHeader.innerHTML = `
-                <div>
+            
+            const isCourseCollapsed = collapsedCourses.includes(`${day}|||${courseKey}`);
+            
+            courseSection.innerHTML = `
+                <div class="course-header ${isCourseCollapsed ? 'collapsed' : ''}" onclick="toggleCourse('${day}|||${courseKey}')">
                     <div class="course-title">
-                        ${courseName === "Managing in Organizations" ? "Managing in Organizations (no AI)" : courseName}
-                        ${syllabusUrl ? `<a href="${syllabusUrl}" target="_blank" class="course-syllabus-link" onclick="event.stopPropagation()" title="View Syllabus">📄</a>` : ''}
+                        ${courseName}
+                        ${courseInfo[courseName].syllabusUrl ? `<a href="${courseInfo[courseName].syllabusUrl}" class="course-syllabus-link" target="_blank" onclick="event.stopPropagation()">📄</a>` : ''}
                     </div>
-                    <div class="course-due">${due}</div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="course-due">${formatDueDate(day, courseName)}</div>
+                        <span class="course-arrow">▼</span>
+                    </div>
                 </div>
-                <span class="course-arrow">▼</span>
+                <div class="course-content ${isCourseCollapsed ? 'collapsed' : ''}"></div>
             `;
-            courseHeader.addEventListener('click', () => toggleCourse(courseId));
-            courseSection.appendChild(courseHeader);
-
-            const courseContent = document.createElement('div');
-            courseContent.className = 'course-content';
-            if (collapsedCourses.includes(courseId)) {
-                courseContent.classList.add('collapsed');
-            }
-
-            const defaultOrder = ['submit', 'reading', 'required', 'optional'];
-            const order = categoryOrder[courseId] || defaultOrder;
-
-            const categoryTitles = {
-                'submit': '🎯 SUBMIT (Actual Submission Required)',
-                'reading': '📖 READING (Required for Class)',
-                'required': '📖 REQUIRED READINGS',
-                'optional': '💡 OPTIONAL READINGS'
-            };
-
-            const deletedInCourse = [];
-
-            order.forEach(category => {
-                const categoryId = `${courseId}|||${category}`;
+            
+            const courseContent = courseSection.querySelector('.course-content');
+            const courseId = `${day}|||${courseKey}`;
+            
+            // Use custom order if exists
+            const categories = categoryOrder[courseId] || ['submit', 'reading', 'required', 'optional'];
+            
+            categories.forEach(category => {
+                const items = active[day][courseKey][category];
+                if (items.length === 0) return;
+                
                 const categoryKey = getCategoryKey(day, courseKey, category);
-                const items = courseTaskData[category];
+                if (deletedCategories.includes(categoryKey)) return;
                 
-                const isDeleted = deletedCategories.includes(categoryKey);
-                if (isDeleted) {
-                    deletedInCourse.push({ category, title: categoryTitles[category] });
-                    return;
-                }
-
-                const isEmpty = items.length === 0;
-                const allCompleted = items.length > 0 && items.every((item, itemIndex) => {
-                    const taskId = getTaskKey(day, courseKey, category, itemIndex);
-                    return completedTaskIds.includes(taskId);
-                });
-                const shouldGrayOut = isEmpty || allCompleted;
+                const categorySection = document.createElement('div');
+                categorySection.className = 'task-category';
                 
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'task-category';
-
-                const categoryTitle = document.createElement('div');
-                categoryTitle.className = 'category-title';
-                if (collapsedCategories.includes(categoryId)) {
-                    categoryTitle.classList.add('collapsed');
-                }
-                if (shouldGrayOut) {
-                    categoryTitle.classList.add('grayed-out');
-                }
+                const isCatCollapsed = collapsedCategories.includes(categoryKey);
+                const isComplete = isCategoryComplete(items, day, courseKey, category);
                 
-                const statusIcon = (allCompleted && !isEmpty) ? '✓ ' : '';
-                
-                const leftDiv = document.createElement('div');
-                leftDiv.className = 'category-title-left';
-                const assignmentsUrl = courseInfo[courseName] ? courseInfo[courseName].assignmentsUrl : '';
-                const assignmentsLink = (category === 'submit' && assignmentsUrl) ? `<a href="${assignmentsUrl}" target="_blank" class="category-assignments-link" onclick="event.stopPropagation()" title="View Assignments">🔗</a>` : '';
-                leftDiv.innerHTML = `
-                    <span class="category-status">${statusIcon}</span>
-                    <span>${categoryTitles[category]}</span>
-                    ${assignmentsLink}
+                categorySection.innerHTML = `
+                    <div class="category-title ${isCatCollapsed ? 'collapsed' : ''} ${isComplete ? 'grayed-out' : ''}" onclick="toggleCategory('${categoryKey}')">
+                        <div class="category-title-left">
+                            <span class="category-arrow">▼</span>
+                            <span>${category.toUpperCase()}</span>
+                            ${category === 'submit' && courseInfo[courseName].assignmentsUrl ? `<a href="${courseInfo[courseName].assignmentsUrl}" class="category-assignments-link" target="_blank" onclick="event.stopPropagation()">🔗</a>` : ''}
+                        </div>
+                        <div class="category-title-right">
+                            ${isComplete ? '<span class="category-status">✓ Done</span>' : ''}
+                            <div class="category-controls" onclick="event.stopPropagation()">
+                                <button class="category-btn" onclick="moveCategoryUp('${day}', '${courseKey}', '${category}')">▲</button>
+                                <button class="category-btn" onclick="moveCategoryDown('${day}', '${courseKey}', '${category}')">▼</button>
+                                <button class="category-btn delete-btn" onclick="deleteCategory('${day}', '${courseKey}', '${category}')">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="category-content ${isCatCollapsed ? 'collapsed' : ''}"></div>
                 `;
-
-                const rightDiv = document.createElement('div');
-                rightDiv.className = 'category-title-right';
                 
-                const controls = document.createElement('div');
-                controls.className = 'category-controls';
+                const categoryContent = categorySection.querySelector('.category-content');
                 
-                const upBtn = document.createElement('button');
-                upBtn.className = 'category-btn';
-                upBtn.textContent = '↑';
-                upBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    moveCategoryUp(day, courseKey, category);
-                };
+                // Use custom task order if exists
+                const taskKey = `${day}|||${courseKey}|||${category}`;
+                const order = taskOrder[taskKey] || items.map((_, i) => i);
                 
-                const downBtn = document.createElement('button');
-                downBtn.className = 'category-btn';
-                downBtn.textContent = '↓';
-                downBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    moveCategoryDown(day, courseKey, category);
-                };
-
-                controls.appendChild(upBtn);
-                controls.appendChild(downBtn);
-
-                if (shouldGrayOut) {
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'category-btn delete-btn';
-                    deleteBtn.textContent = '🗑️';
-                    deleteBtn.onclick = (e) => {
-                        e.stopPropagation();
-                        deleteCategory(day, courseKey, category);
-                    };
-                    controls.appendChild(deleteBtn);
-                }
-
-                rightDiv.appendChild(controls);
-                
-                const arrow = document.createElement('span');
-                arrow.className = 'category-arrow';
-                arrow.textContent = '▼';
-                rightDiv.appendChild(arrow);
-
-                categoryTitle.appendChild(leftDiv);
-                categoryTitle.appendChild(rightDiv);
-                
-                categoryTitle.addEventListener('click', () => toggleCategory(categoryId));
-                categoryDiv.appendChild(categoryTitle);
-
-                const categoryContent = document.createElement('div');
-                categoryContent.className = 'category-content';
-                if (collapsedCategories.includes(categoryId)) {
-                    categoryContent.classList.add('collapsed');
-                }
-                
-                if (items.length === 0) {
-                    const emptyDiv = document.createElement('div');
-                    emptyDiv.className = 'category-empty';
-                    emptyDiv.textContent = 'None';
-                    categoryContent.appendChild(emptyDiv);
-                } else {
-                    const taskKey = `${day}|||${courseKey}|||${category}`;
-                    const defaultTaskOrder = items.map((_, i) => i);
-                    const orderedIndices = taskOrder[taskKey] || defaultTaskOrder;
-
-                    orderedIndices.forEach(itemIndex => {
-                        const item = items[itemIndex];
-                        const taskId = getTaskKey(day, courseKey, category, itemIndex);
-                        const isCompleted = completedTaskIds.includes(taskId);
-                        const isScheduled = scheduledTaskIds.includes(taskId);
-
-                        const taskItem = document.createElement('div');
-                        let taskClasses = 'task-item';
-                        if (isCompleted) taskClasses += ' completed';
-                        else if (isScheduled) taskClasses += ' scheduled';
-                        taskItem.className = taskClasses;
-
-                        const checkbox = document.createElement('input');
-                        checkbox.type = 'checkbox';
-                        checkbox.className = 'task-checkbox';
-                        checkbox.checked = isCompleted;
-                        checkbox.addEventListener('change', () => toggleTask(taskId));
-
-                        const details = document.createElement('div');
-                        details.className = 'task-details';
-
-                        const titleContainer = document.createElement('div');
-                        titleContainer.style.display = 'flex';
-                        titleContainer.style.alignItems = 'center';
-                        titleContainer.style.gap = '8px';
-                        
-                        const title = document.createElement('span');
-                        title.className = 'task-title';
-                        const customTitle = customTaskTitles[taskId] || item.title;
-                        title.textContent = customTitle;
-                        title.contentEditable = false;
-                        title.style.cursor = 'text';
-                        
-                        title.addEventListener('dblclick', () => {
-                            title.contentEditable = true;
-                            title.focus();
-                            const range = document.createRange();
-                            range.selectNodeContents(title);
-                            const sel = window.getSelection();
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                        });
-                        
-                        title.addEventListener('blur', () => {
-                            title.contentEditable = false;
-                            const newTitle = title.textContent.trim();
-                            if (newTitle && newTitle !== item.title) {
-                                customTaskTitles[taskId] = newTitle;
-                                localStorage.setItem('customTaskTitles', JSON.stringify(customTaskTitles));
-                            }
-                        });
-                        
-                        title.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                title.blur();
-                            }
-                        });
-                        
-                        const linkIcon = document.createElement('a');
-                        linkIcon.href = item.link;
-                        linkIcon.target = '_blank';
-                        linkIcon.textContent = '🔗';
-                        linkIcon.style.fontSize = '0.9em';
-                        linkIcon.style.opacity = '0.5';
-                        linkIcon.style.textDecoration = 'none';
-                        linkIcon.style.transition = 'opacity 0.2s';
-                        linkIcon.addEventListener('mouseenter', () => linkIcon.style.opacity = '1');
-                        linkIcon.addEventListener('mouseleave', () => linkIcon.style.opacity = '0.5');
-                        
-                        titleContainer.appendChild(title);
-                        titleContainer.appendChild(linkIcon);
-
-                        const meta = document.createElement('div');
-                        meta.className = 'task-meta';
-                        
-                        const currentTime = getTaskTime(taskId, item.time);
-                        const timeSelect = document.createElement('select');
-                        timeSelect.className = 'task-time-select';
-                        const timeOptions = generateTimeOptions();
-                        timeOptions.forEach(optTime => {
-                            const option = document.createElement('option');
-                            option.value = optTime;
-                            option.textContent = `⏱️ ${formatTime(optTime)}`;
-                            if (optTime === currentTime) {
-                                option.selected = true;
-                            }
-                            timeSelect.appendChild(option);
-                        });
-                        timeSelect.addEventListener('change', (e) => {
-                            updateTaskTime(taskId, parseFloat(e.target.value));
-                        });
-
-                        if (item.points !== null) {
-                            const pointsSpan = document.createElement('span');
-                            pointsSpan.className = 'task-points';
-                            pointsSpan.textContent = `${item.points} pts`;
-                            meta.appendChild(pointsSpan);
-                        }
-
-                        const calendarBtn = document.createElement('button');
-                        calendarBtn.className = 'task-calendar-link';
-                        if (isScheduled) {
-                            calendarBtn.classList.add('scheduled');
-                            calendarBtn.textContent = '✓ Scheduled';
-                        } else {
-                            calendarBtn.textContent = '📅 Add to Calendar';
-                        }
-                        calendarBtn.onclick = (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (!isScheduled) {
-                                const calDescription = `Canvas Link: ${item.link}`;
-                                const durationMinutes = Math.round(currentTime * 60);
-                                const calendarTitle = `(${durationMinutes}min) HW: ${courseName}: ${item.title}`;
-                                const calLink = createGoogleCalendarLink(calendarTitle, calDescription, currentTime, taskId);
-                                window.open(calLink, '_blank');
-                            }
-                            toggleScheduled(taskId);
+                order.forEach(itemIndex => {
+                    const item = items[itemIndex];
+                    const taskId = getTaskKey(day, courseKey, category, itemIndex);
+                    const isTaskComplete = completedTaskIds.includes(taskId);
+                    const isScheduled = scheduledTaskIds.includes(taskId);
+                    const taskTime = getTaskTime(taskId, item.time);
+                    
+                    const taskItem = document.createElement('div');
+                    taskItem.className = `task-item ${isTaskComplete ? 'completed' : ''}`;
+                    
+                    taskItem.innerHTML = `
+                        <input type="checkbox" class="task-checkbox" ${isTaskComplete ? 'checked' : ''} onchange="toggleTask('${taskId}')">
+                        <div class="task-details">
+                            <a href="${item.link || '#'}" class="task-title" target="_blank">${item.title}</a>
+                            <div class="task-meta">
+                                ${item.points ? `<span class="task-points">${item.points} pts</span>` : ''}
+                                <div class="task-time">
+                                    <span>⏱️</span>
+                                    <select class="time-select" onchange="updateTaskTime('${taskId}', parseFloat(this.value))">
+                                        ${generateTimeOptions().map(opt => `<option value="${opt}" ${opt === taskTime ? 'selected' : ''}>${opt}h</option>`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            ${taskNotes[taskId] ? `<div class="task-note-display">${taskNotes[taskId]}</div>` : ''}
+                        </div>
+                        <div class="task-actions">
+                            <button class="task-btn" onclick="moveTaskUp('${day}', '${courseKey}', '${category}', ${itemIndex})">▲</button>
+                            <button class="task-btn" onclick="moveTaskDown('${day}', '${courseKey}', '${category}', ${itemIndex})">▼</button>
+                            <button class="task-btn ${isScheduled ? 'scheduled' : ''}" onclick="toggleScheduled('${taskId}')" title="Schedule in Calendar">📅</button>
+                            <button class="task-btn ${taskNotes[taskId] ? 'has-note' : ''}" onclick="toggleNoteEditor('${taskId}')" title="Add Note">📝</button>
+                        </div>
+                    `;
+                    
+                    // Add note editor (hidden by default)
+                    const noteEditor = document.createElement('div');
+                    noteEditor.id = `note-editor-${taskId.replace(/\|\|\|/g, '-')}`;
+                    noteEditor.className = 'task-note-editor';
+                    noteEditor.style.display = 'none';
+                    noteEditor.innerHTML = `
+                        <textarea class="task-note-textarea" placeholder="Add a note...">${taskNotes[taskId] || ''}</textarea>
+                        <button class="note-save-btn" onclick="saveTaskNote('${taskId}', this.previousElementSibling.value)">Save Note</button>
+                    `;
+                    taskItem.querySelector('.task-details').appendChild(noteEditor);
+                    
+                    categoryContent.appendChild(taskItem);
+                    
+                    // If scheduled, update calendar link
+                    if (isScheduled && !isTaskComplete) {
+                        const calBtn = taskItem.querySelector('.task-btn.scheduled');
+                        calBtn.onclick = () => {
+                            const link = createGoogleCalendarLink(
+                                `[HW] ${courseName}: ${item.title}`,
+                                `Course: ${courseName}\nTask: ${item.title}\nDue: ${formatDueDate(day, courseName)}`,
+                                taskTime,
+                                taskId
+                            );
+                            window.open(link, '_blank');
                         };
-
-                        const notesBtn = document.createElement('button');
-                        notesBtn.className = 'task-notes-btn';
-                        const hasNotes = taskNotes[taskId] && taskNotes[taskId].trim() !== '';
-                        if (hasNotes) {
-                            notesBtn.classList.add('has-notes');
-                        }
-                        notesBtn.textContent = hasNotes ? '📝 Notes' : '📝';
-                        notesBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            const notesArea = taskItem.querySelector('.task-notes-area');
-                            const textarea = notesArea.querySelector('.task-notes-textarea');
-                            if (notesArea.style.display === 'none' || !notesArea.style.display) {
-                                notesArea.style.display = 'block';
-                                setTimeout(() => {
-                                    textarea.style.height = 'auto';
-                                    textarea.style.height = Math.max(80, textarea.scrollHeight) + 'px';
-                                }, 0);
-                            } else {
-                                notesArea.style.display = 'none';
-                            }
-                        };
-
-                        meta.appendChild(timeSelect);
-                        meta.appendChild(notesBtn);
-                        meta.appendChild(calendarBtn);
-
-                        details.appendChild(titleContainer);
-                        details.appendChild(meta);
-
-                        const notesArea = document.createElement('div');
-                        notesArea.className = 'task-notes-area';
-                        notesArea.style.display = 'none';
-
-                        const notesTextarea = document.createElement('textarea');
-                        notesTextarea.className = 'task-notes-textarea';
-                        notesTextarea.placeholder = 'Add notes for this task...';
-                        notesTextarea.value = taskNotes[taskId] || '';
-                        
-                        const autoExpand = () => {
-                            notesTextarea.style.height = 'auto';
-                            notesTextarea.style.height = Math.max(80, notesTextarea.scrollHeight) + 'px';
-                        };
-                        notesTextarea.addEventListener('input', autoExpand);
-                        setTimeout(autoExpand, 0);
-
-                        const notesSaveBtn = document.createElement('button');
-                        notesSaveBtn.className = 'task-notes-save';
-                        notesSaveBtn.textContent = 'Save Notes';
-                        notesSaveBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            saveTaskNote(taskId, notesTextarea.value);
-                            notesArea.style.display = 'none';
-                        };
-
-                        notesArea.appendChild(notesTextarea);
-                        notesArea.appendChild(notesSaveBtn);
-                        details.appendChild(notesArea);
-
-                        const taskControls = document.createElement('div');
-                        taskControls.className = 'task-controls';
-
-                        const taskUpBtn = document.createElement('button');
-                        taskUpBtn.className = 'task-btn';
-                        taskUpBtn.textContent = '↑';
-                        taskUpBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            moveTaskUp(day, courseKey, category, itemIndex);
-                        };
-
-                        const taskDownBtn = document.createElement('button');
-                        taskDownBtn.className = 'task-btn';
-                        taskDownBtn.textContent = '↓';
-                        taskDownBtn.onclick = (e) => {
-                            e.stopPropagation();
-                            moveTaskDown(day, courseKey, category, itemIndex);
-                        };
-
-                        taskControls.appendChild(taskUpBtn);
-                        taskControls.appendChild(taskDownBtn);
-
-                        taskItem.appendChild(checkbox);
-                        taskItem.appendChild(details);
-                        taskItem.appendChild(taskControls);
-
-                        categoryContent.appendChild(taskItem);
-                    });
-                }
-
-                categoryDiv.appendChild(categoryContent);
-                courseContent.appendChild(categoryDiv);
-            });
-
-            if (deletedInCourse.length > 0) {
-                const restoreSection = document.createElement('div');
-                restoreSection.className = 'restore-section';
-                
-                const restoreTitle = document.createElement('div');
-                restoreTitle.className = 'restore-title';
-                restoreTitle.textContent = '🔄 Deleted Sections (Click to Restore)';
-                restoreSection.appendChild(restoreTitle);
-
-                deletedInCourse.forEach(({ category, title }) => {
-                    const restoreBtn = document.createElement('button');
-                    restoreBtn.className = 'restore-btn';
-                    restoreBtn.textContent = title;
-                    restoreBtn.onclick = () => restoreCategory(day, courseKey, category);
-                    restoreSection.appendChild(restoreBtn);
+                    }
                 });
-
-                courseContent.appendChild(restoreSection);
-            }
-
-            courseSection.appendChild(courseContent);
+                
+                courseContent.appendChild(categorySection);
+            });
+            
             dayContent.appendChild(courseSection);
         });
-
-        daySection.appendChild(dayContent);
+        
         content.appendChild(daySection);
     });
+}
 
-    // Render archived tasks
-    if (Object.keys(archived).length > 0) {
-        const archiveSection = document.createElement('div');
-        archiveSection.className = 'day-section';
-        archiveSection.style.marginTop = '40px';
-
-        const archiveHeader = document.createElement('div');
-        archiveHeader.className = 'day-header';
-        archiveHeader.style.background = 'linear-gradient(135deg, #6c757d 0%, #495057 100%)';
-        const archiveCollapsed = collapsedDays.includes('__archive__');
-        if (archiveCollapsed) {
-            archiveHeader.classList.add('collapsed');
-        }
-        archiveHeader.innerHTML = `<span>📦 Archived Tasks (Past Due)</span><span class="arrow">▼</span>`;
-        archiveHeader.addEventListener('click', () => toggleDay('__archive__'));
-        archiveSection.appendChild(archiveHeader);
-
-        const archiveContent = document.createElement('div');
-        archiveContent.className = 'day-content';
-        if (archiveCollapsed) {
-            archiveContent.classList.add('collapsed');
-        }
-
-        Object.keys(archived).forEach(day => {
-            Object.keys(archived[day]).forEach(courseKey => {
-                const [courseName, due] = courseKey.split('|||');
-                const courseId = `${day}|||${courseKey}`;
-                const courseTaskData = archived[day][courseKey];
-                
-                const courseSection = document.createElement('div');
-                courseSection.className = 'course-section';
-                courseSection.style.opacity = '0.6';
-
-                const courseHeader = document.createElement('div');
-                courseHeader.className = 'course-header';
-                courseHeader.innerHTML = `
-                    <div>
-                        <div class="course-title">${courseName} - ${day}</div>
-                    </div>
-                `;
-
-                courseSection.appendChild(courseHeader);
-                archiveContent.appendChild(courseSection);
-            });
-        });
-
-        archiveSection.appendChild(archiveContent);
-        content.appendChild(archiveSection);
+function toggleNoteEditor(taskId) {
+    const editor = document.getElementById(`note-editor-${taskId.replace(/\|\|\|/g, '-')}`);
+    if (editor) {
+        editor.style.display = editor.style.display === 'none' ? 'block' : 'none';
     }
+}
 
+// Initial render
+document.addEventListener('DOMContentLoaded', () => {
     renderCourseCards();
-}
-
-// Toggle functions
-function toggleDay(day) {
-    if (collapsedDays.includes(day)) {
-        collapsedDays = collapsedDays.filter(d => d !== day);
-    } else {
-        collapsedDays.push(day);
-    }
-    localStorage.setItem('collapsedDays', JSON.stringify(collapsedDays));
     renderTasks();
-}
-
-function toggleCourse(courseId) {
-    if (collapsedCourses.includes(courseId)) {
-        collapsedCourses = collapsedCourses.filter(c => c !== courseId);
-    } else {
-        collapsedCourses.push(courseId);
-    }
-    localStorage.setItem('collapsedCourses', JSON.stringify(collapsedCourses));
-    renderTasks();
-}
-
-function toggleCategory(categoryId) {
-    if (collapsedCategories.includes(categoryId)) {
-        collapsedCategories = collapsedCategories.filter(c => c !== categoryId);
-    } else {
-        collapsedCategories.push(categoryId);
-    }
-    localStorage.setItem('collapsedCategories', JSON.stringify(collapsedCategories));
-    renderTasks();
-}
-
-function toggleTask(taskId) {
-    const index = completedTaskIds.indexOf(taskId);
-    if (index > -1) {
-        completedTaskIds.splice(index, 1);
-    } else {
-        completedTaskIds.push(taskId);
-    }
-    localStorage.setItem('completedTasks', JSON.stringify(completedTaskIds));
-    renderTasks();
-}
-
-function toggleScheduled(taskId) {
-    const index = scheduledTaskIds.indexOf(taskId);
-    if (index > -1) {
-        scheduledTaskIds.splice(index, 1);
-    } else {
-        scheduledTaskIds.push(taskId);
-    }
-    localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
-    renderTasks();
-}
-
-// Update homework functionality
-function startUpdateCountdown() {
-    const banner = document.createElement('div');
-    banner.id = 'updateBanner';
-    banner.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #800000 0%, #5a0000 100%);
-        color: white;
-        padding: 20px 30px;
-        border-radius: 15px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        z-index: 9999;
-        font-size: 1.1em;
-        font-weight: bold;
-        min-width: 300px;
-    `;
-    
-    let secondsLeft = 120;
-    
-    const updateBannerText = () => {
-        const minutes = Math.floor(secondsLeft / 60);
-        const seconds = secondsLeft % 60;
-        banner.innerHTML = `
-            <div style="margin-bottom: 10px;">⏳ Updating homework...</div>
-            <div style="font-size: 2em; text-align: center;">${minutes}:${seconds.toString().padStart(2, '0')}</div>
-            <div style="font-size: 0.8em; opacity: 0.8; margin-top: 10px; text-align: center;">Auto-refresh in progress</div>
-        `;
-    };
-    
-    updateBannerText();
-    document.body.appendChild(banner);
-    
-    const countdownInterval = setInterval(() => {
-        secondsLeft--;
-        updateBannerText();
-        
-        if (secondsLeft <= 0) {
-            clearInterval(countdownInterval);
-            banner.innerHTML = '<div>🔄 Refreshing...</div>';
-            
-            setTimeout(() => {
-                if (Notification.permission === 'granted') {
-                    new Notification('🎓 Homework Updated!', {
-                        body: 'Your tracker has been refreshed with new assignments.',
-                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📚</text></svg>'
-                    });
-                }
-                location.reload();
-            }, 500);
-        }
-    }, 1000);
-    
-    const cancelBtn = document.createElement('button');
-    cancelBtn.textContent = '❌ Cancel';
-    cancelBtn.style.cssText = `
-        background: white;
-        color: #800000;
-        border: none;
-        padding: 8px 20px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-        margin-top: 15px;
-        width: 100%;
-    `;
-    cancelBtn.onclick = () => {
-        clearInterval(countdownInterval);
-        banner.remove();
-    };
-    banner.appendChild(cancelBtn);
-}
-
-function updateHomework() {
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-    `;
-    
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-        background: white;
-        padding: 40px;
-        border-radius: 20px;
-        max-width: 700px;
-        max-height: 80vh;
-        overflow-y: auto;
-    `;
-    
-    const instructions = `
-Update my homework tracker with new Canvas data.
-
-**I've attached my current homework_tracker_updated.html file.**
-
-Courses to scrape:
-1. Managing in Organizations: https://canvas.uchicago.edu/courses/67742/modules
-2. PE VC Lab: https://canvas.uchicago.edu/courses/65932/modules
-3. Negotiation: https://canvas.uchicago.edu/courses/67439/modules
-4. Corporate Governance: https://canvas.uchicago.edu/courses/69195/modules
-
-For each course:
-- Extract ALL homework items (readings, assignments, submissions) for the next 2 weeks
-- Include readings even if there's no assignment due
-- Categorize as: submit, reading, required, or optional
-- If it's listed under Canvas Assignments, put it in "submit" even if 0 points
-- Estimate time needed (in hours, use 0.5 hour increments)
-- Get the Canvas link for each item
-- Use exact Canvas due dates and times
-
-Format the data like this:
-{
-  "Monday, January 5, 2026": {
-    "PE VC Lab|||Due: Monday, Jan 5 at 11:59 PM": {
-      submit: [{title: "...", time: 0.5, points: null, link: "..."}],
-      reading: [{title: "...", time: 1.0, points: null, link: "..."}],
-      required: [],
-      optional: []
-    }
-  }
-}
-
-IMPORTANT FORMATTING:
-- Use JavaScript object notation (no quotes around keys like submit, reading)
-- Use "points: null" for readings (not 0)
-- Day of week must be correct (check calendar)
-- Course names: "PE VC Lab", "Managing in Organizations", "Negotiation", "Corporate Governance"
-
-Then:
-1. Read the attached homework_tracker_updated.html file
-2. Find the courseData object (search for "const courseData")
-3. Replace ONLY the courseData object with new scraped data
-4. Find the courseInfo object (search for "const courseInfo")
-5. Update courseInfo with correct first due dates for each course
-6. Keep everything else exactly the same (all JavaScript, CSS, HTML)
-7. Save as: homework_tracker_updated.html
-8. Give me the download link
-
-CRITICAL:
-- Use "reading" NOT "prepare" in categories
-- Update BOTH courseData AND courseInfo
-- Verify all 4 courses appear in courseInfo with correct due dates
-- Include dates with only readings (no submissions)
-- The file I attached has all the working code - don't change anything except courseData and courseInfo
-    `.trim();
-    
-    modalContent.innerHTML = `
-        <h2 style="color: #800000; margin-bottom: 20px;">🔄 Update Homework</h2>
-        <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-            <p style="margin: 0; font-weight: bold; color: #856404;">📎 IMPORTANT: When you paste into Manus, attach your current <code>homework_tracker_updated.html</code> file!</p>
-        </div>
-        <p style="margin-bottom: 20px; font-size: 1.1em;">Copy these instructions and paste them in a new Manus chat:</p>
-        <textarea readonly id="instructionsText" style="
-            width: 100%;
-            height: 400px;
-            padding: 15px;
-            font-family: monospace;
-            font-size: 0.9em;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            resize: vertical;
-        ">${instructions}</textarea>
-        <div style="display: flex; gap: 15px; justify-content: flex-end;">
-            <button onclick="this.parentElement.parentElement.parentElement.remove()" style="
-                background: #6c757d;
-                color: white;
-                border: none;
-                padding: 12px 30px;
-                font-size: 1em;
-                font-weight: bold;
-                border-radius: 8px;
-                cursor: pointer;
-            ">Close</button>
-            <button id="copyButton" onclick="
-                const textarea = document.getElementById('instructionsText');
-                
-                textarea.select();
-                document.execCommand('copy');
-                this.textContent = '\u2705 Copied!';
-                
-                setTimeout(() => this.textContent = '\ud83d\udccb Copy & Open Manus', 2000);
-                window.open('https://manus.im', '_blank');
-                
-                if (Notification.permission === 'default') {
-                    Notification.requestPermission();
-                }
-                
-                setTimeout(() => {
-                    this.parentElement.parentElement.parentElement.remove();
-                    startUpdateCountdown();
-                }, 2000);
-            " style="
-                background: #800000;
-                color: white;
-                border: none;
-                padding: 12px 30px;
-                font-size: 1em;
-                font-weight: bold;
-                border-radius: 8px;
-                cursor: pointer;
-            ">📋 Copy & Open Manus</button>
-        </div>
-    `;
-    
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
-}
-
-// Notes functionality - supports multiple note sections with unsaved indicator
-const noteStates = {
-    personal: { saved: true, content: '' },
-    jobHunting: { saved: true, content: '' },
-    internship: { saved: true, content: '' }
-};
-
-function loadNotes() {
-    const noteTypes = ['personal', 'jobHunting', 'internship'];
-    noteTypes.forEach(type => {
-        const savedNotes = localStorage.getItem(`${type}Notes`) || '';
-        const textareaId = `${type}NotesText`;
-        const textarea = document.getElementById(textareaId);
-        if (textarea) {
-            textarea.value = savedNotes;
-            noteStates[type].content = savedNotes;
-            noteStates[type].saved = true;
-            autoExpandNote(textareaId);
-        }
-    });
-}
-
-function handleNoteInput(noteType, textareaId) {
-    const textarea = document.getElementById(textareaId);
-    const btnId = `${noteType}SaveBtn`;
-    const btn = document.getElementById(btnId);
-    
-    // Mark as unsaved
-    noteStates[noteType].saved = false;
-    textarea.classList.add('unsaved');
-    btn.classList.add('unsaved');
-    btn.classList.remove('saved');
-    btn.textContent = '⚠️ Unsaved Changes';
-    
-    // Auto-expand
-    autoExpandNote(textareaId);
-}
-
-function saveNote(noteType, textareaId, btnId) {
-    const textarea = document.getElementById(textareaId);
-    const btn = document.getElementById(btnId);
-    const notes = textarea.value;
-    
-    // Save to localStorage
-    localStorage.setItem(`${noteType}Notes`, notes);
-    noteStates[noteType].content = notes;
-    noteStates[noteType].saved = true;
-    
-    // Update UI
-    textarea.classList.remove('unsaved');
-    btn.classList.remove('unsaved');
-    btn.classList.add('saved');
-    btn.textContent = '✓ Saved!';
-    
-    // Reset after 2 seconds
-    setTimeout(() => {
-        btn.classList.remove('saved');
-        btn.textContent = '💾 Save';
-    }, 2000);
-}
-
-function autoExpandNote(textareaId) {
-    const textarea = document.getElementById(textareaId);
-    if (textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = Math.max(100, textarea.scrollHeight) + 'px';
-    }
-}
-
-// Load notes when page loads
-document.addEventListener('DOMContentLoaded', loadNotes);
-
-// Initialize on page load
-renderTasks();
-
-// Display last updated timestamp in Central Time
-function updateTimestamp() {
-    // Only use window.lastUpdated from timestamp.js (managed by GitHub Actions)
-    let updateTime;
-    if (typeof window.lastUpdated !== 'undefined' && window.lastUpdated) {
-        updateTime = new Date(window.lastUpdated);
-    } else {
-        // Fallback - show current time
-        updateTime = new Date();
-    }
-    
-    const options = { 
-        weekday: 'short', 
-        month: 'short', 
-        day: 'numeric', 
-        year: 'numeric',
-        hour: 'numeric', 
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'America/Chicago'
-    };
-    const timeStr = updateTime.toLocaleString('en-US', options);
-    document.getElementById('dateRange').textContent = `Last Updated: ${timeStr} CT`;
-}
-
-// Call it on page load
-updateTimestamp();
+});
