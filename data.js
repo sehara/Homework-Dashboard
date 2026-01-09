@@ -1,4 +1,3 @@
-```javascript
 const courseData = {
     "Monday, January 6, 2026": {
         "Managing in Organizations|||Due: Monday, Jan 6 at 8:30 AM": {
