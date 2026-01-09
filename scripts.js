@@ -1,23 +1,3 @@
-// Archive management
-const archivedCourses = JSON.parse(localStorage.getItem('archivedCourses') || '[]');
-let showArchived = false;
-
-function toggleArchive(courseName) {
-    const index = archivedCourses.indexOf(courseName);
-    if (index > -1) {
-        archivedCourses.splice(index, 1); // Unarchive
-    } else {
-        archivedCourses.push(courseName); // Archive
-    }
-    localStorage.setItem('archivedCourses', JSON.stringify(archivedCourses));
-    renderCourseCards(); // Re-render
-}
-
-function toggleShowArchived() {
-    showArchived = !showArchived;
-    renderCourseCards();
-}
-
 // State management
 let completedTaskIds = JSON.parse(localStorage.getItem('completedTasks')) || [];
 let scheduledTaskIds = JSON.parse(localStorage.getItem('scheduledTasks')) || [];
@@ -415,37 +395,25 @@ function renderCourseCards() {
 
     Object.keys(courseStats).forEach(courseName => {
         const stats = courseStats[courseName];
-        const isComplete = stats.remaining === 0;
-        const isArchived = archivedCourses.includes(courseName);
-        const archiveClass = isArchived ? 'archived' : '';
-
-        // Skip archived courses if not showing archived
-        if (isArchived && !showArchived) {
-            return; // Skip this course
-        }
-
         const card = document.createElement('div');
-        card.className = `course-card ${isComplete ? 'completed' : ''} ${archiveClass}`;
+        card.className = 'course-card';
         
-        if (!isComplete) {
-            if (stats.remainingHours <= 2) {
-                card.classList.add('low-workload');
-            } else if (stats.remainingHours <= 5) {
-                card.classList.add('medium-workload');
-            } else {
-                card.classList.add('high-workload');
-            }
+        if (stats.remaining === 0) {
+            card.classList.add('completed');
+        } else if (stats.remainingHours <= 2) {
+            card.classList.add('low-workload');
+        } else if (stats.remainingHours <= 5) {
+            card.classList.add('medium-workload');
+        } else {
+            card.classList.add('high-workload');
         }
 
-        if (isComplete) {
+        if (stats.remaining === 0) {
             card.innerHTML = `
                 <div class="course-card-title">${courseName}</div>
                 <div class="course-card-hours">✅</div>
                 <div class="course-card-hours-label">COMPLETE</div>
                 <div class="course-card-tasks">${stats.total} tasks done</div>
-                <button class="archive-btn" onclick="toggleArchive('${courseName}')">
-                    ${isArchived ? '↩️ Unarchive' : '📦 Archive'}
-                </button>
                 <div class="course-card-due">📅 ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : 'No upcoming class'}</div>
             `;
         } else {
@@ -470,20 +438,6 @@ function renderCourseCards() {
 
         container.appendChild(card);
     });
-
-    // Add show archived toggle
-    const toggleHtml = `
-        <div class="show-archived-toggle">
-            <input type="checkbox" id="showArchivedCheckbox" ${showArchived ? 'checked' : ''} onchange="toggleShowArchived()">
-            <label for="showArchivedCheckbox">Show Archived Courses (${archivedCourses.length})</label>
-        </div>
-    `;
-
-    // Insert toggle after the "Remaining Work This Week" header
-    const header = document.querySelector('.summary-title');
-    if (header && archivedCourses.length > 0) {
-        header.insertAdjacentHTML('afterend', toggleHtml);
-    }
 }
 
 function renderTasks() {
@@ -928,7 +882,10 @@ function renderTasks() {
             archiveContent.classList.add('collapsed');
         }
 
-        Object.keys(archived).forEach(day => {
+        // Sort archived days descending (most recent first)
+        const sortedArchivedDays = Object.keys(archived).sort((a, b) => new Date(b) - new Date(a));
+
+        sortedArchivedDays.forEach(day => {
             Object.keys(archived[day]).forEach(courseKey => {
                 const [courseName, due] = courseKey.split('|||');
                 const courseId = `${day}|||${courseKey}`;
@@ -936,17 +893,69 @@ function renderTasks() {
                 
                 const courseSection = document.createElement('div');
                 courseSection.className = 'course-section';
-                courseSection.style.opacity = '0.6';
+
+                const isCourseCollapsed = collapsedCourses.includes(courseId);
 
                 const courseHeader = document.createElement('div');
                 courseHeader.className = 'course-header';
+                if (isCourseCollapsed) {
+                    courseHeader.classList.add('collapsed');
+                }
+                
                 courseHeader.innerHTML = `
                     <div>
-                        <div class="course-title">${courseName} - ${day}</div>
+                        <div class="course-title" style="color: #856404;">${courseName} - ${new Date(day).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</div>
                     </div>
+                    <span class="course-arrow">▼</span>
                 `;
-
+                courseHeader.addEventListener('click', () => toggleCourse(courseId));
                 courseSection.appendChild(courseHeader);
+
+                const courseContent = document.createElement('div');
+                courseContent.className = 'course-content';
+                if (isCourseCollapsed) {
+                    courseContent.classList.add('collapsed');
+                }
+
+                // Render tasks for archived courses
+                ['submit', 'reading', 'required', 'optional'].forEach(category => {
+                    const items = courseTaskData[category];
+                    if (items.length === 0) return;
+
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'task-category';
+                    categoryDiv.style.opacity = '0.7';
+
+                    const categoryTitle = document.createElement('div');
+                    categoryTitle.className = 'category-title grayed-out';
+                    categoryTitle.innerHTML = `<span>${category.toUpperCase()}</span>`;
+                    categoryDiv.appendChild(categoryTitle);
+
+                    const categoryContent = document.createElement('div');
+                    categoryContent.className = 'category-content';
+
+                    items.forEach((item, itemIndex) => {
+                        const taskId = getTaskKey(day, courseKey, category, itemIndex);
+                        const isTaskComplete = completedTaskIds.includes(taskId);
+                        
+                        const taskItem = document.createElement('div');
+                        taskItem.className = `task-item ${isTaskComplete ? 'completed' : ''}`;
+                        
+                        taskItem.innerHTML = `
+                            <input type="checkbox" class="task-checkbox" ${isTaskComplete ? 'checked' : ''} onchange="toggleTask('${taskId}')">
+                            <div class="task-details">
+                                <a href="${item.link || '#'}" class="task-title" target="_blank">${item.title}</a>
+                                ${taskNotes[taskId] ? `<div class="task-note-display">${taskNotes[taskId]}</div>` : ''}
+                            </div>
+                        `;
+                        categoryContent.appendChild(taskItem);
+                    });
+
+                    categoryDiv.appendChild(categoryContent);
+                    courseContent.appendChild(categoryDiv);
+                });
+
+                courseSection.appendChild(courseContent);
                 archiveContent.appendChild(courseSection);
             });
         });
