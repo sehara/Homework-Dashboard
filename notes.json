@@ -1,5 +1,5 @@
 {
-  "personalNotes": "Complete testing of this page and provide a pass/fail confirmation by the end of today.\n\n---\n\namerica",
+  "personalNotes": "Complete testing of this page and provide a pass/fail confirmation by the end of today.",
   "familyNotes": "japan",
   "jobHuntingNotes": "",
   "internshipNotes": "",
@@ -14,13 +14,7 @@
           "emoji": "🟢",
           "rawMinutes": 60
         },
-        "editingTime": false
-      },
-      {
-        "id": 1768152452015,
-        "content": "america",
-        "rating": null,
-        "editingTime": false
+        "editingTime": true
       }
     ],
     "family": [
@@ -36,5 +30,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T17:43:02.071Z"
+  "lastSynced": "2026-01-11T18:05:21.485Z"
 }
