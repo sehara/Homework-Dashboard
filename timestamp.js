@@ -1,4 +1,4 @@
-const lastUpdated = "2026-01-10T21:29:59-06:00";
+const lastUpdated = "2026-01-10T21:32:53-06:00";
 
 if (typeof window !== 'undefined') {
     window.lastUpdated = lastUpdated;
