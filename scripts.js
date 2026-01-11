@@ -1488,11 +1488,24 @@ async function loadFromGitHub() {
     
     // Load task cards from GitHub
     if (data.taskCards) {
-        Object.assign(taskCards, data.taskCards);
-        localStorage.setItem('taskCards_personal', JSON.stringify(taskCards.personal || []));
-        localStorage.setItem('taskCards_family', JSON.stringify(taskCards.family || []));
-        localStorage.setItem('taskCards_internship', JSON.stringify(taskCards.internship || []));
-        localStorage.setItem('taskCards_jobHunting', JSON.stringify(taskCards.jobHunting || []));
+        // Ensure we have valid arrays for each type
+        taskCards.personal = Array.isArray(data.taskCards.personal) ? data.taskCards.personal : [];
+        taskCards.family = Array.isArray(data.taskCards.family) ? data.taskCards.family : [];
+        taskCards.internship = Array.isArray(data.taskCards.internship) ? data.taskCards.internship : [];
+        taskCards.jobHunting = Array.isArray(data.taskCards.jobHunting) ? data.taskCards.jobHunting : [];
+        
+        // Save to localStorage
+        localStorage.setItem('taskCards_personal', JSON.stringify(taskCards.personal));
+        localStorage.setItem('taskCards_family', JSON.stringify(taskCards.family));
+        localStorage.setItem('taskCards_internship', JSON.stringify(taskCards.internship));
+        localStorage.setItem('taskCards_jobHunting', JSON.stringify(taskCards.jobHunting));
+        
+        console.log('✅ Loaded task cards from GitHub:', {
+            personal: taskCards.personal.length,
+            family: taskCards.family.length,
+            internship: taskCards.internship.length,
+            jobHunting: taskCards.jobHunting.length
+        });
     }
     
     // Auto-expand textareas
@@ -1500,12 +1513,6 @@ async function loadFromGitHub() {
     autoExpandNote('familyNotesText');
     autoExpandNote('jobHuntingNotesText');
     autoExpandNote('internshipNotesText');
-    
-    // Re-render task cards after loading from GitHub
-    renderTaskCards('personal');
-    renderTaskCards('family');
-    renderTaskCards('internship');
-    renderTaskCards('jobHunting');
     
     // Update hidden textareas
     updateHiddenTextarea('personal');
@@ -2015,9 +2022,13 @@ function escapeHtml(text) {
 document.addEventListener('DOMContentLoaded', async function() {
     // Wait for GitHub sync to complete before initializing task cards
     await new Promise(resolve => {
-        setTimeout(resolve, 500);
+        setTimeout(resolve, 1000); // Increased from 500ms to 1000ms
     });
-    initTaskCards();
+    
+    // Force render after GitHub load completes
+    ['personal', 'family', 'internship', 'jobHunting'].forEach(noteType => {
+        renderTaskCards(noteType);
+    });
 });
 
 // Sync with save system - wrap the original saveNote function
