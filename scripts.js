@@ -2279,10 +2279,10 @@ function renderTaskCards(noteType) {
                     </div>
                 `;
             } else {
-                // Display mode - clickable time
+                // Display mode - clickable time (emoji removed per user request)
                 ratingHtml = `
                     <div class="rating-badge ${getRatingClass(card.rating.score)}">
-                        ${card.rating.emoji} ${card.rating.score}/10 • 
+                        ${card.rating.score}/10 •
                         <span class="time-display" onclick="editTime('${noteType}', ${card.id})" title="Click to edit time">
                             ${card.rating.time}
                         </span>
@@ -2292,7 +2292,7 @@ function renderTaskCards(noteType) {
         } else {
             ratingHtml = `
                 <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})">
-                    🎯 Check Rating
+                    🎯 Details
                 </button>
             `;
         }
