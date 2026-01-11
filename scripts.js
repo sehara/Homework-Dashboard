@@ -2263,102 +2263,191 @@ function saveTimeEdit(noteType, cardId) {
 function renderTaskCards(noteType) {
     const container = document.getElementById(`${noteType}TaskCards`);
     if (!container) return;
-    
+
     const cards = taskCards[noteType];
-    
-    if (cards.length === 0) {
+
+    // Filter only ACTIVE (not done) cards
+    const activeCards = cards.filter(card => !card.done);
+
+    if (activeCards.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                No tasks yet. Click "+ Add Task" to get started!
+                No active tasks. Click "+ Add Task" to get started!
             </div>
         `;
-        return;
-    }
-    
-    container.innerHTML = cards.map((card, index) => {
-        const isDone = card.done || false;
-        const doneClass = isDone ? 'task-card-done' : '';
+    } else {
+        container.innerHTML = activeCards.map((card, index) => {
+            let ratingHtml = '';
 
-        let ratingHtml = '';
+            if (card.rating) {
+                if (card.editingTime) {
+                    const options = TIME_OPTIONS.map(mins =>
+                        `<option value="${mins}" ${mins === card.rating.rawMinutes ? 'selected' : ''}>
+                            ${formatTimeMinutes(mins)}
+                        </option>`
+                    ).join('');
 
-        if (card.rating) {
-            if (card.editingTime) {
-                // Editing mode - show dropdown
-                const options = TIME_OPTIONS.map(mins => 
-                    `<option value="${mins}" ${mins === card.rating.rawMinutes ? 'selected' : ''}>
-                        ${formatTimeMinutes(mins)}
-                    </option>`
-                ).join('');
-                
-                ratingHtml = `
-                    <div class="rating-badge ${getRatingClass(card.rating.score)}">
-                        <div class="time-editor">
-                            <select id="timeDropdown${card.id}" class="time-dropdown">
-                                ${options}
-                            </select>
-                            <button class="save-time-btn" onclick="saveTimeEdit('${noteType}', ${card.id})">
-                                ✓
-                            </button>
+                    ratingHtml = `
+                        <div class="rating-badge ${getRatingClass(card.rating.score)}">
+                            <div class="time-editor">
+                                <select id="timeDropdown${card.id}" class="time-dropdown">
+                                    ${options}
+                                </select>
+                                <button class="save-time-btn" onclick="saveTimeEdit('${noteType}', ${card.id})">
+                                    ✓
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    ratingHtml = `
+                        <div class="rating-badge ${getRatingClass(card.rating.score)}">
+                            <span class="time-display" onclick="editTime('${noteType}', ${card.id})" title="Click to edit time">
+                                ${card.rating.time}
+                            </span>
+                        </div>
+                        <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})" style="margin-left: 8px;">
+                            Details
+                        </button>
+                    `;
+                }
             } else {
-                // Display mode - clickable time + Details button
                 ratingHtml = `
-                    <div class="rating-badge ${getRatingClass(card.rating.score)}">
-                        <span class="time-display" onclick="editTime('${noteType}', ${card.id})" title="Click to edit time">
-                            ${card.rating.time}
-                        </span>
-                    </div>
-                    <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})" style="margin-left: 8px;">
+                    <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})">
                         Details
                     </button>
                 `;
             }
-        } else {
-            ratingHtml = `
-                <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})">
-                    Details
-                </button>
-            `;
-        }
-        
-        return `
-            <div id="taskCard${card.id}" class="task-card ${doneClass}" data-card-id="${card.id}">
-                <div class="task-card-header">
-                    <div class="task-card-label">Task ${index + 1}</div>
-                    <div class="task-card-controls">
-                        ${isDone ? `
-                            <div class="done-badge">
-                                ✔️ DONE
-                                <span class="done-timestamp">${new Date(card.doneAt).toLocaleDateString()}</span>
-                            </div>
-                            <button class="card-btn undo" onclick="undoTaskDone('${noteType}', ${card.id})" style="background: #6c757d; margin-right: 5px;">
-                                ↩️ Undo
-                            </button>
-                        ` : `
+
+            return `
+                <div id="taskCard${card.id}" class="task-card" data-card-id="${card.id}">
+                    <div class="task-card-header">
+                        <div class="task-card-label">Task ${index + 1}</div>
+                        <div class="task-card-controls">
                             ${ratingHtml}
-                            <button class="card-btn done" onclick="markTaskDone('${noteType}', ${card.id})" style="background: #28a745; margin-right: 5px;">
+                            <button class="card-btn done" onclick="markTaskDone('${noteType}', ${card.id})" style="background: #28a745; margin: 0 5px;">
                                 ✅ Done
                             </button>
-                        `}
-                        <button class="card-btn delete" onclick="deleteTaskCard('${noteType}', ${card.id})">
-                            ✕
-                        </button>
+                            <button class="card-btn delete" onclick="deleteTaskCard('${noteType}', ${card.id})">
+                                ✕
+                            </button>
+                        </div>
                     </div>
+                    <textarea
+                        class="task-card-textarea"
+                        placeholder="Type your task here... (can be multiple lines)"
+                        oninput="updateTaskCard('${noteType}', ${card.id}, this.value)"
+                        onfocus="this.parentElement.classList.add('focused')"
+                        onblur="this.parentElement.classList.remove('focused')"
+                    >${escapeHtml(card.content)}</textarea>
                 </div>
-                <textarea 
-                    class="task-card-textarea" 
-                    placeholder="Type your task here... (can be multiple lines)"
-                    oninput="updateTaskCard('${noteType}', ${card.id}, this.value)"
-                    onfocus="this.parentElement.classList.add('focused')"
-                    onblur="this.parentElement.classList.remove('focused')"
-                >${escapeHtml(card.content)}</textarea>
+            `;
+        }).join('');
+    }
+
+    updateHiddenTextarea(noteType);
+
+    // Also update archive section
+    renderArchive(noteType);
+}
+
+// Render archived tasks
+function renderArchive(noteType) {
+    const archiveContainer = document.getElementById(`${noteType}Archive`);
+    if (!archiveContainer) return;
+
+    const cards = taskCards[noteType];
+
+    // Filter only DONE cards and sort oldest first
+    const archivedCards = cards
+        .filter(card => card.done)
+        .sort((a, b) => new Date(a.doneAt) - new Date(b.doneAt));
+
+    if (archivedCards.length === 0) {
+        archiveContainer.innerHTML = `
+            <div class="archive-empty">No archived tasks</div>
+        `;
+        return;
+    }
+
+    archiveContainer.innerHTML = archivedCards.map((card, index) => {
+        const doneDate = new Date(card.doneAt).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric'
+        });
+
+        return `
+            <div class="archive-task-card">
+                <div class="archive-task-content">
+                    ${escapeHtml(card.content)}
+                </div>
+                ${card.rating ? `<div class="archive-task-time">${card.rating.time}</div>` : ''}
+                <div class="archive-task-meta">
+                    <span class="archive-task-date">Done: ${doneDate}</span>
+                    <button class="archive-undo-btn" onclick="undoTaskDone('${noteType}', ${card.id})">
+                        ↩️ Undo
+                    </button>
+                </div>
             </div>
         `;
     }).join('');
-    
-    updateHiddenTextarea(noteType);
+}
+
+// Toggle individual archive column
+function toggleArchive(noteType) {
+    const archiveContainer = document.getElementById(`${noteType}Archive`);
+    const arrow = document.getElementById(`${noteType}ArchiveArrow`);
+
+    if (!archiveContainer || !arrow) return;
+
+    const isCollapsed = archiveContainer.classList.contains('collapsed');
+
+    if (isCollapsed) {
+        archiveContainer.classList.remove('collapsed');
+        arrow.textContent = '▲';
+        localStorage.setItem(`${noteType}ArchiveCollapsed`, 'false');
+    } else {
+        archiveContainer.classList.add('collapsed');
+        arrow.textContent = '▼';
+        localStorage.setItem(`${noteType}ArchiveCollapsed`, 'true');
+    }
+}
+
+// Toggle all archives (main header)
+function toggleAllArchives() {
+    const grid = document.getElementById('archiveGrid');
+    const arrow = document.querySelector('.archive-main-arrow');
+
+    if (!grid || !arrow) return;
+
+    const isCollapsed = grid.classList.contains('collapsed');
+
+    if (isCollapsed) {
+        grid.classList.remove('collapsed');
+        arrow.textContent = '▲';
+    } else {
+        grid.classList.add('collapsed');
+        arrow.textContent = '▼';
+    }
+}
+
+// Initialize archive collapse states from localStorage
+function initArchiveStates() {
+    ['personal', 'family', 'jobHunting', 'internship'].forEach(noteType => {
+        const isCollapsed = localStorage.getItem(`${noteType}ArchiveCollapsed`) === 'true';
+        const archiveContainer = document.getElementById(`${noteType}Archive`);
+        const arrow = document.getElementById(`${noteType}ArchiveArrow`);
+
+        if (archiveContainer && arrow) {
+            if (isCollapsed) {
+                archiveContainer.classList.add('collapsed');
+                arrow.textContent = '▼';
+            } else {
+                archiveContainer.classList.remove('collapsed');
+                arrow.textContent = '▲';
+            }
+        }
+    });
 }
 
 // Update task card content
@@ -2496,11 +2585,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     await new Promise(resolve => {
         setTimeout(resolve, 1000); // Increased from 500ms to 1000ms
     });
-    
+
     // Force render after GitHub load completes
     ['personal', 'family', 'internship', 'jobHunting'].forEach(noteType => {
         renderTaskCards(noteType);
     });
+
+    // Initialize archive states
+    initArchiveStates();
 });
 
 // Sync with save system - wrap the original saveNote function
