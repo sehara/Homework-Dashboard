@@ -133,9 +133,50 @@
         <div class="content" id="content">
             <!-- Tasks dynamically inserted -->
         </div>
+
+        <div class="archive-wrapper">
+            <div class="archive-main-header" onclick="toggleAllArchives()">
+                <span>📦 Archived Tasks (Non-School)</span>
+                <span class="archive-main-arrow">▼</span>
+            </div>
+
+            <div id="archiveGrid" class="archive-grid">
+                <div class="archive-column">
+                    <div class="archive-column-header" onclick="toggleArchive('personal')">
+                        <span>📦 Personal Archive</span>
+                        <span class="archive-arrow" id="personalArchiveArrow">▼</span>
+                    </div>
+                    <div id="personalArchive" class="archive-content collapsed"></div>
+                </div>
+
+                <div class="archive-column">
+                    <div class="archive-column-header" onclick="toggleArchive('family')">
+                        <span>📦 Family Archive</span>
+                        <span class="archive-arrow" id="familyArchiveArrow">▼</span>
+                    </div>
+                    <div id="familyArchive" class="archive-content collapsed"></div>
+                </div>
+
+                <div class="archive-column">
+                    <div class="archive-column-header" onclick="toggleArchive('jobHunting')">
+                        <span>📦 Job Hunting Archive</span>
+                        <span class="archive-arrow" id="jobHuntingArchiveArrow">▼</span>
+                    </div>
+                    <div id="jobHuntingArchive" class="archive-content collapsed"></div>
+                </div>
+
+                <div class="archive-column">
+                    <div class="archive-column-header" onclick="toggleArchive('internship')">
+                        <span>📦 Internship Archive</span>
+                        <span class="archive-arrow" id="internshipArchiveArrow">▼</span>
+                    </div>
+                    <div id="internshipArchive" class="archive-content collapsed"></div>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="timestamp.js"></script>
     <script src="data.js"></script>
-    <script src="scripts.js?v=20260117"></script>
+    <script src="scripts.js?v=20260118"></script>
 </body>
 </html>
