@@ -40,6 +40,51 @@
                             </ol>
                         </div>
                     </div>
+
+                    <div style="margin-top: 30px; padding-top: 30px; border-top: 2px solid #e9ecef;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">🤖 AI Clarification (Gemini)</h3>
+                        <div id="geminiSyncStatus" class="sync-status inactive">⚠️ Gemini API Not Configured</div>
+                        
+                        <div style="margin-top: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: bold;">Gemini API Key:</label>
+                            <input 
+                                type="password" 
+                                id="geminiTokenInput" 
+                                placeholder="Enter your Gemini API key (starts with AIza...)"
+                                style="
+                                    width: 100%;
+                                    padding: 12px;
+                                    border: 2px solid #e9ecef;
+                                    border-radius: 8px;
+                                    font-size: 1em;
+                                    margin-bottom: 15px;
+                                "
+                            />
+                            <div style="display: flex; gap: 10px;">
+                                <button onclick="saveGeminiToken()" style="
+                                    background: #667eea;
+                                    color: white;
+                                    border: none;
+                                    padding: 10px 20px;
+                                    border-radius: 8px;
+                                    cursor: pointer;
+                                    font-weight: bold;
+                                ">💾 Save Key</button>
+                                <button onclick="clearGeminiToken()" style="
+                                    background: #dc3545;
+                                    color: white;
+                                    border: none;
+                                    padding: 10px 20px;
+                                    border-radius: 8px;
+                                    cursor: pointer;
+                                    font-weight: bold;
+                                ">🗑️ Clear Key</button>
+                            </div>
+                            <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                                Get your free API key at: <a href="https://aistudio.google.com/app/apikey" target="_blank">https://aistudio.google.com/app/apikey</a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <p id="dateRange">UChicago MBA | Next 14 Days</p>

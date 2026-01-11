@@ -1349,6 +1349,19 @@ function isGitHubConfigured() {
     return !!getGitHubToken();
 }
 
+// Gemini API key management
+function getGeminiApiKey() {
+    return localStorage.getItem('geminiApiKey');
+}
+
+function setGeminiApiKey(key) {
+    localStorage.setItem('geminiApiKey', key);
+}
+
+function isGeminiConfigured() {
+    return !!getGeminiApiKey();
+}
+
 // Fetch notes from GitHub
 async function fetchNotesFromGitHub() {
     const token = getGitHubToken();
@@ -1553,9 +1566,14 @@ window.saveNote = async function(noteType, textareaId, btnId) {
 function openSettings() {
     document.getElementById('settingsModal').style.display = 'block';
     updateSyncStatus();
+    updateGeminiSyncStatus();
     const token = getGitHubToken();
     if (token) {
         document.getElementById('tokenInput').value = '••••••••' + token.slice(-8);
+    }
+    const geminiToken = getGeminiApiKey();
+    if (geminiToken) {
+        document.getElementById('geminiTokenInput').value = '••••••••' + geminiToken.slice(-8);
     }
 }
 
@@ -1589,6 +1607,45 @@ function clearToken() {
         document.getElementById('tokenInput').value = '';
         alert('Token cleared. GitHub sync disabled.');
         updateSyncStatus();
+    }
+}
+
+function saveGeminiToken() {
+    const input = document.getElementById('geminiTokenInput');
+    const token = input.value.trim();
+    
+    if (!token || token.startsWith('••••')) {
+        alert('Please enter a valid API key');
+        return;
+    }
+    
+    if (!token.startsWith('AIza')) {
+        alert('Gemini API key should start with AIza');
+        return;
+    }
+    
+    setGeminiApiKey(token);
+    alert('✅ Gemini API key saved! AI clarification is now enabled.');
+    updateGeminiSyncStatus();
+}
+
+function clearGeminiToken() {
+    if (confirm('Remove Gemini AI? Clarification will use simple form instead.')) {
+        localStorage.removeItem('geminiApiKey');
+        document.getElementById('geminiTokenInput').value = '';
+        alert('Gemini API key cleared.');
+        updateGeminiSyncStatus();
+    }
+}
+
+function updateGeminiSyncStatus() {
+    const statusDiv = document.getElementById('geminiSyncStatus');
+    if (isGeminiConfigured()) {
+        statusDiv.className = 'sync-status active';
+        statusDiv.textContent = '✅ Gemini AI Active - Smart clarification enabled';
+    } else {
+        statusDiv.className = 'sync-status inactive';
+        statusDiv.textContent = '⚠️ Gemini API Not Configured - Using simple form';
     }
 }
 
@@ -1756,16 +1813,96 @@ function isTaskVague(taskText) {
     return false;
 }
 
-// Show clarification prompt
-function clarifyTask(noteType, cardId) {
+// AI-powered clarification using Gemini
+async function clarifyTask(noteType, cardId) {
     const card = taskCards[noteType].find(c => c.id === cardId);
     if (!card) return;
     
     const currentText = card.content.trim();
     
-    // Create modal
+    // Check if Gemini is configured
+    if (!isGeminiConfigured()) {
+        // Fallback to simple form
+        showSimpleClarificationForm(noteType, cardId, currentText);
+        return;
+    }
+    
+    // Show loading modal
+    const loadingModal = showLoadingModal('Analyzing task...');
+    
+    try {
+        // Call Gemini to generate clarifying questions
+        const questions = await askGeminiForQuestions(currentText);
+        
+        loadingModal.remove();
+        
+        // Show questions in modal
+        showQuestionModal(noteType, cardId, currentText, questions);
+        
+    } catch (error) {
+        console.error('Gemini API error:', error);
+        loadingModal.remove();
+        // Fallback to simple form
+        showSimpleClarificationForm(noteType, cardId, currentText);
+    }
+}
+
+// Call Gemini API to generate questions
+async function askGeminiForQuestions(taskText) {
+    const apiKey = getGeminiApiKey();
+    const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+    
+    const prompt = `You are helping clarify a vague task. The user wrote: "${taskText}"
+
+This task is too vague to be actionable. Generate 2-3 SHORT, specific questions to help clarify it.
+
+Focus on:
+- What specifically needs to be done
+- Who is involved
+- Any deadline or timeline
+- Expected deliverable
+
+Return ONLY a JSON array of questions, nothing else. Format:
+["Question 1?", "Question 2?", "Question 3?"]`;
+
+    const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            contents: [{
+                parts: [{
+                    text: prompt
+                }]
+            }]
+        })
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Gemini API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const text = data.candidates[0].content.parts[0].text;
+    
+    // Parse JSON from response
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+        return JSON.parse(jsonMatch[0]);
+    }
+    
+    // Fallback questions if parsing fails
+    return [
+        "What exactly needs to be done?",
+        "Who is involved or should be contacted?",
+        "What's the deadline or timeline?"
+    ];
+}
+
+// Show loading modal
+function showLoadingModal(message) {
     const modal = document.createElement('div');
-    modal.className = 'clarification-modal';
     modal.style.cssText = `
         position: fixed;
         top: 0;
@@ -1779,97 +1916,249 @@ function clarifyTask(noteType, cardId) {
         z-index: 10000;
     `;
     
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        max-width: 600px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    modal.innerHTML = `
+        <div style="
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+        ">
+            <div style="font-size: 3em; margin-bottom: 15px;">🤖</div>
+            <div style="font-size: 1.2em; color: #667eea;">${message}</div>
+        </div>
     `;
     
-    modalContent.innerHTML = `
-        <h3 style="color: #667eea; margin-top: 0;">❓ Let's clarify this task</h3>
-        <p style="color: #666; margin-bottom: 20px;">Current task: <strong>"${escapeHtml(currentText)}"</strong></p>
-        
-        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-            <div style="font-weight: bold; margin-bottom: 10px;">Please add details:</div>
-            <div style="font-size: 0.9em; color: #666; line-height: 1.6;">
-                • What exactly needs to be done?<br>
-                • Who is involved?<br>
-                • What's the deliverable?<br>
-                • Any deadline?
+    document.body.appendChild(modal);
+    return modal;
+}
+
+// Show question modal with AI-generated questions
+function showQuestionModal(noteType, cardId, currentText, questions) {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    `;
+    
+    const questionsHtml = questions.map((q, i) => `
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #667eea;">
+                ${i + 1}. ${q}
+            </label>
+            <input 
+                type="text" 
+                id="answer${i}" 
+                style="
+                    width: 100%;
+                    padding: 10px;
+                    border: 2px solid #e9ecef;
+                    border-radius: 6px;
+                    font-size: 1em;
+                "
+                placeholder="Your answer..."
+            />
+        </div>
+    `).join('');
+    
+    modal.innerHTML = `
+        <div style="
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        ">
+            <h3 style="color: #667eea; margin-top: 0;">🤖 Let's clarify: "${currentText}"</h3>
+            ${questionsHtml}
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button id="cancelBtn" style="
+                    background: #6c757d;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                ">Cancel</button>
+                <button id="submitBtn" style="
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                ">✓ Refine Task</button>
             </div>
         </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Focus first input
+    setTimeout(() => document.getElementById('answer0')?.focus(), 100);
+    
+    // Cancel button
+    modal.querySelector('#cancelBtn').onclick = () => modal.remove();
+    
+    // Submit button
+    modal.querySelector('#submitBtn').onclick = async () => {
+        const answers = questions.map((q, i) => {
+            const answer = document.getElementById(`answer${i}`).value.trim();
+            return answer ? `${q} ${answer}` : '';
+        }).filter(Boolean).join('. ');
         
-        <textarea id="clarificationInput" style="
-            width: 100%;
-            min-height: 120px;
-            padding: 12px;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1em;
-            resize: vertical;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-        " placeholder="Example: Send the Q3 investment deck and ask for feedback on our valuation assumptions. CC John. Deadline: Friday EOD."></textarea>
-        <div style="display: flex; gap: 10px; justify-content: flex-end;">
-            <button id="cancelClarifyBtn" style="
-                background: #6c757d;
-                color: white;
-                border: none;
-                padding: 10px 20px;
+        if (!answers) {
+            alert('Please answer at least one question.');
+            return;
+        }
+        
+        modal.remove();
+        
+        // Show loading
+        const loadingModal = showLoadingModal('Refining task...');
+        
+        try {
+            // Ask Gemini to rewrite the task
+            const refinedTask = await refineTaskWithGemini(currentText, answers);
+            loadingModal.remove();
+            
+            // Update the card
+            const card = taskCards[noteType].find(c => c.id === cardId);
+            if (card) {
+                card.content = refinedTask;
+                saveTaskCards(noteType);
+                renderTaskCards(noteType);
+                
+                // Now check rating
+                checkTaskRating(noteType, cardId);
+            }
+        } catch (error) {
+            console.error('Error refining task:', error);
+            loadingModal.remove();
+            alert('Error refining task. Please try again.');
+        }
+    };
+}
+
+// Ask Gemini to rewrite the task with answers
+async function refineTaskWithGemini(originalTask, answers) {
+    const apiKey = getGeminiApiKey();
+    const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+    
+    const prompt = `Original vague task: "${originalTask}"
+
+Clarification details: ${answers}
+
+Rewrite this as a clear, actionable task that includes all the important details. Be concise but specific. Return ONLY the refined task text, nothing else.`;
+
+    const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            contents: [{
+                parts: [{
+                    text: prompt
+                }]
+            }]
+        })
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Gemini API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data.candidates[0].content.parts[0].text.trim();
+}
+
+// Fallback: Simple clarification form (when Gemini not configured)
+function showSimpleClarificationForm(noteType, cardId, currentText) {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    `;
+    
+    modal.innerHTML = `
+        <div style="
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+        ">
+            <h3 style="color: #667eea; margin-top: 0;">❓ Let's clarify this task</h3>
+            <p style="color: #666; margin-bottom: 20px;">Current: "${currentText}"</p>
+            
+            <textarea id="clarificationInput" style="
+                width: 100%;
+                min-height: 120px;
+                padding: 12px;
+                border: 2px solid #667eea;
                 border-radius: 8px;
-                cursor: pointer;
-                font-weight: bold;
-            ">Cancel</button>
-            <button id="saveClarifyBtn" style="
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 8px;
-                cursor: pointer;
-                font-weight: bold;
-            ">✓ Update Task</button>
+                font-family: inherit;
+                font-size: 1em;
+                resize: vertical;
+                margin-bottom: 15px;
+                box-sizing: border-box;
+            " placeholder="Add more details..."></textarea>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button id="cancelBtn" style="
+                    background: #6c757d;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                ">Cancel</button>
+                <button id="saveBtn" style="
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: bold;
+                ">✓ Update</button>
+            </div>
         </div>
     `;
     
-    modal.appendChild(modalContent);
     document.body.appendChild(modal);
     
-    // Focus the textarea
-    setTimeout(() => {
-        document.getElementById('clarificationInput').focus();
-    }, 100);
-    
-    // Handle cancel
-    document.getElementById('cancelClarifyBtn').onclick = () => {
-        modal.remove();
-    };
-    
-    // Handle save
-    document.getElementById('saveClarifyBtn').onclick = () => {
+    modal.querySelector('#cancelBtn').onclick = () => modal.remove();
+    modal.querySelector('#saveBtn').onclick = () => {
         const details = document.getElementById('clarificationInput').value.trim();
         if (details) {
-            // Update the task content with clarifications
-            card.content = `${currentText}\n\n${details}`;
-            saveTaskCards(noteType);
-            renderTaskCards(noteType);
-            modal.remove();
-            
-            // Now check rating with full context
-            checkTaskRating(noteType, cardId);
-        } else {
-            alert('Please add some clarification details.');
-        }
-    };
-    
-    // Close on background click
-    modal.onclick = (e) => {
-        if (e.target === modal) {
-            modal.remove();
+            const card = taskCards[noteType].find(c => c.id === cardId);
+            if (card) {
+                card.content = `${currentText}\n\n${details}`;
+                saveTaskCards(noteType);
+                renderTaskCards(noteType);
+                modal.remove();
+                checkTaskRating(noteType, cardId);
+            }
         }
     };
 }
