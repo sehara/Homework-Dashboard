@@ -5,5 +5,18 @@
   "internshipNotes": "E-mail KV Partner Laurent\n\n---\n\n(Gemini stored) Understand Kyocera: Investment thesis, fund structure, sector strategy\n\n---\n\nList-up My Social Capital\n\n---\n\nlinkedin update?\n\n---\n\nKyocera Ishida-san Reachout\n\n---\n\npnp event schedule check",
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T05:04:45.658Z"
+  "taskCards": {
+    "personal": [
+      {
+        "id": 1768108292885.4556,
+        "content": "Phase 2: Google Calendar Integration where selecting a time from the dropdown (Tomorrow, This Week, Next Week) automatically books the task to your Google Calendar, and Phase 3: Mark Done + Completion Tracking where you can click a button to mark tasks as complete (whether scheduled or not), which updates the visual state and syncs everything to your notes.json file. These two phases will cost approximately 5-6 more Manus credits and take 3-4 hours of Manus work to complete the entire automated scheduling system you envisioned.",
+        "rating": null,
+        "editingTime": false
+      }
+    ],
+    "family": [],
+    "internship": [],
+    "jobHunting": []
+  },
+  "lastSynced": "2026-01-11T05:11:32.885Z"
 }
