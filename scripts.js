@@ -2292,7 +2292,7 @@ function renderTaskCards(noteType) {
         } else {
             ratingHtml = `
                 <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})">
-                    🎯 Check Rating
+                    Details
                 </button>
             `;
         }
