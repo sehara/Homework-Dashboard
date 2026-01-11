@@ -1371,10 +1371,15 @@ async function fetchNotesFromGitHub() {
         }
         
         const data = await response.json();
-        const content = atob(data.content);
+        const content = decodeURIComponent(escape(atob(data.content)));
         return JSON.parse(content);
     } catch (error) {
-        console.error('Error fetching from GitHub:', error);
+        // Silently fail on network errors (user can still use localStorage)
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            console.log('GitHub fetch failed (offline or network issue), using localStorage');
+        } else {
+            console.error('Error fetching from GitHub:', error);
+        }
         return null;
     }
 }
@@ -1406,7 +1411,7 @@ async function saveNotesToGitHub(notesData) {
         }
         
         // Prepare the update
-        const content = btoa(JSON.stringify(notesData, null, 2));
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(notesData, null, 2))));
         const payload = {
             message: 'Update notes and task states',
             content: content,
