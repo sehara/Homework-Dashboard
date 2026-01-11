@@ -1,7 +1,7 @@
 {
   "personalNotes": "Phase 2: Google Calendar Integration where selecting a time from the dropdown (Tomorrow, This Week, Next Week) automatically books the task to your Google Calendar, and Phase 3: Mark Done + Completion Tracking where you can click a button to mark tasks as complete (whether scheduled or not), which updates the visual state and syncs everything to your notes.json file. These two phases will cost approximately 5-6 more Manus credits and take 3-4 hours of Manus work to complete the entire automated scheduling system you envisioned.\n\n---\n\nAdd a \"Details\" button to the Homework Dashboard. When clicked, the button should trigger the \"check rating\" feature. This task must be completed by the end of the day today.",
-  "familyNotes": "write family members about march",
-  "jobHuntingNotes": "",
+  "familyNotes": "write family members about march schedule with line",
+  "jobHuntingNotes": "look for jobs in the AI sector in company such as AI: Claude, Manus",
   "internshipNotes": "",
   "taskCards": {
     "personal": [
@@ -31,7 +31,7 @@
     "family": [
       {
         "id": 1768135969572,
-        "content": "write family members about march",
+        "content": "write family members about march schedule with line",
         "rating": {
           "score": 9,
           "time": "30 min",
@@ -45,7 +45,7 @@
     "jobHunting": [
       {
         "id": 1768144088041,
-        "content": "",
+        "content": "look for jobs in the AI sector in company such as AI: Claude, Manus",
         "rating": null,
         "editingTime": false
       }
@@ -53,5 +53,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T16:25:43.876Z"
+  "lastSynced": "2026-01-11T16:26:49.993Z"
 }
