@@ -54,46 +54,34 @@
             <div class="notes-grid">
                 <div class="note-section personal">
                     <div class="note-title">📌 Personal Notes</div>
-                    <textarea 
-                        id="personalNotesText" 
-                        class="note-textarea" 
-                        placeholder="Type your personal notes here..."
-                        oninput="handleNoteInput('personal', 'personalNotesText')"
-                    ></textarea>
-                    <button id="personalSaveBtn" class="note-save-btn" onclick="saveNote('personal', 'personalNotesText', 'personalSaveBtn')">💾 Save</button>
+                    <div id="personalTaskCards" class="task-cards-container"></div>
+                    <button class="add-task-btn" onclick="addTaskCard('personal')">+ Add Task</button>
+                    <button id="personalSaveBtn" class="note-save-btn" onclick="saveNote('personal', null, 'personalSaveBtn')">💾 Save All</button>
+                    <textarea id="personalNotesText" class="note-textarea" style="display: none;"></textarea>
                 </div>
             
                 <div class="note-section family">
                     <div class="note-title">👨‍👩‍👧‍👦 Family</div>
-                    <textarea 
-                        id="familyNotesText" 
-                        class="note-textarea" 
-                        placeholder="Family tasks and reminders..."
-                        oninput="handleNoteInput('family', 'familyNotesText')"
-                    ></textarea>
-                    <button id="familySaveBtn" class="note-save-btn" onclick="saveNote('family', 'familyNotesText', 'familySaveBtn')">💾 Save</button>
+                    <div id="familyTaskCards" class="task-cards-container"></div>
+                    <button class="add-task-btn" onclick="addTaskCard('family')">+ Add Task</button>
+                    <button id="familySaveBtn" class="note-save-btn" onclick="saveNote('family', null, 'familySaveBtn')">💾 Save All</button>
+                    <textarea id="familyNotesText" class="note-textarea" style="display: none;"></textarea>
                 </div>
             
                 <div class="note-section job-hunting">
                     <div class="note-title">💼 Job Hunting</div>
-                    <textarea 
-                        id="jobHuntingNotesText" 
-                        class="note-textarea" 
-                        placeholder="Track job applications..."
-                        oninput="handleNoteInput('jobHunting', 'jobHuntingNotesText')"
-                    ></textarea>
-                    <button id="jobHuntingSaveBtn" class="note-save-btn" onclick="saveNote('jobHunting', 'jobHuntingNotesText', 'jobHuntingSaveBtn')">💾 Save</button>
+                    <div id="jobHuntingTaskCards" class="task-cards-container"></div>
+                    <button class="add-task-btn" onclick="addTaskCard('jobHunting')">+ Add Task</button>
+                    <button id="jobHuntingSaveBtn" class="note-save-btn" onclick="saveNote('jobHunting', null, 'jobHuntingSaveBtn')">💾 Save All</button>
+                    <textarea id="jobHuntingNotesText" class="note-textarea" style="display: none;"></textarea>
                 </div>
             
                 <div class="note-section internship">
                     <div class="note-title">🎯 Internship</div>
-                    <textarea 
-                        id="internshipNotesText" 
-                        class="note-textarea" 
-                        placeholder="Internship deadlines..."
-                        oninput="handleNoteInput('internship', 'internshipNotesText')"
-                    ></textarea>
-                    <button id="internshipSaveBtn" class="note-save-btn" onclick="saveNote('internship', 'internshipNotesText', 'internshipSaveBtn')">💾 Save</button>
+                    <div id="internshipTaskCards" class="task-cards-container"></div>
+                    <button class="add-task-btn" onclick="addTaskCard('internship')">+ Add Task</button>
+                    <button id="internshipSaveBtn" class="note-save-btn" onclick="saveNote('internship', null, 'internshipSaveBtn')">💾 Save All</button>
+                    <textarea id="internshipNotesText" class="note-textarea" style="display: none;"></textarea>
                 </div>
             </div>
         </div>

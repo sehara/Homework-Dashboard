@@ -1626,3 +1626,345 @@ function scrollToCourse(courseName) {
         }
     }
 }
+
+
+// ============================================
+// Task Card System
+// ============================================
+
+const taskCards = {
+    personal: [],
+    family: [],
+    internship: [],
+    jobHunting: []
+};
+
+// Common time options in minutes
+const TIME_OPTIONS = [15, 30, 45, 60, 90, 120, 150, 180, 240, 300, 360, 480];
+
+// Initialize task cards on page load
+function initTaskCards() {
+    ['personal', 'family', 'internship', 'jobHunting'].forEach(noteType => {
+        loadTaskCards(noteType);
+        renderTaskCards(noteType);
+    });
+}
+
+// Add a new task card
+function addTaskCard(noteType) {
+    const card = {
+        id: Date.now(),
+        content: '',
+        rating: null,
+        editingTime: false
+    };
+    
+    taskCards[noteType].push(card);
+    renderTaskCards(noteType);
+    
+    setTimeout(() => {
+        const textarea = document.querySelector(`#taskCard${card.id} textarea`);
+        if (textarea) textarea.focus();
+    }, 100);
+    
+    saveTaskCards(noteType);
+}
+
+// Delete a task card
+function deleteTaskCard(noteType, cardId) {
+    if (confirm('Delete this task?')) {
+        taskCards[noteType] = taskCards[noteType].filter(card => card.id !== cardId);
+        renderTaskCards(noteType);
+        saveTaskCards(noteType);
+    }
+}
+
+// Check rating for a task card
+function checkTaskRating(noteType, cardId) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (!card) return;
+    
+    const content = card.content.trim();
+    if (!content) {
+        alert('Please write something in the task first!');
+        return;
+    }
+    
+    const time = estimateTaskTime(content);
+    const score = timeToScore(time);
+    const emoji = scoreToEmoji(score);
+    const timeStr = formatTimeMinutes(time);
+    
+    card.rating = { 
+        score, 
+        time: timeStr, 
+        emoji,
+        rawMinutes: time 
+    };
+    
+    renderTaskCards(noteType);
+    saveTaskCards(noteType);
+}
+
+// Start editing time
+function editTime(noteType, cardId) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (card) {
+        card.editingTime = true;
+        renderTaskCards(noteType);
+        
+        // Focus dropdown after render
+        setTimeout(() => {
+            const dropdown = document.getElementById(`timeDropdown${cardId}`);
+            if (dropdown) dropdown.focus();
+        }, 50);
+    }
+}
+
+// Save time edit
+function saveTimeEdit(noteType, cardId) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (!card) return;
+    
+    const dropdown = document.getElementById(`timeDropdown${cardId}`);
+    const newMinutes = parseInt(dropdown.value);
+    
+    const score = timeToScore(newMinutes);
+    const emoji = scoreToEmoji(score);
+    const timeStr = formatTimeMinutes(newMinutes);
+    
+    card.rating = { 
+        score, 
+        time: timeStr, 
+        emoji,
+        rawMinutes: newMinutes 
+    };
+    card.editingTime = false;
+    
+    renderTaskCards(noteType);
+    saveTaskCards(noteType);
+}
+
+// Render all task cards for a note type
+function renderTaskCards(noteType) {
+    const container = document.getElementById(`${noteType}TaskCards`);
+    if (!container) return;
+    
+    const cards = taskCards[noteType];
+    
+    if (cards.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                No tasks yet. Click "+ Add Task" to get started!
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = cards.map((card, index) => {
+        let ratingHtml = '';
+        
+        if (card.rating) {
+            if (card.editingTime) {
+                // Editing mode - show dropdown
+                const options = TIME_OPTIONS.map(mins => 
+                    `<option value="${mins}" ${mins === card.rating.rawMinutes ? 'selected' : ''}>
+                        ${formatTimeMinutes(mins)}
+                    </option>`
+                ).join('');
+                
+                ratingHtml = `
+                    <div class="rating-badge ${getRatingClass(card.rating.score)}">
+                        ${card.rating.emoji} ${card.rating.score}/10 • 
+                        <div class="time-editor">
+                            <select id="timeDropdown${card.id}" class="time-dropdown">
+                                ${options}
+                            </select>
+                            <button class="save-time-btn" onclick="saveTimeEdit('${noteType}', ${card.id})">
+                                ✓
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Display mode - clickable time
+                ratingHtml = `
+                    <div class="rating-badge ${getRatingClass(card.rating.score)}">
+                        ${card.rating.emoji} ${card.rating.score}/10 • 
+                        <span class="time-display" onclick="editTime('${noteType}', ${card.id})" title="Click to edit time">
+                            ${card.rating.time}
+                        </span>
+                    </div>
+                `;
+            }
+        } else {
+            ratingHtml = `
+                <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})">
+                    🎯 Check Rating
+                </button>
+            `;
+        }
+        
+        return `
+            <div id="taskCard${card.id}" class="task-card" data-card-id="${card.id}">
+                <div class="task-card-header">
+                    <div class="task-card-label">Task ${index + 1}</div>
+                    <div class="task-card-controls">
+                        ${ratingHtml}
+                        <button class="card-btn delete" onclick="deleteTaskCard('${noteType}', ${card.id})">
+                            ✕
+                        </button>
+                    </div>
+                </div>
+                <textarea 
+                    class="task-card-textarea" 
+                    placeholder="Type your task here... (can be multiple lines)"
+                    oninput="updateTaskCard('${noteType}', ${card.id}, this.value)"
+                    onfocus="this.parentElement.classList.add('focused')"
+                    onblur="this.parentElement.classList.remove('focused')"
+                >${escapeHtml(card.content)}</textarea>
+            </div>
+        `;
+    }).join('');
+    
+    updateHiddenTextarea(noteType);
+}
+
+// Update task card content
+function updateTaskCard(noteType, cardId, content) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (card) {
+        card.content = content;
+        saveTaskCards(noteType);
+        updateHiddenTextarea(noteType);
+    }
+}
+
+// Update hidden textarea (for compatibility with existing save system)
+function updateHiddenTextarea(noteType) {
+    const textarea = document.getElementById(`${noteType}NotesText`);
+    if (textarea) {
+        const text = taskCards[noteType]
+            .map(card => card.content.trim())
+            .filter(content => content)
+            .join('\n\n---\n\n');
+        textarea.value = text;
+    }
+}
+
+// Save task cards to localStorage
+function saveTaskCards(noteType) {
+    localStorage.setItem(`taskCards_${noteType}`, JSON.stringify(taskCards[noteType]));
+    updateHiddenTextarea(noteType);
+}
+
+// Load task cards from localStorage
+function loadTaskCards(noteType) {
+    const saved = localStorage.getItem(`taskCards_${noteType}`);
+    if (saved) {
+        taskCards[noteType] = JSON.parse(saved);
+    } else {
+        const textarea = document.getElementById(`${noteType}NotesText`);
+        if (textarea && textarea.value.trim()) {
+            const blocks = textarea.value.split(/\n\n---\n\n|\n---\n/);
+            taskCards[noteType] = blocks
+                .filter(block => block.trim())
+                .map(block => ({
+                    id: Date.now() + Math.random(),
+                    content: block.trim(),
+                    rating: null,
+                    editingTime: false
+                }));
+            saveTaskCards(noteType);
+        }
+    }
+}
+
+// Estimate time in minutes
+function estimateTaskTime(taskText) {
+    const text = taskText.toLowerCase();
+    const wordCount = taskText.split(/\s+/).length;
+    
+    if (text.match(/create|develop|build|design|strategy|presentation|comprehensive|proposal/) || wordCount > 100) {
+        return 120;
+    }
+    
+    if (text.match(/prepare|plan|research|analyze|draft|review|organize/) || wordCount > 50) {
+        return 90;
+    }
+    
+    if (text.match(/write|setup|configure|install|test|debug|update/) || wordCount > 30) {
+        return 60;
+    }
+    
+    if (text.match(/check|review|read|schedule|update/) || wordCount > 15) {
+        return 30;
+    }
+    
+    if (text.match(/email|call|send|contact|reach out|follow up|confirm|book|buy/)) {
+        return 15;
+    }
+    
+    return 30;
+}
+
+// Convert time (minutes) to score (1-10)
+function timeToScore(minutes) {
+    if (minutes <= 15) return 10;
+    if (minutes <= 30) return 9;
+    if (minutes <= 45) return 8;
+    if (minutes <= 60) return 7;
+    if (minutes <= 90) return 6;
+    if (minutes <= 120) return 5;
+    if (minutes <= 180) return 4;
+    if (minutes <= 240) return 3;
+    if (minutes <= 360) return 2;
+    return 1;
+}
+
+// Get emoji based on score
+function scoreToEmoji(score) {
+    if (score >= 9) return '🟢';
+    if (score >= 7) return '🟢';
+    if (score >= 5) return '🟡';
+    if (score >= 3) return '🟠';
+    return '🔴';
+}
+
+// Get CSS class based on score
+function getRatingClass(score) {
+    if (score >= 9) return 'excellent';
+    if (score >= 7) return 'good';
+    if (score >= 5) return 'moderate';
+    if (score >= 3) return 'challenging';
+    return 'hard';
+}
+
+// Format time (minutes)
+function formatTimeMinutes(minutes) {
+    if (minutes < 60) return `${minutes} min`;
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (mins === 0) return `${hours} hr${hours > 1 ? 's' : ''}`;
+    return `${hours}h ${mins}m`;
+}
+
+// Escape HTML
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Initialize task cards when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    initTaskCards();
+});
+
+// Sync with save system - wrap the original saveNote function
+const originalSaveNote = window.saveNote;
+if (originalSaveNote) {
+    window.saveNote = async function(noteType, textareaId, btnId) {
+        originalSaveNote(noteType, `${noteType}NotesText`, btnId);
+    };
+}
