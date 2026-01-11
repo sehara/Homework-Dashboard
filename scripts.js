@@ -1850,7 +1850,7 @@ async function clarifyTask(noteType, cardId) {
 // Call Gemini API to generate questions
 async function askGeminiForQuestions(taskText) {
     const apiKey = getGeminiApiKey();
-    const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+    const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
     
     const prompt = `You are helping clarify a vague task. The user wrote: "${taskText}"
 
@@ -2053,7 +2053,7 @@ function showQuestionModal(noteType, cardId, currentText, questions) {
 // Ask Gemini to rewrite the task with answers
 async function refineTaskWithGemini(originalTask, answers) {
     const apiKey = getGeminiApiKey();
-    const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+    const apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
     
     const prompt = `Original vague task: "${originalTask}"
 
