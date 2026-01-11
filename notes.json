@@ -1,5 +1,5 @@
 {
-  "personalNotes": "test",
+  "personalNotes": "test\n\n---\n\namerica",
   "familyNotes": "write family members about march schedule with line",
   "jobHuntingNotes": "Research and provide a one-time list of current job openings at Anthropic (Claude), Manus AI, and OpenAI.",
   "internshipNotes": "",
@@ -13,7 +13,7 @@
       },
       {
         "id": 1768152452015,
-        "content": "",
+        "content": "america",
         "rating": null,
         "editingTime": false
       }
@@ -24,5 +24,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T17:27:34.017Z"
+  "lastSynced": "2026-01-11T17:27:37.297Z"
 }
