@@ -1472,22 +1472,11 @@ async function loadFromGitHub() {
     
     // Load task cards from GitHub
     if (data.taskCards) {
-        if (data.taskCards.personal && data.taskCards.personal.length > 0) {
-            taskCards.personal = data.taskCards.personal;
-            localStorage.setItem('taskCards_personal', JSON.stringify(taskCards.personal));
-        }
-        if (data.taskCards.family && data.taskCards.family.length > 0) {
-            taskCards.family = data.taskCards.family;
-            localStorage.setItem('taskCards_family', JSON.stringify(taskCards.family));
-        }
-        if (data.taskCards.internship && data.taskCards.internship.length > 0) {
-            taskCards.internship = data.taskCards.internship;
-            localStorage.setItem('taskCards_internship', JSON.stringify(taskCards.internship));
-        }
-        if (data.taskCards.jobHunting && data.taskCards.jobHunting.length > 0) {
-            taskCards.jobHunting = data.taskCards.jobHunting;
-            localStorage.setItem('taskCards_jobHunting', JSON.stringify(taskCards.jobHunting));
-        }
+        Object.assign(taskCards, data.taskCards);
+        localStorage.setItem('taskCards_personal', JSON.stringify(taskCards.personal || []));
+        localStorage.setItem('taskCards_family', JSON.stringify(taskCards.family || []));
+        localStorage.setItem('taskCards_internship', JSON.stringify(taskCards.internship || []));
+        localStorage.setItem('taskCards_jobHunting', JSON.stringify(taskCards.jobHunting || []));
     }
     
     // Auto-expand textareas
@@ -1497,9 +1486,16 @@ async function loadFromGitHub() {
     autoExpandNote('internshipNotesText');
     
     // Re-render task cards after loading from GitHub
-    ['personal', 'family', 'internship', 'jobHunting'].forEach(noteType => {
-        renderTaskCards(noteType);
-    });
+    renderTaskCards('personal');
+    renderTaskCards('family');
+    renderTaskCards('internship');
+    renderTaskCards('jobHunting');
+    
+    // Update hidden textareas
+    updateHiddenTextarea('personal');
+    updateHiddenTextarea('family');
+    updateHiddenTextarea('internship');
+    updateHiddenTextarea('jobHunting');
     
     console.log('✅ Loaded from GitHub');
 }
@@ -1511,14 +1507,9 @@ async function saveAllToGitHub() {
         familyNotes: document.getElementById('familyNotesText').value,
         jobHuntingNotes: document.getElementById('jobHuntingNotesText').value,
         internshipNotes: document.getElementById('internshipNotesText').value,
+        taskCards: taskCards,
         taskStates: JSON.parse(localStorage.getItem('taskStates') || '{}'),
         archivedCourses: JSON.parse(localStorage.getItem('archivedCourses') || '[]'),
-        taskCards: {
-            personal: taskCards.personal || [],
-            family: taskCards.family || [],
-            internship: taskCards.internship || [],
-            jobHunting: taskCards.jobHunting || []
-        },
         lastSynced: new Date().toISOString()
     };
     
