@@ -1470,11 +1470,36 @@ async function loadFromGitHub() {
     noteStates.internship.content = data.internshipNotes || '';
     noteStates.internship.saved = true;
     
+    // Load task cards from GitHub
+    if (data.taskCards) {
+        if (data.taskCards.personal && data.taskCards.personal.length > 0) {
+            taskCards.personal = data.taskCards.personal;
+            localStorage.setItem('taskCards_personal', JSON.stringify(taskCards.personal));
+        }
+        if (data.taskCards.family && data.taskCards.family.length > 0) {
+            taskCards.family = data.taskCards.family;
+            localStorage.setItem('taskCards_family', JSON.stringify(taskCards.family));
+        }
+        if (data.taskCards.internship && data.taskCards.internship.length > 0) {
+            taskCards.internship = data.taskCards.internship;
+            localStorage.setItem('taskCards_internship', JSON.stringify(taskCards.internship));
+        }
+        if (data.taskCards.jobHunting && data.taskCards.jobHunting.length > 0) {
+            taskCards.jobHunting = data.taskCards.jobHunting;
+            localStorage.setItem('taskCards_jobHunting', JSON.stringify(taskCards.jobHunting));
+        }
+    }
+    
     // Auto-expand textareas
     autoExpandNote('personalNotesText');
     autoExpandNote('familyNotesText');
     autoExpandNote('jobHuntingNotesText');
     autoExpandNote('internshipNotesText');
+    
+    // Re-render task cards after loading from GitHub
+    ['personal', 'family', 'internship', 'jobHunting'].forEach(noteType => {
+        renderTaskCards(noteType);
+    });
     
     console.log('✅ Loaded from GitHub');
 }
@@ -1488,6 +1513,12 @@ async function saveAllToGitHub() {
         internshipNotes: document.getElementById('internshipNotesText').value,
         taskStates: JSON.parse(localStorage.getItem('taskStates') || '{}'),
         archivedCourses: JSON.parse(localStorage.getItem('archivedCourses') || '[]'),
+        taskCards: {
+            personal: taskCards.personal || [],
+            family: taskCards.family || [],
+            internship: taskCards.internship || [],
+            jobHunting: taskCards.jobHunting || []
+        },
         lastSynced: new Date().toISOString()
     };
     
@@ -1856,6 +1887,11 @@ function updateHiddenTextarea(noteType) {
 function saveTaskCards(noteType) {
     localStorage.setItem(`taskCards_${noteType}`, JSON.stringify(taskCards[noteType]));
     updateHiddenTextarea(noteType);
+    
+    // Sync to GitHub if configured
+    if (isGitHubConfigured()) {
+        saveAllToGitHub().catch(err => console.error('Failed to sync to GitHub:', err));
+    }
 }
 
 // Load task cards from localStorage
@@ -1956,8 +1992,12 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Initialize task cards when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize task cards when DOM is ready (after GitHub sync)
+document.addEventListener('DOMContentLoaded', async function() {
+    // Wait for GitHub sync to complete before initializing task cards
+    await new Promise(resolve => {
+        setTimeout(resolve, 500);
+    });
     initTaskCards();
 });
 
