@@ -1738,6 +1738,142 @@ function deleteTaskCard(noteType, cardId) {
     }
 }
 
+// Detect if a task is vague
+function isTaskVague(taskText) {
+    const text = taskText.trim().toLowerCase();
+    
+    // Too short
+    if (text.length < 10) return true;
+    
+    // No verb (action word)
+    const actionWords = /\b(email|call|send|write|create|prepare|update|schedule|check|review|research|contact|finish|complete|submit|book|buy|order|pay|fix|setup|install|configure|meet|discuss|analyze|draft|design|build|test|debug|deploy|launch|organize|clean|cancel|confirm|follow up|reach out|sign up|register|apply|attend)\b/i;
+    if (!actionWords.test(taskText)) return true;
+    
+    // Check if it has details (more than just 3 words)
+    const words = taskText.trim().split(/\s+/);
+    if (words.length < 4) return true;
+    
+    return false;
+}
+
+// Show clarification prompt
+function clarifyTask(noteType, cardId) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (!card) return;
+    
+    const currentText = card.content.trim();
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'clarification-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+    `;
+    
+    const modalContent = document.createElement('div');
+    modalContent.style.cssText = `
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        max-width: 600px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    `;
+    
+    modalContent.innerHTML = `
+        <h3 style="color: #667eea; margin-top: 0;">❓ Let's clarify this task</h3>
+        <p style="color: #666; margin-bottom: 20px;">Current task: <strong>"${escapeHtml(currentText)}"</strong></p>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <div style="font-weight: bold; margin-bottom: 10px;">Please add details:</div>
+            <div style="font-size: 0.9em; color: #666; line-height: 1.6;">
+                • What exactly needs to be done?<br>
+                • Who is involved?<br>
+                • What's the deliverable?<br>
+                • Any deadline?
+            </div>
+        </div>
+        
+        <textarea id="clarificationInput" style="
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        " placeholder="Example: Send the Q3 investment deck and ask for feedback on our valuation assumptions. CC John. Deadline: Friday EOD."></textarea>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button id="cancelClarifyBtn" style="
+                background: #6c757d;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: bold;
+            ">Cancel</button>
+            <button id="saveClarifyBtn" style="
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: bold;
+            ">✓ Update Task</button>
+        </div>
+    `;
+    
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+    
+    // Focus the textarea
+    setTimeout(() => {
+        document.getElementById('clarificationInput').focus();
+    }, 100);
+    
+    // Handle cancel
+    document.getElementById('cancelClarifyBtn').onclick = () => {
+        modal.remove();
+    };
+    
+    // Handle save
+    document.getElementById('saveClarifyBtn').onclick = () => {
+        const details = document.getElementById('clarificationInput').value.trim();
+        if (details) {
+            // Update the task content with clarifications
+            card.content = `${currentText}\n\n${details}`;
+            saveTaskCards(noteType);
+            renderTaskCards(noteType);
+            modal.remove();
+            
+            // Now check rating with full context
+            checkTaskRating(noteType, cardId);
+        } else {
+            alert('Please add some clarification details.');
+        }
+    };
+    
+    // Close on background click
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    };
+}
+
 // Check rating for a task card
 function checkTaskRating(noteType, cardId) {
     const card = taskCards[noteType].find(c => c.id === cardId);
@@ -1749,6 +1885,14 @@ function checkTaskRating(noteType, cardId) {
         return;
     }
     
+    // Check if task is vague
+    if (isTaskVague(content)) {
+        // Show clarification prompt
+        clarifyTask(noteType, cardId);
+        return; // Don't calculate rating yet
+    }
+    
+    // Task is clear, calculate rating
     const time = estimateTaskTime(content);
     const score = timeToScore(time);
     const emoji = scoreToEmoji(score);
