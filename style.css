@@ -73,7 +73,11 @@ body {
 
 .course-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.course-card:active {
+    transform: translateY(-2px);
 }
 
 .course-card.low-workload {

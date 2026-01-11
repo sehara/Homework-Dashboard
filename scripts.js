@@ -408,6 +408,9 @@ function renderCourseCards() {
             card.classList.add('high-workload');
         }
 
+        card.setAttribute('onclick', `scrollToCourse('${courseName}')`);
+        card.style.cursor = 'pointer';
+
         if (stats.remaining === 0) {
             card.innerHTML = `
                 <div class="course-card-title">${courseName}</div>
@@ -1594,3 +1597,32 @@ function updateTimestamp() {
 
 // Call it on page load
 updateTimestamp();
+
+// Scroll to course section in task list
+function scrollToCourse(courseName) {
+    // Find the course header in the task list
+    const headers = document.querySelectorAll('.course-title');
+    
+    for (let header of headers) {
+        // Check if this header contains the course name
+        if (header.textContent.includes(courseName) || header.textContent.includes(courseName.replace(' (no AI)', ''))) {
+            // Find the parent date section
+            const dateSection = header.closest('.day-section');
+            if (dateSection) {
+                // Scroll to it with smooth animation
+                dateSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start'
+                });
+                
+                // Add a brief highlight effect
+                dateSection.style.backgroundColor = '#fff3cd';
+                setTimeout(() => {
+                    dateSection.style.backgroundColor = '';
+                }, 2000);
+                
+                break;
+            }
+        }
+    }
+}
