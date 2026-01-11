@@ -2267,7 +2267,6 @@ function renderTaskCards(noteType) {
                 
                 ratingHtml = `
                     <div class="rating-badge ${getRatingClass(card.rating.score)}">
-                        ${card.rating.emoji} ${card.rating.score}/10 • 
                         <div class="time-editor">
                             <select id="timeDropdown${card.id}" class="time-dropdown">
                                 ${options}
@@ -2279,14 +2278,16 @@ function renderTaskCards(noteType) {
                     </div>
                 `;
             } else {
-                // Display mode - clickable time
+                // Display mode - clickable time + Details button
                 ratingHtml = `
                     <div class="rating-badge ${getRatingClass(card.rating.score)}">
-                        ${card.rating.emoji} ${card.rating.score}/10 • 
                         <span class="time-display" onclick="editTime('${noteType}', ${card.id})" title="Click to edit time">
                             ${card.rating.time}
                         </span>
                     </div>
+                    <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})" style="margin-left: 8px;">
+                        Details
+                    </button>
                 `;
             }
         } else {
