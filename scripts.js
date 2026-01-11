@@ -2325,6 +2325,34 @@ function renderTaskCards(noteType) {
                         <div class="task-card-label">Task ${index + 1}</div>
                         <div class="task-card-controls">
                             ${ratingHtml}
+                            <div class="schedule-dropdown-container">
+                                <button class="card-btn schedule" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}">
+                                    📅 Schedule ▼
+                                </button>
+                                <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">
+                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'today')">
+                                        📅 Today
+                                    </div>
+                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'tomorrow')">
+                                        📅 Tomorrow
+                                    </div>
+                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'thisWorkWeek')">
+                                        📅 This Work Week
+                                    </div>
+                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'thisWeekend')">
+                                        📅 This Weekend
+                                    </div>
+                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'nextWeekday')">
+                                        📅 Next Weekday
+                                    </div>
+                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'custom')">
+                                        🗓️ Custom...
+                                    </div>
+                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'anytime')">
+                                        ⚡ Anytime
+                                    </div>
+                                </div>
+                            </div>
                             <button class="card-btn done" onclick="markTaskDone('${noteType}', ${card.id})" style="background: #28a745; margin: 0 5px;">
                                 ✅ Done
                             </button>
@@ -2391,6 +2419,37 @@ function renderArchive(noteType) {
             </div>
         `;
     }).join('');
+}
+
+// Toggle schedule dropdown visibility
+function toggleScheduleDropdown(cardId) {
+    const dropdown = document.getElementById(`scheduleDropdown${cardId}`);
+    if (!dropdown) return;
+
+    // Close all other dropdowns first
+    document.querySelectorAll('.schedule-dropdown-menu').forEach(d => {
+        if (d.id !== `scheduleDropdown${cardId}`) {
+            d.classList.add('hidden');
+        }
+    });
+
+    // Toggle this dropdown
+    dropdown.classList.toggle('hidden');
+}
+
+// Placeholder for scheduling (will be implemented tomorrow with OAuth)
+function scheduleTask(noteType, cardId, timeframe) {
+    // Close dropdown
+    const dropdown = document.getElementById(`scheduleDropdown${cardId}`);
+    if (dropdown) dropdown.classList.add('hidden');
+
+    // Open settings modal
+    openSettings();
+
+    // Show alert after a brief delay
+    setTimeout(() => {
+        alert('Please connect Google Calendar in Settings to enable scheduling.');
+    }, 500);
 }
 
 // Toggle individual archive column
@@ -2602,3 +2661,12 @@ if (originalSaveNote) {
         originalSaveNote(noteType, `${noteType}NotesText`, btnId);
     };
 }
+
+// Close schedule dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.schedule-dropdown-container')) {
+        document.querySelectorAll('.schedule-dropdown-menu').forEach(d => {
+            d.classList.add('hidden');
+        });
+    }
+});
