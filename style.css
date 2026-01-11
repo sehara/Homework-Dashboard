@@ -179,7 +179,7 @@ body {
 
 .notes-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     width: 100%;
 }
@@ -201,6 +201,10 @@ body {
     border-top: 6px solid #dc3545;
 }
 
+.note-section.family {
+    border-top: 6px solid #6f42c1;
+}
+
 .note-section.job-hunting {
     border-top: 6px solid #0d6efd;
 }
@@ -220,6 +224,10 @@ body {
 
 .note-section.personal .note-title {
     color: #dc3545;
+}
+
+.note-section.family .note-title {
+    color: #6f42c1;
 }
 
 .note-section.job-hunting .note-title {
@@ -258,6 +266,11 @@ body {
 .note-section.personal .note-textarea:focus {
     border-color: #dc3545;
     box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.note-section.family .note-textarea:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
 }
 
 .note-section.job-hunting .note-textarea:focus {

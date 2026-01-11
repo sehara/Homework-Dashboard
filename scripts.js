@@ -1247,12 +1247,13 @@ CRITICAL:
 // Notes functionality - supports multiple note sections with unsaved indicator
 const noteStates = {
     personal: { saved: true, content: '' },
+    family: { saved: true, content: '' },
     jobHunting: { saved: true, content: '' },
     internship: { saved: true, content: '' }
 };
 
 function loadNotes() {
-    const noteTypes = ['personal', 'jobHunting', 'internship'];
+    const noteTypes = ['personal', 'family', 'jobHunting', 'internship'];
     noteTypes.forEach(type => {
         const savedNotes = localStorage.getItem(`${type}Notes`) || '';
         const textareaId = `${type}NotesText`;
@@ -1452,12 +1453,15 @@ async function loadFromGitHub() {
     
     // Load notes
     document.getElementById('personalNotesText').value = data.personalNotes || '';
+    document.getElementById('familyNotesText').value = data.familyNotes || '';
     document.getElementById('jobHuntingNotesText').value = data.jobHuntingNotes || '';
     document.getElementById('internshipNotesText').value = data.internshipNotes || '';
     
     // Update note states
     noteStates.personal.content = data.personalNotes || '';
     noteStates.personal.saved = true;
+    noteStates.family.content = data.familyNotes || '';
+    noteStates.family.saved = true;
     noteStates.jobHunting.content = data.jobHuntingNotes || '';
     noteStates.jobHunting.saved = true;
     noteStates.internship.content = data.internshipNotes || '';
@@ -1465,6 +1469,7 @@ async function loadFromGitHub() {
     
     // Auto-expand textareas
     autoExpandNote('personalNotesText');
+    autoExpandNote('familyNotesText');
     autoExpandNote('jobHuntingNotesText');
     autoExpandNote('internshipNotesText');
     
@@ -1475,6 +1480,7 @@ async function loadFromGitHub() {
 async function saveAllToGitHub() {
     const data = {
         personalNotes: document.getElementById('personalNotesText').value,
+        familyNotes: document.getElementById('familyNotesText').value,
         jobHuntingNotes: document.getElementById('jobHuntingNotesText').value,
         internshipNotes: document.getElementById('internshipNotesText').value,
         taskStates: JSON.parse(localStorage.getItem('taskStates') || '{}'),

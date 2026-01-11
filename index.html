@@ -63,6 +63,17 @@
                     <button id="personalSaveBtn" class="note-save-btn" onclick="saveNote('personal', 'personalNotesText', 'personalSaveBtn')">💾 Save</button>
                 </div>
             
+                <div class="note-section family">
+                    <div class="note-title">👨‍👩‍👧‍👦 Family</div>
+                    <textarea 
+                        id="familyNotesText" 
+                        class="note-textarea" 
+                        placeholder="Family tasks and reminders..."
+                        oninput="handleNoteInput('family', 'familyNotesText')"
+                    ></textarea>
+                    <button id="familySaveBtn" class="note-save-btn" onclick="saveNote('family', 'familyNotesText', 'familySaveBtn')">💾 Save</button>
+                </div>
+            
                 <div class="note-section job-hunting">
                     <div class="note-title">💼 Job Hunting</div>
                     <textarea 
