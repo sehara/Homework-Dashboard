@@ -1385,12 +1385,14 @@ async function fetchNotesFromGitHub() {
 }
 
 // Save notes to GitHub
-async function saveNotesToGitHub(notesData) {
+async function saveNotesToGitHub(notesData, retryCount = 0) {
     const token = getGitHubToken();
     if (!token) {
         console.log('No GitHub token configured');
         return false;
     }
+    
+    const MAX_RETRIES = 3;
     
     try {
         // First, get the current file to get its SHA
@@ -1437,8 +1439,13 @@ async function saveNotesToGitHub(notesData) {
         );
         
         if (!putResponse.ok) {
-            if (putResponse.status === 409) {
-                console.log('GitHub conflict (409) - will retry on next save');
+            if (putResponse.status === 409 && retryCount < MAX_RETRIES) {
+                // Conflict - retry with fresh SHA after a short delay
+                console.log(`GitHub conflict (409) - retrying (${retryCount + 1}/${MAX_RETRIES})...`);
+                await new Promise(resolve => setTimeout(resolve, 500 * (retryCount + 1))); // Exponential backoff
+                return await saveNotesToGitHub(notesData, retryCount + 1);
+            } else if (putResponse.status === 409) {
+                console.log('GitHub conflict (409) - max retries reached');
             } else {
                 console.error('Failed to save to GitHub:', putResponse.status);
             }
