@@ -909,7 +909,8 @@ body {
 .task-card-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
 .card-btn {
@@ -940,17 +941,82 @@ body {
     background: #c82333;
 }
 
+/* Compact button layout */
+.card-btn.compact {
+    padding: 6px 10px;
+    font-size: 0.9em;
+    min-width: unset;
+}
+
+.card-btn.compact.details {
+    background: #667eea;
+    color: white;
+}
+
+.card-btn.compact.details:hover {
+    background: #5568d3;
+}
+
+.card-btn.compact.schedule {
+    background: #4285f4;
+    color: white;
+    font-size: 1.1em;
+    padding: 6px 12px;
+}
+
+.card-btn.compact.schedule:hover {
+    background: #3367d6;
+}
+
+.card-btn.compact.done {
+    background: #28a745;
+    color: white;
+    font-size: 1.2em;
+    padding: 6px 12px;
+}
+
+.card-btn.compact.done:hover {
+    background: #218838;
+}
+
+.card-btn.compact.delete {
+    background: #dc3545;
+    color: white;
+    font-size: 1.1em;
+    padding: 6px 10px;
+}
+
+.card-btn.compact.delete:hover {
+    background: #c82333;
+}
+
+.card-btn.compact.undo {
+    background: #6c757d;
+    color: white;
+    font-size: 1.1em;
+    padding: 6px 12px;
+}
+
+.card-btn.compact.undo:hover {
+    background: #5a6268;
+}
+
+/* Tooltip styling (browser default works, but enhance if needed) */
+.card-btn[title] {
+    cursor: help;
+}
+
 .rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85em;
     background: white;
     border: 2px solid;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 0.85em;
     white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 6px;
 }
 
 .rating-badge.excellent {
@@ -1264,7 +1330,7 @@ body {
 .schedule-dropdown-container {
     position: relative;
     display: inline-block;
-    margin: 0 5px;
+    margin: 0;
 }
 
 .card-btn.schedule {

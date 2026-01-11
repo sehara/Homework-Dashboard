@@ -2306,15 +2306,15 @@ function renderTaskCards(noteType) {
                                 ${card.rating.time}
                             </span>
                         </div>
-                        <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})" style="margin-left: 8px;">
-                            Details
+                        <button class="card-btn compact details" onclick="checkTaskRating('${noteType}', ${card.id})" title="View task details and AI suggestions">
+                            ℹ️ Details
                         </button>
                     `;
                 }
             } else {
                 ratingHtml = `
-                    <button class="card-btn" onclick="checkTaskRating('${noteType}', ${card.id})">
-                        Details
+                    <button class="card-btn compact details" onclick="checkTaskRating('${noteType}', ${card.id})" title="View task details and AI suggestions">
+                        ℹ️ Details
                     </button>
                 `;
             }
@@ -2326,8 +2326,8 @@ function renderTaskCards(noteType) {
                         <div class="task-card-controls">
                             ${ratingHtml}
                             <div class="schedule-dropdown-container">
-                                <button class="card-btn schedule" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}">
-                                    📅 Schedule ▼
+                                <button class="card-btn compact schedule" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}" title="Schedule to Google Calendar">
+                                    📅▼
                                 </button>
                                 <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">
                                     <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'today')">
@@ -2353,10 +2353,10 @@ function renderTaskCards(noteType) {
                                     </div>
                                 </div>
                             </div>
-                            <button class="card-btn done" onclick="markTaskDone('${noteType}', ${card.id})" style="background: #28a745; margin: 0 5px;">
-                                ✅ Done
+                            <button class="card-btn compact done" onclick="markTaskDone('${noteType}', ${card.id})" title="Mark as done and archive">
+                                ✅
                             </button>
-                            <button class="card-btn delete" onclick="deleteTaskCard('${noteType}', ${card.id})">
+                            <button class="card-btn compact delete" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
                                 ✕
                             </button>
                         </div>
