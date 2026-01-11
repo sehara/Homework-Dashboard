@@ -1795,6 +1795,28 @@ function deleteTaskCard(noteType, cardId) {
     }
 }
 
+// Mark task as done
+function markTaskDone(noteType, cardId) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (card) {
+        card.done = true;
+        card.doneAt = new Date().toISOString();
+        saveTaskCards(noteType);
+        renderTaskCards(noteType);
+    }
+}
+
+// Undo task done
+function undoTaskDone(noteType, cardId) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (card) {
+        card.done = false;
+        delete card.doneAt;
+        saveTaskCards(noteType);
+        renderTaskCards(noteType);
+    }
+}
+
 // Detect if a task is vague
 function isTaskVague(taskText) {
     const text = taskText.trim().toLowerCase();
@@ -2254,8 +2276,11 @@ function renderTaskCards(noteType) {
     }
     
     container.innerHTML = cards.map((card, index) => {
+        const isDone = card.done || false;
+        const doneClass = isDone ? 'task-card-done' : '';
+
         let ratingHtml = '';
-        
+
         if (card.rating) {
             if (card.editingTime) {
                 // Editing mode - show dropdown
@@ -2299,11 +2324,24 @@ function renderTaskCards(noteType) {
         }
         
         return `
-            <div id="taskCard${card.id}" class="task-card" data-card-id="${card.id}">
+            <div id="taskCard${card.id}" class="task-card ${doneClass}" data-card-id="${card.id}">
                 <div class="task-card-header">
                     <div class="task-card-label">Task ${index + 1}</div>
                     <div class="task-card-controls">
-                        ${ratingHtml}
+                        ${isDone ? `
+                            <div class="done-badge">
+                                ✔️ DONE
+                                <span class="done-timestamp">${new Date(card.doneAt).toLocaleDateString()}</span>
+                            </div>
+                            <button class="card-btn undo" onclick="undoTaskDone('${noteType}', ${card.id})" style="background: #6c757d; margin-right: 5px;">
+                                ↩️ Undo
+                            </button>
+                        ` : `
+                            ${ratingHtml}
+                            <button class="card-btn done" onclick="markTaskDone('${noteType}', ${card.id})" style="background: #28a745; margin-right: 5px;">
+                                ✅ Done
+                            </button>
+                        `}
                         <button class="card-btn delete" onclick="deleteTaskCard('${noteType}', ${card.id})">
                             ✕
                         </button>
