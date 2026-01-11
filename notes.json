@@ -1,5 +1,5 @@
 {
-  "personalNotes": "test\n\n---\n\namerica",
+  "personalNotes": "Complete testing of this page and provide a pass/fail confirmation by the end of today.\n\n---\n\namerica",
   "familyNotes": "japan",
   "jobHuntingNotes": "",
   "internshipNotes": "",
@@ -7,8 +7,13 @@
     "personal": [
       {
         "id": 1768152206107,
-        "content": "test",
-        "rating": null,
+        "content": "Complete testing of this page and provide a pass/fail confirmation by the end of today.",
+        "rating": {
+          "score": 7,
+          "time": "1 hr",
+          "emoji": "🟢",
+          "rawMinutes": 60
+        },
         "editingTime": false
       },
       {
@@ -31,5 +36,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T17:28:34.587Z"
+  "lastSynced": "2026-01-11T17:43:02.071Z"
 }
