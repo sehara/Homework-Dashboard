@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Box Content Extractor - Test Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .task-box {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .task-box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .task-box-label {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+
+        .task-box-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .rating-badge {
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .rating-easy { background: #d4edda; color: #155724; }
+        .rating-medium { background: #fff3cd; color: #856404; }
+        .rating-hard { background: #f8d7da; color: #721c24; }
+
+        .task-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .task-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .script-controls {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .script-controls h2 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .control-section {
+            margin-bottom: 25px;
+        }
+
+        .control-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .control-section input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .control-section input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-box h3 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+        }
+
+        .info-box li {
+            margin-bottom: 5px;
+        }
+
+        #extractedInfo {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .archive {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        .archive h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .archive-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #28a745;
+        }
+
+        .archive-item.empty {
+            text-align: center;
+            color: #6c757d;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Task Box Content Extractor</h1>
+            <p>Test page for browser script functionality</p>
+        </div>
+
+        <!-- Task Box -->
+        <div class="task-box" id="taskBox">
+            <div class="task-box-header">
+                <div class="task-box-label">Task 1</div>
+                <div class="task-box-controls">
+                    <div id="ratingBadge" class="rating-badge" style="display: none;"></div>
+                    <button class="btn btn-secondary" onclick="window.TaskExtractor.analyzeTask()">
+                        📊 Analyze
+                    </button>
+                </div>
+            </div>
+            <textarea
+                id="taskContent"
+                class="task-textarea"
+                placeholder="Enter your task here... (e.g., 'Write a research paper on climate change')"
+            >Develop a browser script for the "test" page that extracts content from the "task box," uses AI to estimate completion time, and identifies an optimal Google Calendar slot based on available gaps and peak cognitive performance.</textarea>
+        </div>
+
+        <!-- Script Controls -->
+        <div class="script-controls">
+            <h2>🔧 Content Extractor Controls</h2>
+
+            <div class="control-section">
+                <label>Gemini API Key:</label>
+                <input
+                    type="password"
+                    id="geminiApiKey"
+                    placeholder="Enter your Gemini API key (starts with AIza...)"
+                />
+            </div>
+
+            <div class="control-section">
+                <label>Google Calendar API Key:</label>
+                <input
+                    type="password"
+                    id="calendarApiKey"
+                    placeholder="Enter your Google Calendar API key"
+                />
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="window.TaskExtractor.extractContent()">
+                    📤 Extract Content
+                </button>
+                <button class="btn btn-primary" onclick="window.TaskExtractor.findOptimalSlot()">
+                    🎯 Find Optimal Slot
+                </button>
+                <button class="btn btn-success" onclick="window.TaskExtractor.syncToCalendar()">
+                    🔄 Sync to Calendar
+                </button>
+                <button class="btn btn-success" onclick="window.TaskExtractor.markAsDone()">
+                    ✅ Mark as Done
+                </button>
+            </div>
+
+            <div id="extractedInfo"></div>
+
+            <div class="info-box">
+                <h3>ℹ️ How to Use:</h3>
+                <ul>
+                    <li><strong>Extract Content:</strong> Extracts text from the task box above</li>
+                    <li><strong>Analyze:</strong> Uses AI to estimate completion time</li>
+                    <li><strong>Find Optimal Slot:</strong> Analyzes your calendar for the best time to schedule</li>
+                    <li><strong>Sync to Calendar:</strong> Creates a Google Calendar event at the optimal time</li>
+                    <li><strong>Mark as Done:</strong> Moves task to archive and deletes calendar event</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Archive -->
+        <div class="archive">
+            <h2>📦 Archive</h2>
+            <div id="archiveContainer">
+                <div class="archive-item empty">No archived tasks</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="content-extractor.js"></script>
+</body>
+</html>
