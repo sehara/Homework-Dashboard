@@ -37,9 +37,16 @@
       }
     ],
     "internship": [],
-    "jobHunting": []
+    "jobHunting": [
+      {
+        "id": 1768144088041,
+        "content": "",
+        "rating": null,
+        "editingTime": false
+      }
+    ]
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T15:07:58.477Z"
+  "lastSynced": "2026-01-11T15:08:10.043Z"
 }
