@@ -1,9 +1,9 @@
 {
-  "personalNotes": "shingo bingo",
-  "familyNotes": "will this be saved?",
-  "jobHuntingNotes": "Create Applying Strategy\n(Region, Sector, Internship)\n\nAI: Claude, Manus\nSocial: ASIJ, L&C, PnP\n\nDone: Searched Linkedin 1st connection",
+  "personalNotes": "Phase 2: Google Calendar Integration where selecting a time from the dropdown (Tomorrow, This Week, Next Week) automatically books the task to your Google Calendar, and Phase 3: Mark Done + Completion Tracking where you can click a button to mark tasks as complete (whether scheduled or not), which updates the visual state and syncs everything to your notes.json file. These two phases will cost approximately 5-6 more Manus credits and take 3-4 hours of Manus work to complete the entire automated scheduling system you envisioned.",
+  "familyNotes": "message parents about my spring visit schedule to japan",
+  "jobHuntingNotes": "Search jobs in AI sector: Claude, Manus etc.\n\n---\n\nCheck all of my social connections and groups from the past and list up people who can introduce me to job opportunities:\n\nGroups: ASIJ, L&C, PnP",
   "internshipNotes": "E-mail KV Partners,\n\n(Gemini stored) Understand Kyocera: Investment thesis, fund structure, sector strategy\n\nList-up My Social Capital\n\nlinkedin update?\n\nKyocera Ishida-san Reachout\n\npnp event schedule check",
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T03:32:46.571Z"
+  "lastSynced": "2026-01-11T04:50:10.423Z"
 }
