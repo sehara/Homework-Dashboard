@@ -1437,7 +1437,11 @@ async function saveNotesToGitHub(notesData) {
         );
         
         if (!putResponse.ok) {
-            console.error('Failed to save to GitHub:', putResponse.status);
+            if (putResponse.status === 409) {
+                console.log('GitHub conflict (409) - will retry on next save');
+            } else {
+                console.error('Failed to save to GitHub:', putResponse.status);
+            }
             return false;
         }
         
@@ -1654,6 +1658,20 @@ function scrollToCourse(courseName) {
     }
 }
 
+
+// ============================================
+// Debounce utility for GitHub saves
+let githubSaveTimeout = null;
+function debouncedGitHubSave() {
+    if (githubSaveTimeout) {
+        clearTimeout(githubSaveTimeout);
+    }
+    githubSaveTimeout = setTimeout(async () => {
+        if (isGitHubConfigured()) {
+            await saveAllToGitHub();
+        }
+    }, 2000); // Wait 2 seconds after last change
+}
 
 // ============================================
 // Task Card System
@@ -1884,10 +1902,8 @@ function saveTaskCards(noteType) {
     localStorage.setItem(`taskCards_${noteType}`, JSON.stringify(taskCards[noteType]));
     updateHiddenTextarea(noteType);
     
-    // Sync to GitHub if configured
-    if (isGitHubConfigured()) {
-        saveAllToGitHub().catch(err => console.error('Failed to sync to GitHub:', err));
-    }
+    // Debounced sync to GitHub
+    debouncedGitHubSave();
 }
 
 // Load task cards from localStorage
