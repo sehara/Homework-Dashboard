@@ -1,5 +1,5 @@
 {
-  "personalNotes": "Phase 2: Google Calendar Integration where selecting a time from the dropdown (Tomorrow, This Week, Next Week) automatically books the task to your Google Calendar, and Phase 3: Mark Done + Completion Tracking where you can click a button to mark tasks as complete (whether scheduled or not), which updates the visual state and syncs everything to your notes.json file. These two phases will cost approximately 5-6 more Manus credits and take 3-4 hours of Manus work to complete the entire automated scheduling system you envisioned.\n\n---\n\nmeeting",
+  "personalNotes": "Phase 2: Google Calendar Integration where selecting a time from the dropdown (Tomorrow, This Week, Next Week) automatically books the task to your Google Calendar, and Phase 3: Mark Done + Completion Tracking where you can click a button to mark tasks as complete (whether scheduled or not), which updates the visual state and syncs everything to your notes.json file. These two phases will cost approximately 5-6 more Manus credits and take 3-4 hours of Manus work to complete the entire automated scheduling system you envisioned.\n\n---\n\nmeeting\n\nAt millennium Park",
   "familyNotes": "write family members about march",
   "jobHuntingNotes": "",
   "internshipNotes": "",
@@ -18,7 +18,7 @@
       },
       {
         "id": 1768137793956,
-        "content": "meeting",
+        "content": "meeting\n\nAt millennium Park",
         "rating": null,
         "editingTime": false
       }
@@ -41,5 +41,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T15:07:40.134Z"
+  "lastSynced": "2026-01-11T15:07:58.477Z"
 }
