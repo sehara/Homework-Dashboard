@@ -1,7 +1,7 @@
 {
   "personalNotes": "Phase 2: Google Calendar Integration where selecting a time from the dropdown (Tomorrow, This Week, Next Week) automatically books the task to your Google Calendar, and Phase 3: Mark Done + Completion Tracking where you can click a button to mark tasks as complete (whether scheduled or not), which updates the visual state and syncs everything to your notes.json file. These two phases will cost approximately 5-6 more Manus credits and take 3-4 hours of Manus work to complete the entire automated scheduling system you envisioned.\n\n---\n\nAdd a \"Details\" button to the Homework Dashboard. When clicked, the button should trigger the \"check rating\" feature. after I answer the questions upon trigger then I also want it to calculate the time based on AI  the calculation made by the AI. This task must be completed by the end of the day today. I also don't like that icon for the green yellow cause I think the time is good enough in terms of display of information.",
   "familyNotes": "write family members about march schedule with line",
-  "jobHuntingNotes": "look for jobs in the AI sector in company such as AI: Claude, Manus. chatgpt",
+  "jobHuntingNotes": "Research and provide a one-time list of current job openings at Anthropic (Claude), Manus AI, and OpenAI.",
   "internshipNotes": "",
   "taskCards": {
     "personal": [
@@ -45,13 +45,18 @@
     "jobHunting": [
       {
         "id": 1768144088041,
-        "content": "look for jobs in the AI sector in company such as AI: Claude, Manus. chatgpt",
-        "rating": null,
+        "content": "Research and provide a one-time list of current job openings at Anthropic (Claude), Manus AI, and OpenAI.",
+        "rating": {
+          "score": 6,
+          "time": "1h 30m",
+          "emoji": "🟡",
+          "rawMinutes": 90
+        },
         "editingTime": false
       }
     ]
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T16:30:02.129Z"
+  "lastSynced": "2026-01-11T16:58:16.091Z"
 }
