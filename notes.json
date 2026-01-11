@@ -1,0 +1,487 @@
+{
+  "personalNotes": "",
+  "jobHuntingNotes": "",
+  "internshipNotes": "",
+  "taskStates": {},
+  "archivedCourses": [],
+  "lastSynced": ""
+}
+```
+
+5. Click **"Commit new file"** (green button)
+
+**⏱️ Time: 5 minutes**
+
+---
+
+## **🤖 PART 2: Code Implementation (MANUS - 25 minutes)**
+
+### **Step 2.1: Give Manus the GitHub Sync Code (Use 1 credit)**
+
+**Copy and paste this to Manus:**
+```
+Add GitHub sync functionality to save notes and task states online.
+
+REPOSITORY: sehara/Homework-Dashboard
+
+FILES TO UPDATE:
+1. scripts.js - Add GitHub sync functions
+
+---
+
+TASK: Add these functions to the END of scripts.js (before the final closing brace):
+
+// ============================================
+// GITHUB SYNC FUNCTIONALITY
+// ============================================
+
+const GITHUB_CONFIG = {
+    owner: 'sehara',
+    repo: 'Homework-Dashboard',
+    branch: 'main',
+    filePath: 'notes.json'
+};
+
+// Get token from localStorage (user will set this once)
+function getGitHubToken() {
+    return localStorage.getItem('githubToken');
+}
+
+// Save token to localStorage
+function setGitHubToken(token) {
+    localStorage.setItem('githubToken', token);
+}
+
+// Check if token is configured
+function isGitHubConfigured() {
+    return !!getGitHubToken();
+}
+
+// Fetch notes from GitHub
+async function fetchNotesFromGitHub() {
+    const token = getGitHubToken();
+    if (!token) return null;
+    
+    try {
+        const response = await fetch(
+            `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`,
+            {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            }
+        );
+        
+        if (!response.ok) {
+            console.error('Failed to fetch from GitHub:', response.status);
+            return null;
+        }
+        
+        const data = await response.json();
+        const content = atob(data.content);
+        return JSON.parse(content);
+    } catch (error) {
+        console.error('Error fetching from GitHub:', error);
+        return null;
+    }
+}
+
+// Save notes to GitHub
+async function saveNotesToGitHub(notesData) {
+    const token = getGitHubToken();
+    if (!token) {
+        console.log('No GitHub token configured');
+        return false;
+    }
+    
+    try {
+        // First, get the current file to get its SHA
+        const getResponse = await fetch(
+            `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`,
+            {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            }
+        );
+        
+        let sha = null;
+        if (getResponse.ok) {
+            const data = await getResponse.json();
+            sha = data.sha;
+        }
+        
+        // Prepare the update
+        const content = btoa(JSON.stringify(notesData, null, 2));
+        const payload = {
+            message: 'Update notes and task states',
+            content: content,
+            branch: GITHUB_CONFIG.branch
+        };
+        
+        if (sha) {
+            payload.sha = sha;
+        }
+        
+        // Update the file
+        const putResponse = await fetch(
+            `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }
+        );
+        
+        if (!putResponse.ok) {
+            console.error('Failed to save to GitHub:', putResponse.status);
+            return false;
+        }
+        
+        console.log('✅ Saved to GitHub successfully');
+        return true;
+    } catch (error) {
+        console.error('Error saving to GitHub:', error);
+        return false;
+    }
+}
+
+// Load all data from GitHub on page load
+async function loadFromGitHub() {
+    if (!isGitHubConfigured()) {
+        console.log('GitHub sync not configured, using localStorage only');
+        return;
+    }
+    
+    const data = await fetchNotesFromGitHub();
+    if (!data) return;
+    
+    // Load notes
+    document.getElementById('personalNotesText').value = data.personalNotes || '';
+    document.getElementById('jobHuntingNotesText').value = data.jobHuntingNotes || '';
+    document.getElementById('internshipNotesText').value = data.internshipNotes || '';
+    
+    // Update note states
+    noteStates.personal.content = data.personalNotes || '';
+    noteStates.personal.saved = true;
+    noteStates.jobHunting.content = data.jobHuntingNotes || '';
+    noteStates.jobHunting.saved = true;
+    noteStates.internship.content = data.internshipNotes || '';
+    noteStates.internship.saved = true;
+    
+    // Auto-expand textareas
+    autoExpandNote('personalNotesText');
+    autoExpandNote('jobHuntingNotesText');
+    autoExpandNote('internshipNotesText');
+    
+    console.log('✅ Loaded from GitHub');
+}
+
+// Save all data to GitHub
+async function saveAllToGitHub() {
+    const data = {
+        personalNotes: document.getElementById('personalNotesText').value,
+        jobHuntingNotes: document.getElementById('jobHuntingNotesText').value,
+        internshipNotes: document.getElementById('internshipNotesText').value,
+        taskStates: JSON.parse(localStorage.getItem('taskStates') || '{}'),
+        archivedCourses: JSON.parse(localStorage.getItem('archivedCourses') || '[]'),
+        lastSynced: new Date().toISOString()
+    };
+    
+    const success = await saveNotesToGitHub(data);
+    return success;
+}
+
+// Update existing saveNote function to also save to GitHub
+const originalSaveNote = saveNote;
+saveNote = async function(noteType, textareaId, btnId) {
+    // Call original function
+    originalSaveNote(noteType, textareaId, btnId);
+    
+    // Also save to GitHub if configured
+    if (isGitHubConfigured()) {
+        await saveAllToGitHub();
+    }
+};
+
+// Initialize GitHub sync on page load
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadFromGitHub();
+});
+
+Push changes to GitHub.
+```
+
+**⏱️ Time: 15 minutes for Manus to implement and push**
+
+---
+
+### **Step 2.2: Add Token Setup UI (Use 1 credit)**
+
+**Copy and paste this to Manus:**
+```
+Add a settings button and modal for GitHub token configuration.
+
+REPOSITORY: sehara/Homework-Dashboard
+
+FILES TO UPDATE:
+1. index.html - Add settings button and modal
+2. style.css - Add modal styles
+
+---
+
+STEP 1: Update index.html
+
+Add this AFTER the header (right after <h1>MBA Homework Tracker</h1>):
+
+<button id="settingsBtn" class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
+
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeSettings()">&times;</span>
+        <h2>⚙️ Dashboard Settings</h2>
+        
+        <div class="settings-section">
+            <h3>☁️ GitHub Sync</h3>
+            <p>Sync your notes and task states across all devices using GitHub.</p>
+            
+            <div id="syncStatus" class="sync-status"></div>
+            
+            <label for="tokenInput">GitHub Personal Access Token:</label>
+            <input type="password" id="tokenInput" placeholder="github_pat_..." class="token-input">
+            
+            <button onclick="saveToken()" class="save-token-btn">💾 Save Token</button>
+            <button onclick="clearToken()" class="clear-token-btn">🗑️ Clear Token</button>
+            
+            <div class="help-text">
+                <p><strong>How to get a token:</strong></p>
+                <ol>
+                    <li>Go to <a href="https://github.com/settings/tokens?type=beta" target="_blank">GitHub Settings</a></li>
+                    <li>Generate new token (fine-grained)</li>
+                    <li>Select only "Homework-Dashboard" repo</li>
+                    <li>Give "Contents" read/write permission</li>
+                    <li>Copy and paste token here</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+---
+
+STEP 2: Update style.css
+
+Add these styles at the end:
+
+.settings-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: all 0.3s;
+}
+
+.settings-btn:hover {
+    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+    transform: translateY(-2px);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.settings-section {
+    margin: 20px 0;
+}
+
+.settings-section h3 {
+    color: #800000;
+    margin-bottom: 10px;
+}
+
+.token-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-family: 'Monaco', monospace;
+    font-size: 0.9em;
+    margin: 10px 0;
+}
+
+.save-token-btn, .clear-token-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 5px;
+    transition: all 0.3s;
+}
+
+.save-token-btn {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+}
+
+.save-token-btn:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+}
+
+.clear-token-btn {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+}
+
+.clear-token-btn:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+.sync-status {
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.sync-status.active {
+    background: #d4edda;
+    color: #155724;
+    border: 2px solid #c3e6cb;
+}
+
+.sync-status.inactive {
+    background: #fff3cd;
+    color: #856404;
+    border: 2px solid #ffc107;
+}
+
+.help-text {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+.help-text ol {
+    margin: 10px 0 0 20px;
+}
+
+---
+
+STEP 3: Add these functions to scripts.js
+
+Add at the end of scripts.js:
+
+function openSettings() {
+    document.getElementById('settingsModal').style.display = 'block';
+    updateSyncStatus();
+    
+    // Load current token (masked)
+    const token = getGitHubToken();
+    if (token) {
+        document.getElementById('tokenInput').value = '••••••••' + token.slice(-8);
+    }
+}
+
+function closeSettings() {
+    document.getElementById('settingsModal').style.display = 'none';
+}
+
+function saveToken() {
+    const input = document.getElementById('tokenInput');
+    const token = input.value.trim();
+    
+    if (!token || token.startsWith('••••')) {
+        alert('Please enter a valid token');
+        return;
+    }
+    
+    if (!token.startsWith('github_pat_') && !token.startsWith('ghp_')) {
+        alert('Token should start with github_pat_ or ghp_');
+        return;
+    }
+    
+    setGitHubToken(token);
+    alert('✅ Token saved! Your notes will now sync to GitHub.');
+    updateSyncStatus();
+    
+    // Try to load from GitHub
+    loadFromGitHub();
+}
+
+function clearToken() {
+    if (confirm('Remove GitHub sync? Your notes will only be saved locally.')) {
+        localStorage.removeItem('githubToken');
+        document.getElementById('tokenInput').value = '';
+        alert('Token cleared. GitHub sync disabled.');
+        updateSyncStatus();
+    }
+}
+
+function updateSyncStatus() {
+    const statusDiv = document.getElementById('syncStatus');
+    if (isGitHubConfigured()) {
+        statusDiv.className = 'sync-status active';
+        statusDiv.textContent = '✅ GitHub Sync Active - Your notes sync automatically';
+    } else {
+        statusDiv.className = 'sync-status inactive';
+        statusDiv.textContent = '⚠️ GitHub Sync Not Configured - Notes saved locally only';
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('settingsModal');
+    if (event.target == modal) {
+        closeSettings();
+    }
+}
+
+Push all changes to GitHub.
