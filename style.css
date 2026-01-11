@@ -710,4 +710,136 @@ body {
     }
 }
 
+.settings-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: all 0.3s;
+}
 
+.settings-btn:hover {
+    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+    transform: translateY(-2px);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.settings-section {
+    margin: 20px 0;
+}
+
+.settings-section h3 {
+    color: #800000;
+    margin-bottom: 10px;
+}
+
+.token-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-family: 'Monaco', monospace;
+    font-size: 0.9em;
+    margin: 10px 0;
+}
+
+.save-token-btn, .clear-token-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 5px;
+    transition: all 0.3s;
+}
+
+.save-token-btn {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+}
+
+.save-token-btn:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+}
+
+.clear-token-btn {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+}
+
+.clear-token-btn:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+.sync-status {
+    padding: 10px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.sync-status.active {
+    background: #d4edda;
+    color: #155724;
+    border: 2px solid #c3e6cb;
+}
+
+.sync-status.inactive {
+    background: #fff3cd;
+    color: #856404;
+    border: 2px solid #ffc107;
+}
+
+.help-text {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+.help-text ol {
+    margin: 10px 0 0 20px;
+}

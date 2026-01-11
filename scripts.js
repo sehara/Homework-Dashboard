@@ -1319,6 +1319,248 @@ document.addEventListener('DOMContentLoaded', loadNotes);
 // Initialize on page load
 renderTasks();
 
+// ============================================
+// GITHUB SYNC FUNCTIONALITY
+// ============================================
+
+const GITHUB_CONFIG = {
+    owner: 'sehara',
+    repo: 'Homework-Dashboard',
+    branch: 'main',
+    filePath: 'notes.json'
+};
+
+// Get token from localStorage (user will set this once)
+function getGitHubToken() {
+    return localStorage.getItem('githubToken');
+}
+
+// Save token to localStorage
+function setGitHubToken(token) {
+    localStorage.setItem('githubToken', token);
+}
+
+// Check if token is configured
+function isGitHubConfigured() {
+    return !!getGitHubToken();
+}
+
+// Fetch notes from GitHub
+async function fetchNotesFromGitHub() {
+    const token = getGitHubToken();
+    if (!token) return null;
+    
+    try {
+        const response = await fetch(
+            `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`,
+            {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            }
+        );
+        
+        if (!response.ok) {
+            console.error('Failed to fetch from GitHub:', response.status);
+            return null;
+        }
+        
+        const data = await response.json();
+        const content = atob(data.content);
+        return JSON.parse(content);
+    } catch (error) {
+        console.error('Error fetching from GitHub:', error);
+        return null;
+    }
+}
+
+// Save notes to GitHub
+async function saveNotesToGitHub(notesData) {
+    const token = getGitHubToken();
+    if (!token) {
+        console.log('No GitHub token configured');
+        return false;
+    }
+    
+    try {
+        // First, get the current file to get its SHA
+        const getResponse = await fetch(
+            `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`,
+            {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            }
+        );
+        
+        let sha = null;
+        if (getResponse.ok) {
+            const data = await getResponse.json();
+            sha = data.sha;
+        }
+        
+        // Prepare the update
+        const content = btoa(JSON.stringify(notesData, null, 2));
+        const payload = {
+            message: 'Update notes and task states',
+            content: content,
+            branch: GITHUB_CONFIG.branch
+        };
+        
+        if (sha) {
+            payload.sha = sha;
+        }
+        
+        // Update the file
+        const putResponse = await fetch(
+            `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            }
+        );
+        
+        if (!putResponse.ok) {
+            console.error('Failed to save to GitHub:', putResponse.status);
+            return false;
+        }
+        
+        console.log('✅ Saved to GitHub successfully');
+        return true;
+    } catch (error) {
+        console.error('Error saving to GitHub:', error);
+        return false;
+    }
+}
+
+// Load all data from GitHub on page load
+async function loadFromGitHub() {
+    if (!isGitHubConfigured()) {
+        console.log('GitHub sync not configured, using localStorage only');
+        return;
+    }
+    
+    const data = await fetchNotesFromGitHub();
+    if (!data) return;
+    
+    // Load notes
+    document.getElementById('personalNotesText').value = data.personalNotes || '';
+    document.getElementById('jobHuntingNotesText').value = data.jobHuntingNotes || '';
+    document.getElementById('internshipNotesText').value = data.internshipNotes || '';
+    
+    // Update note states
+    noteStates.personal.content = data.personalNotes || '';
+    noteStates.personal.saved = true;
+    noteStates.jobHunting.content = data.jobHuntingNotes || '';
+    noteStates.jobHunting.saved = true;
+    noteStates.internship.content = data.internshipNotes || '';
+    noteStates.internship.saved = true;
+    
+    // Auto-expand textareas
+    autoExpandNote('personalNotesText');
+    autoExpandNote('jobHuntingNotesText');
+    autoExpandNote('internshipNotesText');
+    
+    console.log('✅ Loaded from GitHub');
+}
+
+// Save all data to GitHub
+async function saveAllToGitHub() {
+    const data = {
+        personalNotes: document.getElementById('personalNotesText').value,
+        jobHuntingNotes: document.getElementById('jobHuntingNotesText').value,
+        internshipNotes: document.getElementById('internshipNotesText').value,
+        taskStates: JSON.parse(localStorage.getItem('taskStates') || '{}'),
+        archivedCourses: JSON.parse(localStorage.getItem('archivedCourses') || '[]'),
+        lastSynced: new Date().toISOString()
+    };
+    
+    const success = await saveNotesToGitHub(data);
+    return success;
+}
+
+// Modify saveNote to also save to GitHub
+const _originalSaveNote = window.saveNote;
+window.saveNote = async function(noteType, textareaId, btnId) {
+    _originalSaveNote(noteType, textareaId, btnId);
+    if (isGitHubConfigured()) {
+        await saveAllToGitHub();
+    }
+};
+
+// Settings modal functions
+function openSettings() {
+    document.getElementById('settingsModal').style.display = 'block';
+    updateSyncStatus();
+    const token = getGitHubToken();
+    if (token) {
+        document.getElementById('tokenInput').value = '••••••••' + token.slice(-8);
+    }
+}
+
+function closeSettings() {
+    document.getElementById('settingsModal').style.display = 'none';
+}
+
+function saveToken() {
+    const input = document.getElementById('tokenInput');
+    const token = input.value.trim();
+    
+    if (!token || token.startsWith('••••')) {
+        alert('Please enter a valid token');
+        return;
+    }
+    
+    if (!token.startsWith('github_pat_') && !token.startsWith('ghp_')) {
+        alert('Token should start with github_pat_ or ghp_');
+        return;
+    }
+    
+    setGitHubToken(token);
+    alert('✅ Token saved! Your notes will now sync to GitHub.');
+    updateSyncStatus();
+    loadFromGitHub();
+}
+
+function clearToken() {
+    if (confirm('Remove GitHub sync? Your notes will only be saved locally.')) {
+        localStorage.removeItem('githubToken');
+        document.getElementById('tokenInput').value = '';
+        alert('Token cleared. GitHub sync disabled.');
+        updateSyncStatus();
+    }
+}
+
+function updateSyncStatus() {
+    const statusDiv = document.getElementById('syncStatus');
+    if (isGitHubConfigured()) {
+        statusDiv.className = 'sync-status active';
+        statusDiv.textContent = '✅ GitHub Sync Active - Your notes sync automatically';
+    } else {
+        statusDiv.className = 'sync-status inactive';
+        statusDiv.textContent = '⚠️ GitHub Sync Not Configured - Notes saved locally only';
+    }
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('settingsModal');
+    if (event.target == modal) {
+        closeSettings();
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadFromGitHub();
+});
+
 // Display last updated timestamp in Central Time
 function updateTimestamp() {
     // Only use window.lastUpdated from timestamp.js (managed by GitHub Actions)

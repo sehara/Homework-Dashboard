@@ -10,6 +10,38 @@
     <div class="container">
         <div class="header">
             <h1>📚 Homework</h1>
+            <button id="settingsBtn" class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
+
+            <div id="settingsModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeSettings()">&times;</span>
+                    <h2>⚙️ Dashboard Settings</h2>
+                    
+                    <div class="settings-section">
+                        <h3>☁️ GitHub Sync</h3>
+                        <p>Sync your notes and task states across all devices using GitHub.</p>
+                        
+                        <div id="syncStatus" class="sync-status"></div>
+                        
+                        <label for="tokenInput">GitHub Personal Access Token:</label>
+                        <input type="password" id="tokenInput" placeholder="github_pat_..." class="token-input">
+                        
+                        <button onclick="saveToken()" class="save-token-btn">💾 Save Token</button>
+                        <button onclick="clearToken()" class="clear-token-btn">🗑️ Clear Token</button>
+                        
+                        <div class="help-text">
+                            <p><strong>How to get a token:</strong></p>
+                            <ol>
+                                <li>Go to <a href="https://github.com/settings/tokens?type=beta" target="_blank">GitHub Settings</a></li>
+                                <li>Generate new token (fine-grained)</li>
+                                <li>Select only "Homework-Dashboard" repo</li>
+                                <li>Give "Contents" read/write permission</li>
+                                <li>Copy and paste token here</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <p id="dateRange">UChicago MBA | Next 14 Days</p>
         </div>
         <div class="summary-section">
