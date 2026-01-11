@@ -1073,3 +1073,46 @@ body {
     color: #999;
     font-style: italic;
 }
+
+.task-card-done {
+    opacity: 0.6;
+    background: #f8f9fa;
+}
+
+.task-card-done .task-card-textarea {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.done-badge {
+    background: #28a745;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.done-timestamp {
+    font-size: 0.8em;
+    opacity: 0.9;
+}
+
+.card-btn.done {
+    background: #28a745;
+}
+
+.card-btn.done:hover {
+    background: #218838;
+}
+
+.card-btn.undo {
+    background: #6c757d;
+}
+
+.card-btn.undo:hover {
+    background: #5a6268;
+}
