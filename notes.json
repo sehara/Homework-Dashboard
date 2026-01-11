@@ -1,6 +1,6 @@
 {
   "personalNotes": "Develop a script or tool for the current page that reads \"task box\" content and uses AI to estimate completion time and suggest an optimal time slot by analyzing existing Google Calendar events for maximum brainpower. Implement a button to sync the task to Google Calendar and a \"Mark as Done\" function that moves the task to a bottom-of-page archive while automatically deleting the corresponding calendar event. Full implementation is required by the end of the day.",
-  "familyNotes": "japan",
+  "familyNotes": "test japan",
   "jobHuntingNotes": "",
   "internshipNotes": "",
   "taskCards": {
@@ -15,7 +15,7 @@
     "family": [
       {
         "id": 1768152509629,
-        "content": "japan",
+        "content": "test japan",
         "rating": null,
         "editingTime": false
       }
@@ -25,5 +25,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-11T18:08:10.283Z"
+  "lastSynced": "2026-01-11T18:21:04.359Z"
 }
