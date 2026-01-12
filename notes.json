@@ -1,7 +1,7 @@
 {
   "personalNotes": "Develop a browser script for the \"test\" page that extracts content from the \"task box,\" uses AI to estimate completion time, and identifies an optimal Google Calendar slot based on available gaps and peak cognitive performance. The tool must feature a \"Sync\" button to create the Google Calendar event and a \"Mark as Done\" function that moves the task to a bottom-of-page archive while automatically deleting the corresponding calendar event. Full implementation is required by the end of the day.",
   "familyNotes": "test japan\n\n---\n\nMessage parents about March Plans",
-  "jobHuntingNotes": "Research and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.",
+  "jobHuntingNotes": "Research and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.\n\n---\n\nSocial Connector",
   "internshipNotes": "",
   "taskCards": {
     "personal": [
@@ -48,7 +48,7 @@
       },
       {
         "id": 1768237668238,
-        "content": "",
+        "content": "Social Connector",
         "rating": null,
         "editingTime": false
       }
@@ -56,5 +56,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-12T17:07:50.240Z"
+  "lastSynced": "2026-01-12T17:08:02.997Z"
 }
