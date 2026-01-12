@@ -876,8 +876,8 @@ body {
     background: white;
     border-radius: 12px;
     border: 2px solid #dee2e6;
-    margin-bottom: 20px;
-    overflow: hidden;
+    margin-bottom: 40px;
+    overflow: visible;
     transition: all 0.3s;
 }
 
@@ -899,6 +899,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
 }
 
 .task-info {
@@ -1481,7 +1483,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     min-width: 200px;
-    z-index: 1000;
+    z-index: 9999;
     margin-top: 5px;
 }
 
