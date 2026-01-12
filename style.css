@@ -990,34 +990,35 @@ body {
 }
 
 .btn-details {
-    background: #667eea;
-    color: white;
+    background: #fff9e6;
+    color: #f59e0b;
+    font-size: 1.3em;
 }
 
 .btn-details:hover {
-    background: #5568d3;
+    background: #fef3c7;
 }
 
 .btn-schedule {
-    background: #4285f4;
-    color: white;
-    font-size: 1.2em;
+    background: #e8f4fd;
+    color: #4285f4;
+    font-size: 1.3em;
     padding: 8px 16px;
 }
 
 .btn-schedule:hover {
-    background: #3367d6;
+    background: #d0e9fa;
 }
 
 .btn-done {
-    background: #28a745;
-    color: white;
+    background: #e6f7ea;
+    color: #28a745;
     font-size: 1.3em;
     padding: 8px 16px;
 }
 
 .btn-done:hover {
-    background: #218838;
+    background: #d1f0d9;
 }
 
 .btn-undo {
@@ -1473,15 +1474,15 @@ body {
 
 .schedule-dropdown-menu {
     position: absolute;
-    bottom: 100%;
+    top: 100%;
     left: 0;
     background: white;
     border: 2px solid #4285f4;
     border-radius: 8px;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     min-width: 200px;
     z-index: 1000;
-    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 .schedule-dropdown-menu.hidden {
