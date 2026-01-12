@@ -1,7 +1,7 @@
 {
   "personalNotes": "Develop a browser script for the \"test\" page that extracts content from the \"task box,\" uses AI to estimate completion time, and identifies an optimal Google Calendar slot based on available gaps and peak cognitive performance. The tool must feature a \"Sync\" button to create the Google Calendar event and a \"Mark as Done\" function that moves the task to a bottom-of-page archive while automatically deleting the corresponding calendar event. Full implementation is required by the end of the day.",
   "familyNotes": "test japan\n\n---\n\nMessage parents about March Plans",
-  "jobHuntingNotes": "Research and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.\n\n---\n\nSocial Connector\nASIJ, L&C, PnP",
+  "jobHuntingNotes": "Research and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. DENA, Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.\n\n---\n\nSocial Connector\nASIJ, L&C, PnP",
   "internshipNotes": "E-mail KV Partner\n\n---\n\nList-up My Social Capital",
   "taskCards": {
     "personal": [
@@ -50,7 +50,7 @@
     "jobHunting": [
       {
         "id": 1768236841837,
-        "content": "Research and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.",
+        "content": "Research and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. DENA, Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.",
         "rating": {
           "score": 6,
           "time": "1h 30m",
@@ -69,5 +69,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-12T17:09:04.885Z"
+  "lastSynced": "2026-01-12T19:13:50.262Z"
 }
