@@ -2343,11 +2343,11 @@ function renderTaskCards(noteType) {
 
                     <div class="task-card-actions">
                         <button class="action-btn btn-details" onclick="checkTaskRating('${noteType}', ${card.id})" title="View task details and AI suggestions">
-                            ℹ️ Details
+                            💡
                         </button>
                         <div class="schedule-dropdown-container">
                             <button class="action-btn btn-schedule" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}" title="Schedule to Google Calendar">
-                                📅▼
+                                📅
                             </button>
                             <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">
                                 <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'today')">
