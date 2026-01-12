@@ -2322,52 +2322,61 @@ function renderTaskCards(noteType) {
             return `
                 <div id="taskCard${card.id}" class="task-card" data-card-id="${card.id}">
                     <div class="task-card-header">
-                        <div class="task-card-label">Task ${index + 1}</div>
-                        <div class="task-card-controls">
-                            ${ratingHtml}
-                            <div class="schedule-dropdown-container">
-                                <button class="card-btn compact schedule" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}" title="Schedule to Google Calendar">
-                                    📅▼
-                                </button>
-                                <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">
-                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'today')">
-                                        📅 Today
-                                    </div>
-                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'tomorrow')">
-                                        📅 Tomorrow
-                                    </div>
-                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'thisWorkWeek')">
-                                        📅 This Work Week
-                                    </div>
-                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'thisWeekend')">
-                                        📅 This Weekend
-                                    </div>
-                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'nextWeekday')">
-                                        📅 Next Weekday
-                                    </div>
-                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'custom')">
-                                        🗓️ Custom...
-                                    </div>
-                                    <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'anytime')">
-                                        ⚡ Anytime
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="card-btn compact done" onclick="markTaskDone('${noteType}', ${card.id})" title="Mark as done and archive">
-                                ✅
-                            </button>
-                            <button class="card-btn compact delete" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
-                                ✕
-                            </button>
+                        <div class="task-info">
+                            <span class="task-number">Task ${index + 1}</span>
+                            ${card.rating ? `
+                                <span class="time-badge">${card.rating.time}</span>
+                            ` : ''}
                         </div>
+                        <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
+                            ✕
+                        </button>
                     </div>
+
                     <textarea
-                        class="task-card-textarea"
+                        class="task-card-content"
                         placeholder="Type your task here... (can be multiple lines)"
                         oninput="updateTaskCard('${noteType}', ${card.id}, this.value)"
                         onfocus="this.parentElement.classList.add('focused')"
                         onblur="this.parentElement.classList.remove('focused')"
                     >${escapeHtml(card.content)}</textarea>
+
+                    <div class="task-card-actions">
+                        <button class="action-btn btn-details" onclick="checkTaskRating('${noteType}', ${card.id})" title="View task details and AI suggestions">
+                            ℹ️ Details
+                        </button>
+                        <div class="schedule-dropdown-container">
+                            <button class="action-btn btn-schedule" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}" title="Schedule to Google Calendar">
+                                📅▼
+                            </button>
+                            <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">
+                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'today')">
+                                    📅 Today
+                                </div>
+                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'tomorrow')">
+                                    📅 Tomorrow
+                                </div>
+                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'thisWorkWeek')">
+                                    📅 This Work Week
+                                </div>
+                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'thisWeekend')">
+                                    📅 This Weekend
+                                </div>
+                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'nextWeekday')">
+                                    📅 Next Weekday
+                                </div>
+                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'custom')">
+                                    🗓️ Custom...
+                                </div>
+                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'anytime')">
+                                    ⚡ Anytime
+                                </div>
+                            </div>
+                        </div>
+                        <button class="action-btn btn-done" onclick="markTaskDone('${noteType}', ${card.id})" title="Mark as done and archive">
+                            ✅
+                        </button>
+                    </div>
                 </div>
             `;
         }).join('');
