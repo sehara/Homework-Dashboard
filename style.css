@@ -1509,6 +1509,7 @@ body {
     position: relative;
     display: flex;
     margin: 0;
+    z-index: 100000;
 }
 
 .card-btn.schedule {
@@ -1532,7 +1533,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     min-width: 200px;
-    z-index: 99999;
+    z-index: 100001;
     margin-top: 5px;
 }
 
