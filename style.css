@@ -880,11 +880,13 @@ body {
     margin-bottom: 40px;
     overflow: visible;
     transition: all 0.3s;
+    z-index: 1;
 }
 
 .task-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    z-index: 2;
 }
 
 .task-card.focused {
@@ -1530,7 +1532,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     min-width: 200px;
-    z-index: 9999;
+    z-index: 99999;
     margin-top: 5px;
 }
 

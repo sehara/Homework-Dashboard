@@ -2938,48 +2938,44 @@ async function scheduleTask(taskId, timeframe, taskData) {
         return;
     }
 
+    const auth = JSON.parse(authData);
+    if (Date.now() > auth.expiresAt) {
+        alert('Google Calendar token expired. Please reconnect.');
+        localStorage.removeItem('googleCalendarAuth');
+        openSettings();
+        return;
+    }
+
     const { title, duration, link, courseName } = taskData;
     const durationMinutes = Math.round(duration * 60);
 
-    const events = await fetchCalendarEvents(timeframe);
+    const { startDate, endDate } = getTimeframeRange(timeframe);
+    const events = await fetchCalendarEvents(auth.accessToken, startDate, endDate);
+    
     if (events === null) {
         alert('Failed to fetch calendar events. Please check your connection.');
         return;
     }
 
-    const optimalSlot = findOptimalSlot(events, durationMinutes, timeframe);
+    const optimalSlot = findOptimalTimeSlot(events, startDate, endDate, durationMinutes);
     if (!optimalSlot) {
-        alert('Could not find a suitable free slot in the selected timeframe.');
+        alert(`Could not find a suitable ${durationMinutes} min slot in the selected timeframe. Try a different timeframe or check your calendar.`);
         return;
     }
 
     // Generate Google Calendar Link
-    const startTime = optimalSlot;
-    const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
+    const startTime = optimalSlot.start;
+    const endTime = optimalSlot.end;
     
-    const formatDateTime = (date) => {
-        return date.toISOString().replace(/-|:|\.\d+/g, '').split('.')[0] + 'Z';
-    };
-
     // Format: (xMin) HW: Class Name: Assignment or Task, Title
     const calendarTitle = `(${durationMinutes}Min) HW: ${courseName}: ${title}`;
     const notes = taskNotes[taskId] || '';
     const description = `${notes}\n\nCanvas Link: ${link}\n\nCreated from Dashboard`.trim();
     
-    const baseUrl = 'https://calendar.google.com/calendar/u/0/r/eventedit';
-    const url = `${baseUrl}?text=${encodeURIComponent(calendarTitle)}&details=${encodeURIComponent(description)}&dates=${formatDateTime(startTime)}/${formatDateTime(endTime)}&add=primary`;
-
+    const url = generateCalendarLink(calendarTitle, startTime, endTime, description);
     window.open(url, '_blank');
 
     // Update the button to "Mark Scheduled"
-    // We need to find the button in the DOM
-    const allButtons = document.querySelectorAll('.task-calendar-link');
-    let targetBtn = null;
-    // This is a bit hacky but works for Phase 1 since we don't have easy access to the element from here
-    // In a real app we'd pass the element or use a better selector
-    renderTasks(); // Re-render to show "Mark Scheduled" if we want, but let's just update the specific one
-    
-    // Actually, let's just call a function to update the UI state temporarily
     showMarkScheduled(taskId, startTime);
 }
 
@@ -3022,4 +3018,157 @@ function confirmScheduled(taskId, suggestedTime) {
             renderTasks();
         }
     }
+}
+
+function getTimeframeRange(timeframe) {
+    const now = new Date();
+    let startDate, endDate;
+    
+    switch(timeframe) {
+        case 'today':
+            startDate = new Date(now);
+            endDate = new Date(now);
+            endDate.setHours(23, 59, 59);
+            break;
+            
+        case 'tomorrow':
+            startDate = new Date(now);
+            startDate.setDate(startDate.getDate() + 1);
+            startDate.setHours(0, 0, 0);
+            endDate = new Date(startDate);
+            endDate.setHours(23, 59, 59);
+            break;
+            
+        case 'thisWorkWeek':
+            startDate = new Date(now);
+            const dayOfWeek = startDate.getDay();
+            const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+            startDate.setDate(startDate.getDate() + daysToMonday);
+            startDate.setHours(0, 0, 0);
+            
+            endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 4);
+            endDate.setHours(23, 59, 59);
+            break;
+            
+        case 'thisWeekend':
+            startDate = new Date(now);
+            const daysToSaturday = 6 - startDate.getDay();
+            startDate.setDate(startDate.getDate() + daysToSaturday);
+            startDate.setHours(0, 0, 0);
+            
+            endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 1);
+            endDate.setHours(23, 59, 59);
+            break;
+            
+        case 'nextWeekday':
+            startDate = new Date(now);
+            let daysToAdd = 1;
+            startDate.setDate(startDate.getDate() + daysToAdd);
+            
+            while (startDate.getDay() === 0 || startDate.getDay() === 6) {
+                startDate.setDate(startDate.getDate() + 1);
+            }
+            startDate.setHours(8, 30, 0);
+            
+            endDate = new Date(startDate);
+            endDate.setHours(17, 0, 0);
+            break;
+            
+        case 'anytime':
+            startDate = new Date(now);
+            endDate = new Date(now);
+            endDate.setDate(endDate.getDate() + 7);
+            break;
+            
+        default:
+            startDate = new Date(now);
+            endDate = new Date(now);
+            endDate.setDate(endDate.getDate() + 7);
+    }
+    
+    return { startDate, endDate };
+}
+
+async function fetchCalendarEvents(accessToken, startDate, endDate) {
+    const timeMin = startDate.toISOString();
+    const timeMax = endDate.toISOString();
+    
+    const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?` +
+        `timeMin=${encodeURIComponent(timeMin)}&` +
+        `timeMax=${encodeURIComponent(timeMax)}&` +
+        `singleEvents=true&` +
+        `orderBy=startTime`;
+    
+    try {
+        const response = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        if (!response.ok) return null;
+        const data = await response.json();
+        return data.items || [];
+    } catch (error) {
+        console.error('Error fetching calendar events:', error);
+        return null;
+    }
+}
+
+function findOptimalTimeSlot(events, startDate, endDate, durationMinutes) {
+    const slots = [];
+    const current = new Date(startDate);
+    
+    while (current <= endDate) {
+        if (current.getDay() !== 0 && current.getDay() !== 6) {
+            const morningStart = new Date(current);
+            morningStart.setHours(8, 30, 0, 0);
+            const morningEnd = new Date(current);
+            morningEnd.setHours(12, 0, 0, 0);
+            slots.push({ start: morningStart, end: morningEnd, priority: 100 });
+            
+            const afternoonStart = new Date(current);
+            afternoonStart.setHours(13, 0, 0, 0);
+            const afternoonEnd = new Date(current);
+            afternoonEnd.setHours(17, 0, 0, 0);
+            slots.push({ start: afternoonStart, end: afternoonEnd, priority: 80 });
+            
+            const eveningStart = new Date(current);
+            eveningStart.setHours(19, 30, 0, 0);
+            const eveningEnd = new Date(current);
+            eveningEnd.setHours(22, 0, 0, 0);
+            slots.push({ start: eveningStart, end: eveningEnd, priority: 60 });
+        }
+        current.setDate(current.getDate() + 1);
+    }
+    
+    for (const slot of slots) {
+        const slotDuration = (slot.end - slot.start) / (1000 * 60);
+        if (slotDuration >= durationMinutes) {
+            const hasConflict = events.some(event => {
+                const eventStart = new Date(event.start.dateTime || event.start.date);
+                const eventEnd = new Date(event.end.dateTime || event.end.date);
+                return (slot.start < eventEnd && slot.end > eventStart);
+            });
+            
+            if (!hasConflict) {
+                return {
+                    start: slot.start,
+                    end: new Date(slot.start.getTime() + durationMinutes * 60 * 1000)
+                };
+            }
+        }
+    }
+    return null;
+}
+
+function generateCalendarLink(title, startDate, endDate, description) {
+    const startStr = startDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const endStr = endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&` +
+        `text=${encodeURIComponent(title)}&` +
+        `dates=${startStr}/${endStr}&` +
+        `details=${encodeURIComponent(description)}`;
+    
+    return url;
 }
