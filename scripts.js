@@ -1832,7 +1832,8 @@ const taskCards = {
 };
 
 // Common time options in minutes
-const TIME_OPTIONS = [15, 30, 45, 60, 90, 120, 150, 180, 240, 300, 360, 480];
+// Time options in minutes (0.5 to 8 hours in 0.5 hour increments, matching Canvas tasks)
+const TIME_OPTIONS = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480];
 
 // Initialize task cards on page load
 function initTaskCards() {
@@ -2419,7 +2420,7 @@ function renderTaskCards(noteType) {
                         <div class="task-info">
                             <span class="task-number">Task ${index + 1}</span>
                             ${card.rating ? `
-                                <span class="time-badge">${card.rating.time}</span>
+                                <span class="time-badge" onclick="editTime('${noteType}', ${card.id}); event.stopPropagation();" style="cursor: pointer;" title="Click to edit time">${card.rating.time}</span>
                             ` : ''}
                             ${isScheduled ? `<span class="scheduled-badge">${scheduledTimeText}</span>` : ''}
                         </div>
@@ -2441,7 +2442,7 @@ function renderTaskCards(noteType) {
                             💡
                         </button>
                         <div class="schedule-dropdown-container">
-                            <button class="action-btn btn-schedule ${isScheduled ? 'scheduled' : ''}" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}" title="${isScheduled ? 'View/Unschedule event' : 'Schedule to Google Calendar'}">
+                            <button class="action-btn btn-schedule ${isScheduled ? 'scheduled' : ''}" onclick="${isScheduled ? `scheduleTaskCard('${noteType}', ${card.id}, 'unschedule')` : `toggleScheduleDropdown(${card.id})`}" id="scheduleBtn${card.id}" title="${isScheduled ? 'View/Unschedule event' : 'Schedule to Google Calendar'}">
                                 ${isScheduled ? scheduledTimeText : '📅'}
                             </button>
                             <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">

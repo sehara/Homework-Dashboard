@@ -927,6 +927,18 @@ body {
     font-weight: bold;
 }
 
+.scheduled-badge {
+    background: #28a745;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .delete-btn {
     background: #dc3545;
     color: white;
