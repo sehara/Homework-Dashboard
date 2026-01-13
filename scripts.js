@@ -2948,43 +2948,63 @@ async function scheduleTask(taskId, timeframe, taskData) {
 
     const { title, duration, link, courseName } = taskData;
     
-    // Parse duration (e.g., "2 hrs" -> 120 minutes, "45 min" -> 45)
+    // Parse duration - handle multiple formats: "1h 30m", "2 hrs", "45 min", "2h", "30m"
     const durationText = taskData.durationText || (typeof duration === 'string' ? duration : `${duration} hrs`);
     let durationMinutes = 60; // Default 1 hour
 
     console.log('Parsing duration from:', durationText);
 
-    // Extract number from string
-    const numberMatch = durationText.match(/[\d.]+/);
-    if (!numberMatch) {
-        console.error('Could not parse number from:', durationText);
-        alert('Could not determine task duration. Please check the time estimate.');
+    try {
+        let totalMinutes = 0;
+        
+        // Handle "1h 30m" format
+        const hoursMatch = durationText.match(/(\d+)\s*h/i);
+        const minutesMatch = durationText.match(/(\d+)\s*m(?!in)/i); // Match 'm' but not 'min'
+        
+        if (hoursMatch) {
+            totalMinutes += parseInt(hoursMatch[1]) * 60;
+            console.log('Found hours:', hoursMatch[1]);
+        }
+        
+        if (minutesMatch) {
+            totalMinutes += parseInt(minutesMatch[1]);
+            console.log('Found minutes:', minutesMatch[1]);
+        }
+        
+        // Handle "2 hrs" or "45 min" format (if above didn't match)
+        if (totalMinutes === 0) {
+            const numberMatch = durationText.match(/(\d+(?:\.\d+)?)/);
+            if (numberMatch) {
+                const number = parseFloat(numberMatch[1]);
+                
+                if (durationText.toLowerCase().includes('hr')) {
+                    totalMinutes = number * 60;
+                } else if (durationText.toLowerCase().includes('min')) {
+                    totalMinutes = number;
+                } else {
+                    // No unit, assume hours
+                    totalMinutes = number * 60;
+                }
+            }
+        }
+        
+        if (totalMinutes > 0) {
+            durationMinutes = totalMinutes;
+        } else {
+            throw new Error('Could not parse duration');
+        }
+        
+        console.log('Parsed duration:', durationMinutes, 'minutes');
+        
+    } catch (error) {
+        console.error('Duration parsing error:', error);
+        alert(`Could not determine task duration from "${durationText}". Please check the time estimate.`);
         return;
     }
 
-    const number = parseFloat(numberMatch[0]);
-
-    // Determine if hours or minutes
-    if (durationText.toLowerCase().includes('hr')) {
-        durationMinutes = number * 60;
-    } else if (durationText.toLowerCase().includes('min')) {
-        durationMinutes = number;
-    } else if (durationText.toLowerCase().includes('h')) {
-        // Handle "2h" format
-        durationMinutes = number * 60;
-    } else if (durationText.toLowerCase().includes('m')) {
-        // Handle "45m" format
-        durationMinutes = number;
-    } else {
-        // Default to hours if no unit specified
-        durationMinutes = number * 60;
-    }
-
-    console.log('Parsed duration:', durationMinutes, 'minutes');
-
     // Validate duration
     if (isNaN(durationMinutes) || durationMinutes <= 0) {
-        alert(`Invalid task duration: ${durationText}. Please check the time estimate.`);
+        alert(`Invalid task duration: ${durationText}. Please re-check rating.`);
         return;
     }
 
