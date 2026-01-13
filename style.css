@@ -873,6 +873,7 @@ body {
 
 /* Task Card - 3 Section Layout */
 .task-card {
+    position: relative;
     background: white;
     border-radius: 12px;
     border: 2px solid #dee2e6;
@@ -941,7 +942,7 @@ body {
 }
 
 .delete-btn:hover {
-    background: #c82333;
+    background: #dc3545;
     transform: scale(1.1);
 }
 
@@ -968,33 +969,51 @@ body {
 
 /* Actions Section */
 .task-card-actions {
-    background: #fafbfc;
-    border-top: 1px solid #e9ecef;
-    padding: 12px 16px;
+    position: absolute;
+    right: -60px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
-    gap: 16px;
-    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.task-card:hover .task-card-actions {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.task-card.mobile-active .task-card-actions {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .action-btn {
-    padding: 8px 14px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9em;
+    font-size: 1.4em;
     transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .btn-details {
     background: #fff9e6;
     color: #f59e0b;
-    font-size: 1.3em;
 }
 
 .btn-details:hover {
@@ -1004,8 +1023,6 @@ body {
 .btn-schedule {
     background: #e8f4fd;
     color: #4285f4;
-    font-size: 1.3em;
-    padding: 8px 16px;
 }
 
 .btn-schedule:hover {
@@ -1015,8 +1032,6 @@ body {
 .btn-done {
     background: #e6f7ea;
     color: #28a745;
-    font-size: 1.3em;
-    padding: 8px 16px;
 }
 
 .btn-done:hover {
@@ -1458,7 +1473,7 @@ body {
 /* Schedule Dropdown */
 .schedule-dropdown-container {
     position: relative;
-    display: inline-block;
+    display: flex;
     margin: 0;
 }
 

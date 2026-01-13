@@ -2320,7 +2320,7 @@ function renderTaskCards(noteType) {
             }
 
             return `
-                <div id="taskCard${card.id}" class="task-card" data-card-id="${card.id}">
+                <div id="taskCard${card.id}" class="task-card" data-card-id="${card.id}" ontouchstart="this.classList.toggle('mobile-active')" onclick="this.classList.toggle('mobile-active')">
                     <div class="task-card-header">
                         <div class="task-info">
                             <span class="task-number">Task ${index + 1}</span>
