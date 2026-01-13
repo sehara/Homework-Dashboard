@@ -970,7 +970,7 @@ body {
 /* Actions Section */
 .task-card-actions {
     position: absolute;
-    right: -60px;
+    right: -30px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
@@ -982,6 +982,11 @@ body {
 }
 
 .task-card:hover .task-card-actions {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.task-card-actions:hover {
     opacity: 1;
     pointer-events: auto;
 }
