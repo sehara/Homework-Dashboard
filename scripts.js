@@ -750,7 +750,7 @@ function renderTasks() {
                                 const dropdown = document.createElement('div');
                                 dropdown.className = 'schedule-dropdown-menu';
                                 dropdown.style.position = 'absolute';
-                                dropdown.style.zIndex = '1000';
+                                dropdown.style.zIndex = '99999';
                                 dropdown.style.background = 'white';
                                 dropdown.style.border = '1px solid #ccc';
                                 dropdown.style.borderRadius = '8px';
@@ -2369,14 +2369,19 @@ function renderTaskCards(noteType) {
                 `;
             }
 
+            // Check if this task card is scheduled
+            const scheduledKey = `taskCard_${noteType}_${card.id}`;
+            const isScheduled = scheduledTaskIds.includes(scheduledKey);
+
             return `
-                <div id="taskCard${card.id}" class="task-card" data-card-id="${card.id}" ontouchstart="this.classList.toggle('mobile-active')" onclick="this.classList.toggle('mobile-active')">
+                <div id="taskCard${card.id}" class="task-card ${isScheduled ? 'scheduled' : ''}" data-card-id="${card.id}" ontouchstart="this.classList.toggle('mobile-active')" onclick="this.classList.toggle('mobile-active')">
                     <div class="task-card-header">
                         <div class="task-info">
                             <span class="task-number">Task ${index + 1}</span>
                             ${card.rating ? `
                                 <span class="time-badge">${card.rating.time}</span>
                             ` : ''}
+                            ${isScheduled ? `<span class="scheduled-badge">✓ Scheduled</span>` : ''}
                         </div>
                         <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
                             ✕
@@ -2396,8 +2401,8 @@ function renderTaskCards(noteType) {
                             💡
                         </button>
                         <div class="schedule-dropdown-container">
-                            <button class="action-btn btn-schedule" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}" title="Schedule to Google Calendar">
-                                📅
+                            <button class="action-btn btn-schedule ${isScheduled ? 'scheduled' : ''}" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}" title="${isScheduled ? 'View/Unschedule event' : 'Schedule to Google Calendar'}">
+                                ${isScheduled ? '✓' : '📅'}
                             </button>
                             <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">
                                 <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'today')">
@@ -2497,159 +2502,115 @@ function toggleScheduleDropdown(cardId) {
 }
 
 // Google Calendar scheduling implementation
-async function scheduleTask(noteType, cardId, timeframe) {
+// Generate event name for Task Cards: (15min) Category: Task Title
+function generateTaskCardEventName(durationMinutes, category, title) {
+    // Capitalize first letter of category
+    const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+    // Take first line of title, max 100 chars
+    const shortTitle = title.split('\n')[0].substring(0, 100);
+    return `(${durationMinutes}min) ${categoryName}: ${shortTitle}`;
+}
+
+// Task Card scheduling - opens Google Calendar in new tab
+function scheduleTask(noteType, cardId, timeframe) {
     const dropdown = document.getElementById(`scheduleDropdown${cardId}`);
     if (dropdown) dropdown.classList.add('hidden');
 
-    try {
-        // Get task from global taskCards object
-        const cards = taskCards[noteType];
-        if (!cards) {
-            alert('Task list not found');
-            return;
-        }
+    // Get task from global taskCards object
+    const cards = taskCards[noteType];
+    if (!cards) {
+        alert('Task list not found');
+        return;
+    }
 
-        const card = cards.find(c => c.id === cardId);
-        if (!card) {
-            alert('Task not found');
-            return;
-        }
+    const card = cards.find(c => c.id === cardId);
+    if (!card) {
+        alert('Task not found');
+        return;
+    }
 
-        // === EXTENSIVE DEBUGGING ===
-        console.log('=== SCHEDULE TASK DEBUG ===');
-        console.log('Note Type:', noteType);
-        console.log('Card ID:', cardId);
-        console.log('Full card object:', card);
-        console.log('All card keys:', Object.keys(card));
-        console.log('card.rating:', card.rating);
-        if (card.rating) {
-            console.log('card.rating keys:', Object.keys(card.rating));
-            console.log('card.rating.time:', card.rating.time);
-            console.log('card.rating.emoji:', card.rating.emoji);
-            console.log('card.rating.score:', card.rating.score);
-        }
-        console.log('card.time:', card.time);
-        console.log('card.estimatedTime:', card.estimatedTime);
-        console.log('card.duration:', card.duration);
-        console.log('card.content:', card.content);
-        console.log('========================');
+    // Check if card is already scheduled - if so, open search
+    const scheduledKey = `taskCard_${noteType}_${cardId}`;
+    const isScheduled = scheduledTaskIds.includes(scheduledKey);
 
-        console.log('=== SCHEDULING TASK ===');
-        console.log('Card:', card);
-        console.log('Rating:', card.rating);
-
-        // Get duration
+    if (isScheduled) {
+        // Get duration for event name
         let durationText = card.rating?.time;
-
-        // Try alternative properties if rating.time is undefined
-        if (!durationText || durationText === 'undefined' || durationText.includes('undefined')) {
-            console.log('⚠️ card.rating.time is invalid, trying alternatives...');
-            durationText = card.time || card.estimatedTime || card.duration;
-            console.log('Alternative found:', durationText);
-        }
-
-        // If still nothing, check DOM
-        if (!durationText || durationText === 'undefined' || durationText.includes('undefined')) {
-            console.log('⚠️ No duration in data, checking DOM...');
+        if (!durationText) {
             const cardElement = document.getElementById(`taskCard${cardId}`);
             const timeBadge = cardElement?.querySelector('.time-badge');
             if (timeBadge) {
                 durationText = timeBadge.textContent.trim();
-                console.log('Found in DOM:', durationText);
             }
         }
 
-        console.log('Final durationText:', durationText);
-
-        if (!durationText || durationText.includes('undefined')) {
-            alert('No time estimate found. Please click 💡 Details button first to get AI time estimate.');
+        if (!durationText) {
+            alert('No time estimate found. Please click 💡 Details button first.');
             return;
         }
 
-        console.log('Parsing duration from:', durationText);
-
-        // Parse duration - handle "1h 30m", "2h", "45m", "1 hr", "2 hrs", "30 min"
-        let durationMinutes = 60;
-        try {
-            let totalMinutes = 0;
-
-            const hoursMatch = durationText.match(/(\d+(?:\.\d+)?)\s*h(?:rs?|ours?)?/i);
-            const minutesMatch = durationText.match(/(\d+)\s*m(?:ins?)?(?!\w)/i);
-
-            if (hoursMatch) {
-                totalMinutes += parseFloat(hoursMatch[1]) * 60;
-                console.log('Hours:', hoursMatch[1]);
-            }
-
-            if (minutesMatch) {
-                totalMinutes += parseInt(minutesMatch[1]);
-                console.log('Minutes:', minutesMatch[1]);
-            }
-
-            if (totalMinutes > 0) {
-                durationMinutes = totalMinutes;
-            } else {
-                throw new Error('No time value parsed');
-            }
-
-            console.log('✓ Duration:', durationMinutes, 'minutes');
-
-        } catch (error) {
-            console.error('Parse error:', error);
-            alert(`Could not parse duration from "${durationText}"`);
+        const durationMinutes = parseDurationToMinutes(durationText);
+        if (!durationMinutes) {
+            alert('Could not parse duration.');
             return;
         }
 
-        if (isNaN(durationMinutes) || durationMinutes <= 0) {
-            alert(`Invalid duration: ${durationText}`);
-            return;
+        // Generate event name and open search
+        const eventName = generateTaskCardEventName(durationMinutes, noteType, card.content);
+        const searchUrl = `https://calendar.google.com/calendar/u/0/r/search?q=${encodeURIComponent(eventName)}`;
+        window.open(searchUrl, '_blank');
+
+        // Toggle to unscheduled
+        scheduledTaskIds = scheduledTaskIds.filter(id => id !== scheduledKey);
+        localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
+
+        // Re-render task cards
+        renderTaskCards(noteType);
+        return;
+    }
+
+    // Get duration
+    let durationText = card.rating?.time;
+
+    // Try alternative properties if rating.time is undefined
+    if (!durationText || durationText === 'undefined') {
+        const cardElement = document.getElementById(`taskCard${cardId}`);
+        const timeBadge = cardElement?.querySelector('.time-badge');
+        if (timeBadge) {
+            durationText = timeBadge.textContent.trim();
         }
+    }
 
-        // Check Google Calendar auth
-        const authStr = localStorage.getItem('googleCalendarAuth');
-        if (!authStr) {
-            alert('Please connect Google Calendar in Settings first');
-            openSettings();
-            return;
-        }
+    if (!durationText || durationText.includes('undefined')) {
+        alert('No time estimate found. Please click 💡 Details button first to get AI time estimate.');
+        return;
+    }
 
-        const auth = JSON.parse(authStr);
-        if (Date.now() > auth.expiresAt) {
-            alert('Google Calendar token expired. Please reconnect.');
-            localStorage.removeItem('googleCalendarAuth');
-            openSettings();
-            return;
-        }
+    // Parse duration
+    const durationMinutes = parseDurationToMinutes(durationText);
+    if (!durationMinutes) {
+        alert(`Could not parse duration from "${durationText}"`);
+        return;
+    }
 
-        // Get timeframe
-        const { startDate, endDate } = getTimeframeRange(timeframe);
-        console.log('Timeframe:', startDate.toLocaleString(), '-', endDate.toLocaleString());
+    // Generate event name
+    const eventName = generateTaskCardEventName(durationMinutes, noteType, card.content);
 
-        // Fetch calendar events
-        const events = await fetchCalendarEvents(auth.accessToken, startDate, endDate);
-        console.log('Calendar events:', events.length);
+    // Get suggested date
+    const suggestedDate = getTimeframeSuggestedDate(timeframe);
 
-        // Find slot
-        const slot = findOptimalTimeSlot(events, startDate, endDate, durationMinutes);
+    // Generate Google Calendar URL
+    const description = `Task from ${noteType.charAt(0).toUpperCase() + noteType.slice(1)} section\n\nCreated from Homework Dashboard`;
+    const calendarUrl = generateGoogleCalendarUrl(eventName, suggestedDate, durationMinutes, description);
 
-        if (!slot) {
-            alert(`No ${durationText} slot found in "${timeframe}". Try different timeframe.`);
-            return;
-        }
+    // Open in new tab
+    window.open(calendarUrl, '_blank');
 
-        console.log('✓ Slot:', slot.start.toLocaleString());
-
-        // Generate link
-        const title = card.content.split('\n')[0].substring(0, 100);
-        const link = generateCalendarLink(title, slot.start, slot.end);
-
-        // Open calendar
-        window.open(link, '_blank');
-        alert(`Suggested: ${slot.start.toLocaleString()}\n\nOpening Google Calendar...`);
-
-    } catch (error) {
-        console.error('Schedule error:', error);
-        alert('Error: ' + error.message);
+    // Mark as scheduled
+    if (!scheduledTaskIds.includes(scheduledKey)) {
+        scheduledTaskIds.push(scheduledKey);
+        localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
+        renderTaskCards(noteType);
     }
 }
 
@@ -3171,121 +3132,170 @@ function findOptimalSlot(events, durationMinutes, timeframe = 'today') {
     return null;
 }
 
-async function scheduleTask(taskId, timeframe, taskData) {
-    const authData = localStorage.getItem('googleCalendarAuth');
-    if (!authData) {
-        alert('Please connect Google Calendar in Settings first.');
-        openSettings();
-        return;
+// Generate event name for Canvas tasks: (120min) HW: Course Name: Task Title
+function generateCanvasEventName(durationMinutes, courseName, title) {
+    return `(${durationMinutes}min) HW: ${courseName}: ${title}`;
+}
+
+// Parse duration text to minutes
+function parseDurationToMinutes(durationText) {
+    if (!durationText || durationText === 'undefined') {
+        return null;
     }
 
-    const auth = JSON.parse(authData);
-    if (Date.now() > auth.expiresAt) {
-        alert('Google Calendar token expired. Please reconnect.');
-        localStorage.removeItem('googleCalendarAuth');
-        openSettings();
-        return;
+    let totalMinutes = 0;
+
+    // Try "1h 30m" style format
+    const hoursMatch = durationText.match(/(\d+(?:\.\d+)?)\s*h(?:rs?)?/i);
+    const minutesMatch = durationText.match(/(\d+)\s*m(?:ins?)?/i);
+
+    if (hoursMatch) {
+        totalMinutes += parseFloat(hoursMatch[1]) * 60;
     }
 
-    const { title, duration, link, courseName } = taskData;
-    
-    // Parse duration - handle ALL formats: "1h 30m", "1 hr", "2 hrs", "45 min", "2h", "30m"
-    const durationText = taskData.durationText || (typeof duration === 'string' ? duration : `${duration} hrs`);
-    let durationMinutes = 60; // Default 1 hour
+    if (minutesMatch) {
+        totalMinutes += parseInt(minutesMatch[1]);
+    }
 
-    console.log('Parsing duration from:', durationText);
+    // If no match yet, try simple number extraction
+    if (totalMinutes === 0) {
+        const numberMatch = durationText.match(/(\d+(?:\.\d+)?)/);
+        if (numberMatch) {
+            const number = parseFloat(numberMatch[1]);
+            const lowerText = durationText.toLowerCase();
 
-    try {
-        let totalMinutes = 0;
-        
-        // Method 1: Try "1h 30m" style format
-        const hoursMatch = durationText.match(/(\d+(?:\.\d+)?)\s*h(?:rs?)?/i);
-        const minutesMatch = durationText.match(/(\d+)\s*m(?:ins?)?/i);
-        
-        if (hoursMatch) {
-            totalMinutes += parseFloat(hoursMatch[1]) * 60;
-            console.log('Found hours:', hoursMatch[1]);
-        }
-        
-        if (minutesMatch) {
-            totalMinutes += parseInt(minutesMatch[1]);
-            console.log('Found minutes:', minutesMatch[1]);
-        }
-        
-        // Method 2: If no match yet, try simple number extraction
-        if (totalMinutes === 0) {
-            const numberMatch = durationText.match(/(\d+(?:\.\d+)?)/);
-            if (numberMatch) {
-                const number = parseFloat(numberMatch[1]);
-                
-                // Check what unit follows
-                const lowerText = durationText.toLowerCase();
-                if (lowerText.includes('hr') || lowerText.includes('hour')) {
-                    totalMinutes = number * 60;
-                    console.log('Parsed as hours:', number);
-                } else if (lowerText.includes('min')) {
-                    totalMinutes = number;
-                    console.log('Parsed as minutes:', number);
-                } else {
-                    // No unit specified, assume hours
-                    totalMinutes = number * 60;
-                    console.log('No unit, assuming hours:', number);
-                }
+            if (lowerText.includes('hr') || lowerText.includes('hour')) {
+                totalMinutes = number * 60;
+            } else if (lowerText.includes('min')) {
+                totalMinutes = number;
+            } else {
+                // No unit specified, assume hours
+                totalMinutes = number * 60;
             }
         }
-        
-        if (totalMinutes > 0) {
-            durationMinutes = totalMinutes;
-        } else {
-            throw new Error('Could not parse any time value');
+    }
+
+    return totalMinutes > 0 ? totalMinutes : null;
+}
+
+// Canvas task scheduling - opens Google Calendar in new tab
+function scheduleTask(taskId, timeframe, taskData) {
+    const { title, duration, link, courseName } = taskData;
+
+    // Check if already scheduled - if so, open search
+    if (scheduledTaskIds.includes(taskId)) {
+        // Open Google Calendar search with event name
+        const durationText = taskData.durationText || (typeof duration === 'string' ? duration : `${duration} hrs`);
+        const durationMinutes = parseDurationToMinutes(durationText);
+
+        if (!durationMinutes) {
+            alert('Could not determine task duration. Please check the time estimate.');
+            return;
         }
-        
-        console.log('✓ Parsed duration:', durationMinutes, 'minutes');
-        
-    } catch (error) {
-        console.error('Duration parsing error:', error);
-        alert(`Could not determine task duration from "${durationText}". Please check the time estimate.`);
+
+        const eventName = generateCanvasEventName(durationMinutes, courseName, title);
+        const searchUrl = `https://calendar.google.com/calendar/u/0/r/search?q=${encodeURIComponent(eventName)}`;
+        window.open(searchUrl, '_blank');
+
+        // Toggle to unscheduled state
+        scheduledTaskIds = scheduledTaskIds.filter(id => id !== taskId);
+        localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
+
+        // Remove scheduled time
+        const times = JSON.parse(localStorage.getItem('scheduledTimes') || '{}');
+        delete times[taskId];
+        localStorage.setItem('scheduledTimes', JSON.stringify(times));
+
+        renderTasks();
         return;
     }
 
-    // Validate duration
-    if (isNaN(durationMinutes) || durationMinutes <= 0) {
-        alert(`Invalid task duration: ${durationText}. Please re-check rating.`);
+    // Parse duration
+    const durationText = taskData.durationText || (typeof duration === 'string' ? duration : `${duration} hrs`);
+    const durationMinutes = parseDurationToMinutes(durationText);
+
+    if (!durationMinutes) {
+        alert('Could not determine task duration. Please check the time estimate.');
         return;
     }
 
-    // Ensure reasonable duration (5 min to 8 hours)
-    if (durationMinutes < 5) durationMinutes = 5;
-    if (durationMinutes > 480) durationMinutes = 480;
+    // Generate event name
+    const eventName = generateCanvasEventName(durationMinutes, courseName, title);
 
-    const { startDate, endDate } = getTimeframeRange(timeframe);
-    const events = await fetchCalendarEvents(auth.accessToken, startDate, endDate);
-    
-    if (events === null) {
-        alert('Failed to fetch calendar events. Please check your connection.');
-        return;
-    }
+    // Get suggested date based on timeframe
+    const suggestedDate = getTimeframeSuggestedDate(timeframe);
 
-    const optimalSlot = findOptimalTimeSlot(events, startDate, endDate, durationMinutes);
-    if (!optimalSlot) {
-        alert(`Could not find a suitable ${durationMinutes} min slot in the selected timeframe. Try a different timeframe or check your calendar.`);
-        return;
-    }
-
-    // Generate Google Calendar Link
-    const startTime = optimalSlot.start;
-    const endTime = optimalSlot.end;
-    
-    // Format: (xMin) HW: Class Name: Assignment or Task, Title
-    const calendarTitle = `(${durationMinutes}Min) HW: ${courseName}: ${title}`;
+    // Build description
     const notes = taskNotes[taskId] || '';
-    const description = `${notes}\n\nCanvas Link: ${link}\n\nCreated from Dashboard`.trim();
-    
-    const url = generateCalendarLink(calendarTitle, startTime, endTime, description);
-    window.open(url, '_blank');
+    const description = `${notes}\n\nCanvas Link: ${link}\n\nCreated from Homework Dashboard`.trim();
 
-    // Update the button to "Mark Scheduled"
-    showMarkScheduled(taskId, startTime);
+    // Generate Google Calendar URL
+    const calendarUrl = generateGoogleCalendarUrl(eventName, suggestedDate, durationMinutes, description);
+
+    // Open in new tab
+    window.open(calendarUrl, '_blank');
+
+    // Mark as scheduled
+    if (!scheduledTaskIds.includes(taskId)) {
+        scheduledTaskIds.push(taskId);
+        localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
+        renderTasks();
+    }
+}
+
+// Get suggested date based on timeframe selection
+function getTimeframeSuggestedDate(timeframe) {
+    const now = new Date();
+    let suggestedDate = new Date(now);
+
+    switch (timeframe) {
+        case 'today':
+            // Keep today
+            break;
+        case 'tomorrow':
+            suggestedDate.setDate(suggestedDate.getDate() + 1);
+            break;
+        case 'week':
+        case 'thisWorkWeek':
+            // Next Monday if today is weekend, otherwise tomorrow
+            const day = suggestedDate.getDay();
+            if (day === 0) { // Sunday
+                suggestedDate.setDate(suggestedDate.getDate() + 1);
+            } else if (day === 6) { // Saturday
+                suggestedDate.setDate(suggestedDate.getDate() + 2);
+            } else {
+                suggestedDate.setDate(suggestedDate.getDate() + 1);
+            }
+            break;
+        default:
+            // Default to tomorrow
+            suggestedDate.setDate(suggestedDate.getDate() + 1);
+    }
+
+    return suggestedDate;
+}
+
+// Generate Google Calendar URL with pre-filled event details
+function generateGoogleCalendarUrl(title, date, durationMinutes, description = '') {
+    // Set start time (default to 9 AM on the suggested date)
+    const startDate = new Date(date);
+    startDate.setHours(9, 0, 0, 0);
+
+    // Calculate end time
+    const endDate = new Date(startDate);
+    endDate.setMinutes(endDate.getMinutes() + durationMinutes);
+
+    // Format dates for Google Calendar (YYYYMMDDTHHmmssZ format)
+    const formatDateTime = (d) => {
+        return d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    };
+
+    const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&` +
+        `text=${encodeURIComponent(title)}&` +
+        `dates=${formatDateTime(startDate)}/${formatDateTime(endDate)}&` +
+        `details=${encodeURIComponent(description)}`;
+
+    return url;
 }
 
 function showMarkScheduled(taskId, suggestedTime) {
