@@ -2948,7 +2948,7 @@ async function scheduleTask(taskId, timeframe, taskData) {
 
     const { title, duration, link, courseName } = taskData;
     
-    // Parse duration - handle multiple formats: "1h 30m", "2 hrs", "45 min", "2h", "30m"
+    // Parse duration - handle ALL formats: "1h 30m", "1 hr", "2 hrs", "45 min", "2h", "30m"
     const durationText = taskData.durationText || (typeof duration === 'string' ? duration : `${duration} hrs`);
     let durationMinutes = 60; // Default 1 hour
 
@@ -2957,12 +2957,12 @@ async function scheduleTask(taskId, timeframe, taskData) {
     try {
         let totalMinutes = 0;
         
-        // Handle "1h 30m" format
-        const hoursMatch = durationText.match(/(\d+)\s*h/i);
-        const minutesMatch = durationText.match(/(\d+)\s*m(?!in)/i); // Match 'm' but not 'min'
+        // Method 1: Try "1h 30m" style format
+        const hoursMatch = durationText.match(/(\d+(?:\.\d+)?)\s*h(?:rs?)?/i);
+        const minutesMatch = durationText.match(/(\d+)\s*m(?:ins?)?/i);
         
         if (hoursMatch) {
-            totalMinutes += parseInt(hoursMatch[1]) * 60;
+            totalMinutes += parseFloat(hoursMatch[1]) * 60;
             console.log('Found hours:', hoursMatch[1]);
         }
         
@@ -2971,19 +2971,24 @@ async function scheduleTask(taskId, timeframe, taskData) {
             console.log('Found minutes:', minutesMatch[1]);
         }
         
-        // Handle "2 hrs" or "45 min" format (if above didn't match)
+        // Method 2: If no match yet, try simple number extraction
         if (totalMinutes === 0) {
             const numberMatch = durationText.match(/(\d+(?:\.\d+)?)/);
             if (numberMatch) {
                 const number = parseFloat(numberMatch[1]);
                 
-                if (durationText.toLowerCase().includes('hr')) {
+                // Check what unit follows
+                const lowerText = durationText.toLowerCase();
+                if (lowerText.includes('hr') || lowerText.includes('hour')) {
                     totalMinutes = number * 60;
-                } else if (durationText.toLowerCase().includes('min')) {
+                    console.log('Parsed as hours:', number);
+                } else if (lowerText.includes('min')) {
                     totalMinutes = number;
+                    console.log('Parsed as minutes:', number);
                 } else {
-                    // No unit, assume hours
+                    // No unit specified, assume hours
                     totalMinutes = number * 60;
+                    console.log('No unit, assuming hours:', number);
                 }
             }
         }
@@ -2991,10 +2996,10 @@ async function scheduleTask(taskId, timeframe, taskData) {
         if (totalMinutes > 0) {
             durationMinutes = totalMinutes;
         } else {
-            throw new Error('Could not parse duration');
+            throw new Error('Could not parse any time value');
         }
         
-        console.log('Parsed duration:', durationMinutes, 'minutes');
+        console.log('✓ Parsed duration:', durationMinutes, 'minutes');
         
     } catch (error) {
         console.error('Duration parsing error:', error);
