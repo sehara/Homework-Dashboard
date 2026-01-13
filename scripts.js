@@ -1616,6 +1616,7 @@ function openSettings() {
     document.getElementById('settingsModal').style.display = 'block';
     updateSyncStatus();
     updateGeminiSyncStatus();
+    updateGoogleCalendarStatus();
     const token = getGitHubToken();
     if (token) {
         document.getElementById('tokenInput').value = '••••••••' + token.slice(-8);
@@ -2729,59 +2730,76 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// --- GOOGLE CALENDAR INTEGRATION (PHASE 1) ---
+// --- GOOGLE CALENDAR INTEGRATION ---
 
 const GOOGLE_CLIENT_ID = '103319944778-o17374emsbcv16sk8f310iufr4vcgm6p.apps.googleusercontent.com';
 const GOOGLE_REDIRECT_URI = 'https://sehara.github.io/Homework-Dashboard/oauth-callback';
-const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events';
+const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/userinfo.email';
 
 // Check for token on load
 document.addEventListener('DOMContentLoaded', function() {
-    updateGoogleStatus();
-    handleOAuthCallback();
+    updateGoogleCalendarStatus();
 });
 
-function updateGoogleStatus() {
-    const statusEl = document.getElementById('googleCalendarStatus');
-    const btnEl = document.getElementById('connectGoogleBtn');
-    const token = localStorage.getItem('googleCalendarToken');
-
-    if (token) {
-        statusEl.textContent = '✅ Connected';
-        statusEl.className = 'sync-status active';
-        statusEl.style.color = '#28a745';
-        btnEl.textContent = '🔄 Reconnect Google Calendar';
-    } else {
-        statusEl.textContent = '⚠️ Not Connected';
-        statusEl.className = 'sync-status inactive';
-        statusEl.style.color = '#dc3545';
-        btnEl.textContent = '🔗 Connect Google Calendar';
-    }
-}
-
-function connectGoogleCalendar() {
-    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(GOOGLE_REDIRECT_URI)}&response_type=token&scope=${encodeURIComponent(GOOGLE_SCOPES)}&include_granted_scopes=true&state=dashboard`;
-    window.location.href = authUrl;
-}
-
-function handleOAuthCallback() {
-    const hash = window.location.hash;
-    if (hash && hash.includes('access_token')) {
-        const params = new URLSearchParams(hash.substring(1));
-        const token = params.get('access_token');
-        if (token) {
-            localStorage.setItem('googleCalendarToken', token);
-            // Clean up URL
-            window.history.replaceState({}, document.title, window.location.pathname);
-            updateGoogleStatus();
-            alert('Google Calendar connected successfully!');
+function updateGoogleCalendarStatus() {
+    const authData = localStorage.getItem('googleCalendarAuth');
+    const email = localStorage.getItem('googleCalendarEmail');
+    const statusDiv = document.getElementById('googleCalendarStatus');
+    const connectBtn = document.getElementById('connectGoogleBtn');
+    
+    if (statusDiv && connectBtn) {
+        if (authData) {
+            const auth = JSON.parse(authData);
+            const isExpired = Date.now() > auth.expiresAt;
+            
+            if (!isExpired) {
+                statusDiv.className = 'sync-status active';
+                statusDiv.textContent = `✅ Connected${email ? ` as ${email}` : ''}`;
+                statusDiv.style.color = '#28a745';
+                connectBtn.textContent = '🔓 Disconnect';
+                connectBtn.onclick = disconnectGoogleCalendar;
+            } else {
+                statusDiv.className = 'sync-status inactive';
+                statusDiv.textContent = '⚠️ Token Expired - Reconnect';
+                statusDiv.style.color = '#dc3545';
+                connectBtn.textContent = '🔗 Reconnect';
+                connectBtn.onclick = connectGoogleCalendar;
+            }
+        } else {
+            statusDiv.className = 'sync-status inactive';
+            statusDiv.textContent = '⚠️ Not Connected';
+            statusDiv.style.color = '#dc3545';
+            connectBtn.textContent = '🔗 Connect Google Calendar';
+            connectBtn.onclick = connectGoogleCalendar;
         }
     }
 }
 
+function connectGoogleCalendar() {
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+        `client_id=${GOOGLE_CLIENT_ID}&` +
+        `redirect_uri=${encodeURIComponent(GOOGLE_REDIRECT_URI)}&` +
+        `response_type=code&` +
+        `scope=${encodeURIComponent(GOOGLE_SCOPES)}&` +
+        `access_type=offline&` +
+        `prompt=consent`;
+    
+    window.location.href = authUrl;
+}
+
+function disconnectGoogleCalendar() {
+    if (confirm('Disconnect Google Calendar? You can reconnect anytime.')) {
+        localStorage.removeItem('googleCalendarAuth');
+        localStorage.removeItem('googleCalendarEmail');
+        updateGoogleCalendarStatus();
+    }
+}
+
 async function fetchCalendarEvents(timeframe = 'today') {
-    const token = localStorage.getItem('googleCalendarToken');
-    if (!token) return null;
+    const authData = localStorage.getItem('googleCalendarAuth');
+    if (!authData) return null;
+    const auth = JSON.parse(authData);
+    const token = auth.accessToken;
 
     let timeMin = new Date();
     let timeMax = new Date();
@@ -2915,8 +2933,8 @@ function findOptimalSlot(events, durationMinutes, timeframe = 'today') {
 }
 
 async function scheduleTask(taskId, timeframe, taskData) {
-    const token = localStorage.getItem('googleCalendarToken');
-    if (!token) {
+    const authData = localStorage.getItem('googleCalendarAuth');
+    if (!authData) {
         alert('Please connect Google Calendar in Settings first.');
         openSettings();
         return;
