@@ -2399,6 +2399,20 @@ function renderTaskCards(noteType) {
             const scheduledKey = `taskCard_${noteType}_${card.id}`;
             const isScheduled = scheduledTaskIds.includes(scheduledKey);
 
+            // Get scheduled time if exists
+            let scheduledTimeText = '';
+            if (isScheduled) {
+                const sTime = scheduledTimes[scheduledKey];
+                if (sTime) {
+                    const d = new Date(sTime);
+                    const monthDay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    const timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+                    scheduledTimeText = `${monthDay} ${timeStr}`;
+                } else {
+                    scheduledTimeText = '✓';
+                }
+            }
+
             return `
                 <div id="taskCard${card.id}" class="task-card ${isScheduled ? 'scheduled' : ''}" data-card-id="${card.id}" ontouchstart="this.classList.toggle('mobile-active')" onclick="this.classList.toggle('mobile-active')">
                     <div class="task-card-header">
@@ -2407,7 +2421,7 @@ function renderTaskCards(noteType) {
                             ${card.rating ? `
                                 <span class="time-badge">${card.rating.time}</span>
                             ` : ''}
-                            ${isScheduled ? `<span class="scheduled-badge">✓ Scheduled</span>` : ''}
+                            ${isScheduled ? `<span class="scheduled-badge">${scheduledTimeText}</span>` : ''}
                         </div>
                         <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
                             ✕
@@ -2428,7 +2442,7 @@ function renderTaskCards(noteType) {
                         </button>
                         <div class="schedule-dropdown-container">
                             <button class="action-btn btn-schedule ${isScheduled ? 'scheduled' : ''}" onclick="toggleScheduleDropdown(${card.id})" id="scheduleBtn${card.id}" title="${isScheduled ? 'View/Unschedule event' : 'Schedule to Google Calendar'}">
-                                ${isScheduled ? '✓' : '📅'}
+                                ${isScheduled ? scheduledTimeText : '📅'}
                             </button>
                             <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">
                                 <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'today')">
@@ -2560,35 +2574,19 @@ function scheduleTaskCard(noteType, cardId, timeframe) {
     const isScheduled = scheduledTaskIds.includes(scheduledKey);
 
     if (isScheduled) {
-        // Get duration for event name
-        let durationText = card.rating?.time;
-        if (!durationText) {
-            const cardElement = document.getElementById(`taskCard${cardId}`);
-            const timeBadge = cardElement?.querySelector('.time-badge');
-            if (timeBadge) {
-                durationText = timeBadge.textContent.trim();
-            }
-        }
-
-        if (!durationText) {
-            alert('No time estimate found. Please click 💡 Details button first.');
-            return;
-        }
-
-        const durationMinutes = parseDurationToMinutes(durationText);
-        if (!durationMinutes) {
-            alert('Could not parse duration.');
-            return;
-        }
-
-        // Generate event name and open search
-        const eventName = generateTaskCardEventName(durationMinutes, noteType, card.content);
-        const searchUrl = `https://calendar.google.com/calendar/u/0/r/search?q=${encodeURIComponent(eventName)}`;
+        // Search by category name only (capitalize first letter)
+        const categoryName = noteType.charAt(0).toUpperCase() + noteType.slice(1);
+        const searchUrl = `https://calendar.google.com/calendar/u/0/r/search?q=${encodeURIComponent(categoryName)}`;
         window.open(searchUrl, '_blank');
 
         // Toggle to unscheduled
         scheduledTaskIds = scheduledTaskIds.filter(id => id !== scheduledKey);
         localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
+
+        // Remove scheduled time
+        const times = JSON.parse(localStorage.getItem('scheduledTimes') || '{}');
+        delete times[scheduledKey];
+        localStorage.setItem('scheduledTimes', JSON.stringify(times));
 
         // Re-render task cards
         renderTaskCards(noteType);
@@ -2632,10 +2630,18 @@ function scheduleTaskCard(noteType, cardId, timeframe) {
     // Open in new tab
     window.open(calendarUrl, '_blank');
 
-    // Mark as scheduled
+    // Mark as scheduled and store time
     if (!scheduledTaskIds.includes(scheduledKey)) {
         scheduledTaskIds.push(scheduledKey);
         localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
+
+        // Store the scheduled time (same as the suggested start time in calendar URL)
+        const times = JSON.parse(localStorage.getItem('scheduledTimes') || '{}');
+        const scheduledTime = new Date(suggestedDate);
+        scheduledTime.setHours(9, 0, 0, 0); // Default 9 AM
+        times[scheduledKey] = scheduledTime.getTime();
+        localStorage.setItem('scheduledTimes', JSON.stringify(times));
+
         renderTaskCards(noteType);
     }
 }
