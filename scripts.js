@@ -5,6 +5,7 @@ let collapsedDays = JSON.parse(localStorage.getItem('collapsedDays')) || ['__arc
 let collapsedCourses = JSON.parse(localStorage.getItem('collapsedCourses')) || [];
 let customTimeEstimates = JSON.parse(localStorage.getItem('customTimeEstimates')) || {};
 let taskNotes = JSON.parse(localStorage.getItem('taskNotes')) || {};
+let scheduledTimes = JSON.parse(localStorage.getItem('scheduledTimes')) || {};
 
 // Version check: Clear old 'prepare' data if detected (one-time only)
 const TRACKER_VERSION = 'reading-v1';
@@ -632,6 +633,7 @@ function renderTasks() {
                         if (isCompleted) taskClasses += ' completed';
                         else if (isScheduled) taskClasses += ' scheduled';
                         taskItem.className = taskClasses;
+                        taskItem.setAttribute('data-task-id', taskId);
 
                         const checkbox = document.createElement('input');
                         checkbox.type = 'checkbox';
@@ -725,22 +727,69 @@ function renderTasks() {
                         calendarBtn.className = 'task-calendar-link';
                         if (isScheduled) {
                             calendarBtn.classList.add('scheduled');
-                            calendarBtn.textContent = '✓ Scheduled';
-                        } else {
-                            calendarBtn.textContent = '📅 Add to Calendar';
-                        }
-                        calendarBtn.onclick = (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (!isScheduled) {
-                                const calDescription = `Canvas Link: ${item.link}`;
-                                const durationMinutes = Math.round(currentTime * 60);
-                                const calendarTitle = `(${durationMinutes}min) HW: ${courseName}: ${item.title}`;
-                                const calLink = createGoogleCalendarLink(calendarTitle, calDescription, currentTime, taskId);
-                                window.open(calLink, '_blank');
+                            const sTime = scheduledTimes[taskId];
+                            if (sTime) {
+                                const d = new Date(sTime);
+                                const dayName = d.toLocaleDateString([], { weekday: 'short' });
+                                const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                calendarBtn.textContent = `📅 ${dayName} ${timeStr}`;
+                            } else {
+                                calendarBtn.textContent = '✓ Scheduled';
                             }
-                            toggleScheduled(taskId);
-                        };
+                        } else {
+                            calendarBtn.textContent = '📅 Schedule';
+                            
+                            // Create dropdown for timeframe
+                            calendarBtn.onclick = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                
+                                // Close other dropdowns
+                                document.querySelectorAll('.schedule-dropdown-menu').forEach(d => d.classList.add('hidden'));
+                                
+                                const dropdown = document.createElement('div');
+                                dropdown.className = 'schedule-dropdown-menu';
+                                dropdown.style.position = 'absolute';
+                                dropdown.style.zIndex = '1000';
+                                dropdown.style.background = 'white';
+                                dropdown.style.border = '1px solid #ccc';
+                                dropdown.style.borderRadius = '8px';
+                                dropdown.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                                dropdown.style.padding = '8px 0';
+                                dropdown.style.marginTop = '5px';
+                                
+                                const options = [
+                                    { label: 'Today', value: 'today' },
+                                    { label: 'Tomorrow', value: 'tomorrow' },
+                                    { label: 'This Work Week', value: 'week' }
+                                ];
+                                
+                                options.forEach(opt => {
+                                    const optEl = document.createElement('div');
+                                    optEl.textContent = opt.label;
+                                    optEl.style.padding = '8px 16px';
+                                    optEl.style.cursor = 'pointer';
+                                    optEl.onmouseover = () => optEl.style.background = '#f0f0f0';
+                                    optEl.onmouseout = () => optEl.style.background = 'transparent';
+                                    optEl.onclick = (ev) => {
+                                        ev.stopPropagation();
+                                        dropdown.remove();
+                                        // Pass task data for scheduling
+                                        const taskData = {
+                                            title: customTitle,
+                                            duration: currentTime,
+                                            link: item.link,
+                                            courseName: courseName
+                                        };
+                                        scheduleTask(taskId, opt.value, taskData);
+                                    };
+                                    dropdown.appendChild(optEl);
+                                });
+                                
+                                calendarBtn.parentElement.style.position = 'relative';
+                                calendarBtn.parentElement.appendChild(dropdown);
+                            };
+                        }
 
                         const notesBtn = document.createElement('button');
                         notesBtn.className = 'task-notes-btn';
@@ -2679,3 +2728,282 @@ document.addEventListener('click', function(e) {
         });
     }
 });
+
+// --- GOOGLE CALENDAR INTEGRATION (PHASE 1) ---
+
+const GOOGLE_CLIENT_ID = '103319944778-o17374emsbcv16sk8f310iufr4vcgm6p.apps.googleusercontent.com';
+const GOOGLE_REDIRECT_URI = 'https://sehara.github.io/Homework-Dashboard/oauth-callback';
+const GOOGLE_SCOPES = 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events';
+
+// Check for token on load
+document.addEventListener('DOMContentLoaded', function() {
+    updateGoogleStatus();
+    handleOAuthCallback();
+});
+
+function updateGoogleStatus() {
+    const statusEl = document.getElementById('googleCalendarStatus');
+    const btnEl = document.getElementById('connectGoogleBtn');
+    const token = localStorage.getItem('googleCalendarToken');
+
+    if (token) {
+        statusEl.textContent = '✅ Connected';
+        statusEl.className = 'sync-status active';
+        statusEl.style.color = '#28a745';
+        btnEl.textContent = '🔄 Reconnect Google Calendar';
+    } else {
+        statusEl.textContent = '⚠️ Not Connected';
+        statusEl.className = 'sync-status inactive';
+        statusEl.style.color = '#dc3545';
+        btnEl.textContent = '🔗 Connect Google Calendar';
+    }
+}
+
+function connectGoogleCalendar() {
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(GOOGLE_REDIRECT_URI)}&response_type=token&scope=${encodeURIComponent(GOOGLE_SCOPES)}&include_granted_scopes=true&state=dashboard`;
+    window.location.href = authUrl;
+}
+
+function handleOAuthCallback() {
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token')) {
+        const params = new URLSearchParams(hash.substring(1));
+        const token = params.get('access_token');
+        if (token) {
+            localStorage.setItem('googleCalendarToken', token);
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+            updateGoogleStatus();
+            alert('Google Calendar connected successfully!');
+        }
+    }
+}
+
+async function fetchCalendarEvents(timeframe = 'today') {
+    const token = localStorage.getItem('googleCalendarToken');
+    if (!token) return null;
+
+    let timeMin = new Date();
+    let timeMax = new Date();
+
+    if (timeframe === 'today') {
+        timeMax.setHours(23, 59, 59, 999);
+    } else if (timeframe === 'tomorrow') {
+        timeMin.setDate(timeMin.getDate() + 1);
+        timeMin.setHours(0, 0, 0, 0);
+        timeMax.setDate(timeMax.getDate() + 1);
+        timeMax.setHours(23, 59, 59, 999);
+    } else if (timeframe === 'week') {
+        // This Work Week (Mon-Fri)
+        const today = new Date();
+        const dayOfWeek = today.getDay(); // 0 is Sunday
+        const diffToMon = dayOfWeek === 0 ? 1 : 1 - dayOfWeek;
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + diffToMon);
+        monday.setHours(0, 0, 0, 0);
+        
+        const friday = new Date(monday);
+        friday.setDate(monday.getDate() + 4);
+        friday.setHours(23, 59, 59, 999);
+        
+        timeMin = monday > today ? monday : today;
+        timeMax = friday;
+    }
+
+    const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${timeMin.toISOString()}&timeMax=${timeMax.toISOString()}&singleEvents=true&orderBy=startTime`;
+
+    try {
+        const response = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.status === 401) {
+            localStorage.removeItem('googleCalendarToken');
+            updateGoogleStatus();
+            return null;
+        }
+        const data = await response.json();
+        return data.items || [];
+    } catch (error) {
+        console.error('Error fetching calendar events:', error);
+        return null;
+    }
+}
+
+function findOptimalSlot(events, durationMinutes, timeframe = 'today') {
+    // Heuristic rules
+    // Morning (8:30 AM - 12 PM): 100% - Suggest for tasks 2+ hours
+    // Afternoon (1 PM - 5 PM): 80% - Suggest for tasks 1-2 hours
+    // Evening (7:30 PM - 10 PM): 60% - Suggest for tasks <1 hour
+
+    const now = new Date();
+    let searchStart = new Date(now);
+    let searchEnd = new Date(now);
+
+    if (timeframe === 'today') {
+        searchEnd.setHours(22, 0, 0, 0);
+    } else if (timeframe === 'tomorrow') {
+        searchStart.setDate(now.getDate() + 1);
+        searchStart.setHours(8, 30, 0, 0);
+        searchEnd.setDate(now.getDate() + 1);
+        searchEnd.setHours(22, 0, 0, 0);
+    } else if (timeframe === 'week') {
+        // For week, just look at today or tomorrow for simplicity in Phase 1
+        return findOptimalSlot(events, durationMinutes, 'tomorrow');
+    }
+
+    // Define preferred windows
+    const windows = [
+        { start: 8.5, end: 12, minDur: 120 }, // Morning
+        { start: 13, end: 17, minDur: 60 },  // Afternoon
+        { start: 19.5, end: 22, minDur: 0 }   // Evening
+    ];
+
+    // Sort windows by suitability for duration
+    const sortedWindows = [...windows].sort((a, b) => {
+        if (durationMinutes >= a.minDur && durationMinutes < b.minDur) return -1;
+        if (durationMinutes >= b.minDur && durationMinutes < a.minDur) return 1;
+        return 0;
+    });
+
+    for (const window of sortedWindows) {
+        let winStart = new Date(searchStart);
+        winStart.setHours(Math.floor(window.start), (window.start % 1) * 60, 0, 0);
+        let winEnd = new Date(searchStart);
+        winEnd.setHours(Math.floor(window.end), (window.end % 1) * 60, 0, 0);
+
+        if (winStart < now && timeframe === 'today') winStart = new Date(now);
+        if (winStart >= winEnd) continue;
+
+        // Find free slot in this window
+        let current = new Date(winStart);
+        current.setMinutes(Math.ceil(current.getMinutes() / 15) * 15, 0, 0); // Round to 15m
+
+        while (current.getTime() + durationMinutes * 60000 <= winEnd.getTime()) {
+            const slotEnd = new Date(current.getTime() + durationMinutes * 60000);
+            const isBusy = events.some(event => {
+                const start = new Date(event.start.dateTime || event.start.date);
+                const end = new Date(event.end.dateTime || event.end.date);
+                // Buffer of 30 mins
+                const bufferedStart = new Date(start.getTime() - 30 * 60000);
+                const bufferedEnd = new Date(end.getTime() + 30 * 60000);
+                return (current < bufferedEnd && slotEnd > bufferedStart);
+            });
+
+            if (!isBusy) return current;
+            current = new Date(current.getTime() + 15 * 60000);
+        }
+    }
+
+    // Fallback: first available slot regardless of window
+    let fallbackStart = new Date(searchStart);
+    if (fallbackStart < now && timeframe === 'today') fallbackStart = new Date(now);
+    fallbackStart.setMinutes(Math.ceil(fallbackStart.getMinutes() / 15) * 15, 0, 0);
+
+    let current = new Date(fallbackStart);
+    while (current.getTime() + durationMinutes * 60000 <= searchEnd.getTime()) {
+        const slotEnd = new Date(current.getTime() + durationMinutes * 60000);
+        const isBusy = events.some(event => {
+            const start = new Date(event.start.dateTime || event.start.date);
+            const end = new Date(event.end.dateTime || event.end.date);
+            return (current < end && slotEnd > start);
+        });
+        if (!isBusy) return current;
+        current = new Date(current.getTime() + 15 * 60000);
+    }
+
+    return null;
+}
+
+async function scheduleTask(taskId, timeframe, taskData) {
+    const token = localStorage.getItem('googleCalendarToken');
+    if (!token) {
+        alert('Please connect Google Calendar in Settings first.');
+        openSettings();
+        return;
+    }
+
+    const { title, duration, link, courseName } = taskData;
+    const durationMinutes = Math.round(duration * 60);
+
+    const events = await fetchCalendarEvents(timeframe);
+    if (events === null) {
+        alert('Failed to fetch calendar events. Please check your connection.');
+        return;
+    }
+
+    const optimalSlot = findOptimalSlot(events, durationMinutes, timeframe);
+    if (!optimalSlot) {
+        alert('Could not find a suitable free slot in the selected timeframe.');
+        return;
+    }
+
+    // Generate Google Calendar Link
+    const startTime = optimalSlot;
+    const endTime = new Date(startTime.getTime() + durationMinutes * 60000);
+    
+    const formatDateTime = (date) => {
+        return date.toISOString().replace(/-|:|\.\d+/g, '').split('.')[0] + 'Z';
+    };
+
+    // Format: (xMin) HW: Class Name: Assignment or Task, Title
+    const calendarTitle = `(${durationMinutes}Min) HW: ${courseName}: ${title}`;
+    const notes = taskNotes[taskId] || '';
+    const description = `${notes}\n\nCanvas Link: ${link}\n\nCreated from Dashboard`.trim();
+    
+    const baseUrl = 'https://calendar.google.com/calendar/u/0/r/eventedit';
+    const url = `${baseUrl}?text=${encodeURIComponent(calendarTitle)}&details=${encodeURIComponent(description)}&dates=${formatDateTime(startTime)}/${formatDateTime(endTime)}&add=primary`;
+
+    window.open(url, '_blank');
+
+    // Update the button to "Mark Scheduled"
+    // We need to find the button in the DOM
+    const allButtons = document.querySelectorAll('.task-calendar-link');
+    let targetBtn = null;
+    // This is a bit hacky but works for Phase 1 since we don't have easy access to the element from here
+    // In a real app we'd pass the element or use a better selector
+    renderTasks(); // Re-render to show "Mark Scheduled" if we want, but let's just update the specific one
+    
+    // Actually, let's just call a function to update the UI state temporarily
+    showMarkScheduled(taskId, startTime);
+}
+
+function showMarkScheduled(taskId, suggestedTime) {
+    // We'll re-render but with a temporary state or just find the button
+    const taskItems = document.querySelectorAll('.task-item');
+    taskItems.forEach(item => {
+        // We need a way to identify the task item. Let's add data-task-id in renderTasks
+    });
+    
+    // For Phase 1, let's just alert and then the user can click "Schedule" again which will be "Mark Scheduled"
+    // Actually, let's just add the data-task-id to the task item in renderTasks
+    const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
+    if (taskItem) {
+        const btn = taskItem.querySelector('.task-calendar-link');
+        if (btn) {
+            btn.textContent = '📅 Mark Scheduled';
+            btn.classList.add('mark-scheduled');
+            btn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                confirmScheduled(taskId, suggestedTime);
+            };
+        }
+    }
+}
+
+function confirmScheduled(taskId, suggestedTime) {
+    const timeStr = suggestedTime.toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    if (confirm(`Confirm task scheduled for ${timeStr}?`)) {
+        if (!scheduledTaskIds.includes(taskId)) {
+            scheduledTaskIds.push(taskId);
+            localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
+            
+            // Store the specific time
+            const scheduledTimes = JSON.parse(localStorage.getItem('scheduledTimes') || '{}');
+            scheduledTimes[taskId] = suggestedTime.getTime();
+            localStorage.setItem('scheduledTimes', JSON.stringify(scheduledTimes));
+            
+            renderTasks();
+        }
+    }
+}

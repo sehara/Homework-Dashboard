@@ -1288,10 +1288,37 @@ body {
     color: #999;
     font-style: italic;
 }
-
-.task-card-done {
+.task-item.completed {
     opacity: 0.6;
     background: #f8f9fa;
+}
+
+.task-item.scheduled {
+    border-left: 4px solid #4285f4;
+    background: #f0f7ff;
+}
+
+.task-calendar-link.scheduled {
+    background: #4285f4;
+    color: white;
+}
+
+.task-calendar-link.mark-scheduled {
+    background: #ffc107;
+    color: black;
+}
+
+.schedule-dropdown-menu {
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.schedule-dropdown-menu.hidden {
+    display: none;
 }
 
 .task-card-done .task-card-textarea {
