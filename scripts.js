@@ -2496,19 +2496,221 @@ function toggleScheduleDropdown(cardId) {
     dropdown.classList.toggle('hidden');
 }
 
-// Placeholder for scheduling (will be implemented tomorrow with OAuth)
-function scheduleTask(noteType, cardId, timeframe) {
-    // Close dropdown
+// Google Calendar scheduling implementation
+async function scheduleTask(noteType, cardId, timeframe) {
     const dropdown = document.getElementById(`scheduleDropdown${cardId}`);
     if (dropdown) dropdown.classList.add('hidden');
 
-    // Open settings modal
-    openSettings();
+    try {
+        // Get task from global taskCards object
+        const cards = taskCards[noteType];
+        if (!cards) {
+            alert('Task list not found');
+            return;
+        }
 
-    // Show alert after a brief delay
-    setTimeout(() => {
-        alert('Please connect Google Calendar in Settings to enable scheduling.');
-    }, 500);
+        const card = cards.find(c => c.id === cardId);
+        if (!card) {
+            alert('Task not found');
+            return;
+        }
+
+        console.log('=== SCHEDULING TASK ===');
+        console.log('Card:', card);
+        console.log('Rating:', card.rating);
+
+        // Get duration
+        const durationText = card.rating?.time;
+
+        if (!durationText || durationText.includes('undefined')) {
+            alert('No time estimate found. Please click 💡 Details button first to get AI time estimate.');
+            return;
+        }
+
+        console.log('Parsing duration from:', durationText);
+
+        // Parse duration - handle "1h 30m", "2h", "45m", "1 hr", "2 hrs", "30 min"
+        let durationMinutes = 60;
+        try {
+            let totalMinutes = 0;
+
+            const hoursMatch = durationText.match(/(\d+(?:\.\d+)?)\s*h(?:rs?|ours?)?/i);
+            const minutesMatch = durationText.match(/(\d+)\s*m(?:ins?)?(?!\w)/i);
+
+            if (hoursMatch) {
+                totalMinutes += parseFloat(hoursMatch[1]) * 60;
+                console.log('Hours:', hoursMatch[1]);
+            }
+
+            if (minutesMatch) {
+                totalMinutes += parseInt(minutesMatch[1]);
+                console.log('Minutes:', minutesMatch[1]);
+            }
+
+            if (totalMinutes > 0) {
+                durationMinutes = totalMinutes;
+            } else {
+                throw new Error('No time value parsed');
+            }
+
+            console.log('✓ Duration:', durationMinutes, 'minutes');
+
+        } catch (error) {
+            console.error('Parse error:', error);
+            alert(`Could not parse duration from "${durationText}"`);
+            return;
+        }
+
+        if (isNaN(durationMinutes) || durationMinutes <= 0) {
+            alert(`Invalid duration: ${durationText}`);
+            return;
+        }
+
+        // Check Google Calendar auth
+        const authStr = localStorage.getItem('googleCalendarAuth');
+        if (!authStr) {
+            alert('Please connect Google Calendar in Settings first');
+            openSettings();
+            return;
+        }
+
+        const auth = JSON.parse(authStr);
+        if (Date.now() > auth.expiresAt) {
+            alert('Google Calendar token expired. Please reconnect.');
+            localStorage.removeItem('googleCalendarAuth');
+            openSettings();
+            return;
+        }
+
+        // Get timeframe
+        const { startDate, endDate } = getTimeframeRange(timeframe);
+        console.log('Timeframe:', startDate.toLocaleString(), '-', endDate.toLocaleString());
+
+        // Fetch calendar events
+        const events = await fetchCalendarEvents(auth.accessToken, startDate, endDate);
+        console.log('Calendar events:', events.length);
+
+        // Find slot
+        const slot = findOptimalTimeSlot(events, startDate, endDate, durationMinutes);
+
+        if (!slot) {
+            alert(`No ${durationText} slot found in "${timeframe}". Try different timeframe.`);
+            return;
+        }
+
+        console.log('✓ Slot:', slot.start.toLocaleString());
+
+        // Generate link
+        const title = card.content.split('\n')[0].substring(0, 100);
+        const link = generateCalendarLink(title, slot.start, slot.end);
+
+        // Open calendar
+        window.open(link, '_blank');
+        alert(`Suggested: ${slot.start.toLocaleString()}\n\nOpening Google Calendar...`);
+
+    } catch (error) {
+        console.error('Schedule error:', error);
+        alert('Error: ' + error.message);
+    }
+}
+
+function getTimeframeRange(timeframe) {
+    const now = new Date();
+    let startDate, endDate;
+
+    if (timeframe === 'today') {
+        startDate = new Date(now);
+        endDate = new Date(now);
+        endDate.setHours(23, 59, 59);
+    } else if (timeframe === 'tomorrow') {
+        startDate = new Date(now);
+        startDate.setDate(startDate.getDate() + 1);
+        startDate.setHours(8, 30, 0);
+        endDate = new Date(startDate);
+        endDate.setHours(22, 0, 0);
+    } else if (timeframe === 'thisWorkWeek') {
+        startDate = new Date(now);
+        const day = startDate.getDay();
+        const toMonday = day === 0 ? 1 : (day === 1 ? 0 : 1 - day);
+        startDate.setDate(startDate.getDate() + toMonday);
+        startDate.setHours(8, 30, 0);
+        endDate = new Date(startDate);
+        endDate.setDate(endDate.getDate() + 4);
+        endDate.setHours(17, 0, 0);
+    } else {
+        startDate = new Date(now);
+        endDate = new Date(now);
+        endDate.setDate(endDate.getDate() + 7);
+    }
+
+    return { startDate, endDate };
+}
+
+async function fetchCalendarEvents(accessToken, startDate, endDate) {
+    const url = `https://www.googleapis.com/calendar/v3/calendars/primary/events?` +
+        `timeMin=${encodeURIComponent(startDate.toISOString())}&` +
+        `timeMax=${encodeURIComponent(endDate.toISOString())}&` +
+        `singleEvents=true&orderBy=startTime`;
+
+    const response = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+
+    if (!response.ok) {
+        throw new Error('Calendar fetch failed: ' + response.statusText);
+    }
+
+    const data = await response.json();
+    return data.items || [];
+}
+
+function findOptimalTimeSlot(events, startDate, endDate, durationMinutes) {
+    const slots = [];
+    const current = new Date(startDate);
+
+    while (current <= endDate) {
+        if (current.getDay() !== 0 && current.getDay() !== 6) {
+            slots.push({
+                start: new Date(current.getFullYear(), current.getMonth(), current.getDate(), 8, 30),
+                end: new Date(current.getFullYear(), current.getMonth(), current.getDate(), 12, 0)
+            });
+            slots.push({
+                start: new Date(current.getFullYear(), current.getMonth(), current.getDate(), 13, 0),
+                end: new Date(current.getFullYear(), current.getMonth(), current.getDate(), 17, 0)
+            });
+            slots.push({
+                start: new Date(current.getFullYear(), current.getMonth(), current.getDate(), 19, 30),
+                end: new Date(current.getFullYear(), current.getMonth(), current.getDate(), 22, 0)
+            });
+        }
+        current.setDate(current.getDate() + 1);
+    }
+
+    for (const slot of slots) {
+        const duration = (slot.end - slot.start) / 60000;
+        if (duration >= durationMinutes) {
+            const conflict = events.some(e => {
+                const eStart = new Date(e.start.dateTime || e.start.date);
+                const eEnd = new Date(e.end.dateTime || e.end.date);
+                return slot.start < eEnd && slot.end > eStart;
+            });
+            if (!conflict) {
+                return {
+                    start: slot.start,
+                    end: new Date(slot.start.getTime() + durationMinutes * 60000)
+                };
+            }
+        }
+    }
+    return null;
+}
+
+function generateCalendarLink(title, startDate, endDate) {
+    const fmt = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&` +
+        `text=${encodeURIComponent(title)}&` +
+        `dates=${fmt(startDate)}/${fmt(endDate)}&` +
+        `details=${encodeURIComponent('From Homework Dashboard')}`;
 }
 
 // Toggle individual archive column
