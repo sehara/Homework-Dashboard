@@ -69,10 +69,16 @@
         "content": "Social Connector\nASIJ, L&C, PnP",
         "rating": null,
         "editingTime": false
+      },
+      {
+        "id": 1768312691094,
+        "content": "",
+        "rating": null,
+        "editingTime": false
       }
     ]
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-13T03:59:50.592Z"
+  "lastSynced": "2026-01-13T13:58:13.098Z"
 }
