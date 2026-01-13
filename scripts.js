@@ -2515,12 +2515,51 @@ async function scheduleTask(noteType, cardId, timeframe) {
             return;
         }
 
+        // === EXTENSIVE DEBUGGING ===
+        console.log('=== SCHEDULE TASK DEBUG ===');
+        console.log('Note Type:', noteType);
+        console.log('Card ID:', cardId);
+        console.log('Full card object:', card);
+        console.log('All card keys:', Object.keys(card));
+        console.log('card.rating:', card.rating);
+        if (card.rating) {
+            console.log('card.rating keys:', Object.keys(card.rating));
+            console.log('card.rating.time:', card.rating.time);
+            console.log('card.rating.emoji:', card.rating.emoji);
+            console.log('card.rating.score:', card.rating.score);
+        }
+        console.log('card.time:', card.time);
+        console.log('card.estimatedTime:', card.estimatedTime);
+        console.log('card.duration:', card.duration);
+        console.log('card.content:', card.content);
+        console.log('========================');
+
         console.log('=== SCHEDULING TASK ===');
         console.log('Card:', card);
         console.log('Rating:', card.rating);
 
         // Get duration
-        const durationText = card.rating?.time;
+        let durationText = card.rating?.time;
+
+        // Try alternative properties if rating.time is undefined
+        if (!durationText || durationText === 'undefined' || durationText.includes('undefined')) {
+            console.log('⚠️ card.rating.time is invalid, trying alternatives...');
+            durationText = card.time || card.estimatedTime || card.duration;
+            console.log('Alternative found:', durationText);
+        }
+
+        // If still nothing, check DOM
+        if (!durationText || durationText === 'undefined' || durationText.includes('undefined')) {
+            console.log('⚠️ No duration in data, checking DOM...');
+            const cardElement = document.getElementById(`taskCard${cardId}`);
+            const timeBadge = cardElement?.querySelector('.time-badge');
+            if (timeBadge) {
+                durationText = timeBadge.textContent.trim();
+                console.log('Found in DOM:', durationText);
+            }
+        }
+
+        console.log('Final durationText:', durationText);
 
         if (!durationText || durationText.includes('undefined')) {
             alert('No time estimate found. Please click 💡 Details button first to get AI time estimate.');
