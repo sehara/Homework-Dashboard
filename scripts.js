@@ -2947,7 +2947,50 @@ async function scheduleTask(taskId, timeframe, taskData) {
     }
 
     const { title, duration, link, courseName } = taskData;
-    const durationMinutes = Math.round(duration * 60);
+    
+    // Parse duration (e.g., "2 hrs" -> 120 minutes, "45 min" -> 45)
+    const durationText = taskData.durationText || (typeof duration === 'string' ? duration : `${duration} hrs`);
+    let durationMinutes = 60; // Default 1 hour
+
+    console.log('Parsing duration from:', durationText);
+
+    // Extract number from string
+    const numberMatch = durationText.match(/[\d.]+/);
+    if (!numberMatch) {
+        console.error('Could not parse number from:', durationText);
+        alert('Could not determine task duration. Please check the time estimate.');
+        return;
+    }
+
+    const number = parseFloat(numberMatch[0]);
+
+    // Determine if hours or minutes
+    if (durationText.toLowerCase().includes('hr')) {
+        durationMinutes = number * 60;
+    } else if (durationText.toLowerCase().includes('min')) {
+        durationMinutes = number;
+    } else if (durationText.toLowerCase().includes('h')) {
+        // Handle "2h" format
+        durationMinutes = number * 60;
+    } else if (durationText.toLowerCase().includes('m')) {
+        // Handle "45m" format
+        durationMinutes = number;
+    } else {
+        // Default to hours if no unit specified
+        durationMinutes = number * 60;
+    }
+
+    console.log('Parsed duration:', durationMinutes, 'minutes');
+
+    // Validate duration
+    if (isNaN(durationMinutes) || durationMinutes <= 0) {
+        alert(`Invalid task duration: ${durationText}. Please check the time estimate.`);
+        return;
+    }
+
+    // Ensure reasonable duration (5 min to 8 hours)
+    if (durationMinutes < 5) durationMinutes = 5;
+    if (durationMinutes > 480) durationMinutes = 480;
 
     const { startDate, endDate } = getTimeframeRange(timeframe);
     const events = await fetchCalendarEvents(auth.accessToken, startDate, endDate);
