@@ -2779,10 +2779,8 @@ function connectGoogleCalendar() {
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
         `client_id=${GOOGLE_CLIENT_ID}&` +
         `redirect_uri=${encodeURIComponent(GOOGLE_REDIRECT_URI)}&` +
-        `response_type=code&` +
-        `scope=${encodeURIComponent(GOOGLE_SCOPES)}&` +
-        `access_type=offline&` +
-        `prompt=consent`;
+        `response_type=token&` +
+        `scope=${encodeURIComponent(GOOGLE_SCOPES)}`;
     
     window.location.href = authUrl;
 }
