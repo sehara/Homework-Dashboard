@@ -736,17 +736,43 @@ function renderTasks() {
                             } else {
                                 calendarBtn.textContent = '✓ Scheduled';
                             }
+
+                            // Click to unschedule and open search
+                            calendarBtn.onclick = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+
+                                // Build event name for search
+                                const durationText = typeof currentTime === 'string' ? currentTime : `${currentTime} hrs`;
+                                const durationMinutes = parseDurationToMinutes(durationText);
+
+                                if (durationMinutes) {
+                                    const eventName = generateCanvasEventName(durationMinutes, courseName, customTitle);
+                                    const searchUrl = `https://calendar.google.com/calendar/u/0/r/search?q=${encodeURIComponent(eventName)}`;
+                                    window.open(searchUrl, '_blank');
+                                }
+
+                                // Toggle to unscheduled
+                                scheduledTaskIds = scheduledTaskIds.filter(id => id !== taskId);
+                                localStorage.setItem('scheduledTasks', JSON.stringify(scheduledTaskIds));
+
+                                const times = JSON.parse(localStorage.getItem('scheduledTimes') || '{}');
+                                delete times[taskId];
+                                localStorage.setItem('scheduledTimes', JSON.stringify(times));
+
+                                renderTasks();
+                            };
                         } else {
                             calendarBtn.textContent = '📅 Schedule';
-                            
+
                             // Create dropdown for timeframe
                             calendarBtn.onclick = (e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                
+
                                 // Close other dropdowns
                                 document.querySelectorAll('.schedule-dropdown-menu').forEach(d => d.classList.add('hidden'));
-                                
+
                                 const dropdown = document.createElement('div');
                                 dropdown.className = 'schedule-dropdown-menu';
                                 dropdown.style.position = 'absolute';
@@ -757,13 +783,13 @@ function renderTasks() {
                                 dropdown.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
                                 dropdown.style.padding = '8px 0';
                                 dropdown.style.marginTop = '5px';
-                                
+
                                 const options = [
                                     { label: 'Today', value: 'today' },
                                     { label: 'Tomorrow', value: 'tomorrow' },
                                     { label: 'This Work Week', value: 'week' }
                                 ];
-                                
+
                                 options.forEach(opt => {
                                     const optEl = document.createElement('div');
                                     optEl.textContent = opt.label;
@@ -781,11 +807,11 @@ function renderTasks() {
                                             link: item.link,
                                             courseName: courseName
                                         };
-                                        scheduleTask(taskId, opt.value, taskData);
+                                        scheduleCanvasTask(taskId, opt.value, taskData);
                                     };
                                     dropdown.appendChild(optEl);
                                 });
-                                
+
                                 calendarBtn.parentElement.style.position = 'relative';
                                 calendarBtn.parentElement.appendChild(dropdown);
                             };
@@ -2405,25 +2431,25 @@ function renderTaskCards(noteType) {
                                 ${isScheduled ? '✓' : '📅'}
                             </button>
                             <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">
-                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'today')">
+                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'today')">
                                     📅 Today
                                 </div>
-                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'tomorrow')">
+                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'tomorrow')">
                                     📅 Tomorrow
                                 </div>
-                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'thisWorkWeek')">
+                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'thisWorkWeek')">
                                     📅 This Work Week
                                 </div>
-                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'thisWeekend')">
+                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'thisWeekend')">
                                     📅 This Weekend
                                 </div>
-                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'nextWeekday')">
+                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'nextWeekday')">
                                     📅 Next Weekday
                                 </div>
-                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'custom')">
+                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'custom')">
                                     🗓️ Custom...
                                 </div>
-                                <div class="schedule-option" onclick="scheduleTask('${noteType}', ${card.id}, 'anytime')">
+                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'anytime')">
                                     ⚡ Anytime
                                 </div>
                             </div>
@@ -2512,7 +2538,7 @@ function generateTaskCardEventName(durationMinutes, category, title) {
 }
 
 // Task Card scheduling - opens Google Calendar in new tab
-function scheduleTask(noteType, cardId, timeframe) {
+function scheduleTaskCard(noteType, cardId, timeframe) {
     const dropdown = document.getElementById(`scheduleDropdown${cardId}`);
     if (dropdown) dropdown.classList.add('hidden');
 
@@ -3179,7 +3205,7 @@ function parseDurationToMinutes(durationText) {
 }
 
 // Canvas task scheduling - opens Google Calendar in new tab
-function scheduleTask(taskId, timeframe, taskData) {
+function scheduleCanvasTask(taskId, timeframe, taskData) {
     const { title, duration, link, courseName } = taskData;
 
     // Check if already scheduled - if so, open search
