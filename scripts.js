@@ -2331,7 +2331,40 @@ function saveTimeEdit(noteType, cardId) {
         rawMinutes: newMinutes 
     };
     card.editingTime = false;
-    
+
+    renderTaskCards(noteType);
+    saveTaskCards(noteType);
+}
+
+// Edit task title
+function editTaskTitle(noteType, cardId) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (!card) return;
+
+    card.editingTitle = true;
+    renderTaskCards(noteType);
+
+    // Focus input after render
+    setTimeout(() => {
+        const input = document.getElementById(`titleInput${cardId}`);
+        if (input) {
+            input.focus();
+            input.select();
+        }
+    }, 50);
+}
+
+// Save task title
+function saveTaskTitle(noteType, cardId) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (!card) return;
+
+    const input = document.getElementById(`titleInput${cardId}`);
+    if (input) {
+        card.title = input.value.trim() || 'Untitled';
+    }
+
+    card.editingTitle = false;
     renderTaskCards(noteType);
     saveTaskCards(noteType);
 }
@@ -2399,16 +2432,30 @@ function renderTaskCards(noteType) {
             }
 
             return `
-                <div id="taskCard${card.id}" class="task-card ${isScheduled ? 'scheduled' : ''}" data-card-id="${card.id}" ontouchstart="this.classList.toggle('mobile-active')" onclick="this.classList.toggle('mobile-active')">
+                <div id="taskCard${card.id}" class="task-card ${isScheduled ? 'scheduled' : ''}" data-card-id="${card.id}" draggable="true" ontouchstart="this.classList.toggle('mobile-active')" onclick="this.classList.toggle('mobile-active')">
                     <div class="task-card-header">
                         <div class="task-info">
-                            <span class="task-number">Task ${index + 1}</span>
-                            ${ratingHtml}
+                            ${card.editingTitle ? `
+                                <input
+                                    type="text"
+                                    id="titleInput${card.id}"
+                                    class="task-number-input"
+                                    value="${escapeHtml(card.title || `Task ${index + 1}`)}"
+                                    onblur="saveTaskTitle('${noteType}', ${card.id})"
+                                    onkeydown="if(event.key==='Enter'){this.blur();event.stopPropagation();}"
+                                    onclick="event.stopPropagation();"
+                                />
+                            ` : `
+                                <span class="task-number" onclick="editTaskTitle('${noteType}', ${card.id}); event.stopPropagation();" title="Click to edit title">${escapeHtml(card.title || `Task ${index + 1}`)}</span>
+                            `}
                             ${isScheduled ? `<span class="scheduled-badge">${scheduledTimeText}</span>` : ''}
                         </div>
-                        <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
-                            ✕
-                        </button>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            ${ratingHtml}
+                            <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
+                                ✕
+                            </button>
+                        </div>
                     </div>
 
                     <textarea
@@ -2462,8 +2509,79 @@ function renderTaskCards(noteType) {
 
     updateHiddenTextarea(noteType);
 
+    // Initialize drag and drop
+    initDragAndDrop(noteType);
+
     // Also update archive section
     renderArchive(noteType);
+}
+
+// Initialize drag and drop for task cards
+function initDragAndDrop(noteType) {
+    const container = document.getElementById(`${noteType}TaskCards`);
+    if (!container) return;
+
+    const taskCardElements = container.querySelectorAll('.task-card');
+    let draggedElement = null;
+    let draggedIndex = null;
+
+    taskCardElements.forEach((el, index) => {
+        el.addEventListener('dragstart', (e) => {
+            draggedElement = el;
+            draggedIndex = index;
+            el.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+
+        el.addEventListener('dragend', (e) => {
+            el.classList.remove('dragging');
+        });
+
+        el.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+
+            const afterElement = getDragAfterElement(container, e.clientY);
+            if (afterElement == null) {
+                container.appendChild(draggedElement);
+            } else {
+                container.insertBefore(draggedElement, afterElement);
+            }
+        });
+
+        el.addEventListener('drop', (e) => {
+            e.preventDefault();
+
+            // Get new order
+            const newOrder = Array.from(container.querySelectorAll('.task-card')).map(card => {
+                const cardId = parseInt(card.getAttribute('data-card-id'));
+                return taskCards[noteType].find(c => c.id === cardId);
+            }).filter(Boolean);
+
+            // Update taskCards array with new order
+            taskCards[noteType] = newOrder.concat(
+                taskCards[noteType].filter(c => c.done) // Keep done cards at the end
+            );
+
+            // Save to storage and GitHub
+            saveTaskCards(noteType);
+        });
+    });
+}
+
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.task-card:not(.dragging)')];
+
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
 // Render archived tasks

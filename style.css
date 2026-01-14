@@ -916,11 +916,43 @@ body {
     font-weight: 600;
     color: #495057;
     font-size: 0.95em;
+    cursor: text;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.task-number:hover {
+    background: #f8f9fa;
+}
+
+.task-number-input {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.95em;
+    border: 2px solid #667eea;
+    padding: 2px 4px;
+    border-radius: 4px;
+    outline: none;
+    background: white;
+    min-width: 60px;
+}
+
+.task-card {
+    cursor: grab;
+}
+
+.task-card:active {
+    cursor: grabbing;
+}
+
+.task-card.dragging {
+    opacity: 0.5;
 }
 
 .time-badge {
-    background: #ffc107;
-    color: #000;
+    background: #e9ecef;
+    color: #495057;
     padding: 4px 12px;
     border-radius: 6px;
     font-size: 0.85em;
@@ -984,7 +1016,7 @@ body {
 /* Actions Section */
 .task-card-actions {
     position: absolute;
-    right: -30px;
+    right: -28px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
