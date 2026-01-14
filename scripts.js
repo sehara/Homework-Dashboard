@@ -2365,35 +2365,22 @@ function renderTaskCards(noteType) {
                     ).join('');
 
                     ratingHtml = `
-                        <div class="rating-badge ${getRatingClass(card.rating.score)}">
-                            <div class="time-editor">
-                                <select id="timeDropdown${card.id}" class="time-dropdown">
-                                    ${options}
-                                </select>
-                                <button class="save-time-btn" onclick="saveTimeEdit('${noteType}', ${card.id})">
-                                    ✓
-                                </button>
-                            </div>
-                        </div>
+                        <select id="timeDropdown${card.id}" class="time-dropdown" style="font-size: 0.85em; padding: 4px 8px; border-radius: 6px; border: 2px solid #ffc107;">
+                            ${options}
+                        </select>
+                        <button class="save-time-btn" onclick="saveTimeEdit('${noteType}', ${card.id}); event.stopPropagation();" style="background: #28a745; color: white; border: none; padding: 4px 12px; border-radius: 6px; cursor: pointer; margin-left: 4px;">
+                            ✓
+                        </button>
                     `;
                 } else {
                     ratingHtml = `
-                        <div class="rating-badge ${getRatingClass(card.rating.score)}">
-                            <span class="time-display" onclick="editTime('${noteType}', ${card.id})" title="Click to edit time">
-                                ${card.rating.time}
-                            </span>
-                        </div>
-                        <button class="card-btn compact details" onclick="checkTaskRating('${noteType}', ${card.id})" title="View task details and AI suggestions">
-                            ℹ️ Details
-                        </button>
+                        <span class="time-badge" onclick="editTime('${noteType}', ${card.id}); event.stopPropagation();" style="cursor: pointer;" title="Click to edit time">
+                            ${card.rating.time}
+                        </span>
                     `;
                 }
             } else {
-                ratingHtml = `
-                    <button class="card-btn compact details" onclick="checkTaskRating('${noteType}', ${card.id})" title="View task details and AI suggestions">
-                        ℹ️ Details
-                    </button>
-                `;
+                ratingHtml = '';
             }
 
             // Check if this task card is scheduled
@@ -2419,9 +2406,7 @@ function renderTaskCards(noteType) {
                     <div class="task-card-header">
                         <div class="task-info">
                             <span class="task-number">Task ${index + 1}</span>
-                            ${card.rating ? `
-                                <span class="time-badge" onclick="editTime('${noteType}', ${card.id}); event.stopPropagation();" style="cursor: pointer;" title="Click to edit time">${card.rating.time}</span>
-                            ` : ''}
+                            ${ratingHtml}
                             ${isScheduled ? `<span class="scheduled-badge">${scheduledTimeText}</span>` : ''}
                         </div>
                         <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
