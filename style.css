@@ -951,8 +951,8 @@ body {
 }
 
 .time-badge {
-    background: #e9ecef;
-    color: #495057;
+    background: #e9ecef !important;
+    color: #495057 !important;
     padding: 4px 12px;
     border-radius: 6px;
     font-size: 0.85em;
@@ -1016,7 +1016,7 @@ body {
 /* Actions Section */
 .task-card-actions {
     position: absolute;
-    right: -22px;
+    right: -22px !important;
     top: 50%;
     transform: translateY(-50%);
     display: flex;

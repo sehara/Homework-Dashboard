@@ -2398,7 +2398,7 @@ function renderTaskCards(noteType) {
                     ).join('');
 
                     ratingHtml = `
-                        <select id="timeDropdown${card.id}" class="time-dropdown" onchange="saveTimeEdit('${noteType}', ${card.id}); event.stopPropagation();" style="font-size: 0.85em; padding: 4px 8px; border-radius: 6px; border: 2px solid #ffc107; cursor: pointer; background: #ffc107; color: #000; font-weight: bold;">
+                        <select id="timeDropdown${card.id}" class="time-dropdown" onchange="saveTimeEdit('${noteType}', ${card.id}); event.stopPropagation();" style="font-size: 0.85em; padding: 4px 12px; border-radius: 6px; border: 2px solid #e9ecef; cursor: pointer; background: #e9ecef; color: #495057; font-weight: bold;">
                             ${options}
                         </select>
                     `;
