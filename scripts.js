@@ -2371,6 +2371,7 @@ function saveTaskTitle(noteType, cardId) {
 
 // Render all task cards for a note type
 function renderTaskCards(noteType) {
+    console.log('[TaskCard] Rendering with new layout - time badge on right', noteType);
     const container = document.getElementById(`${noteType}TaskCards`);
     if (!container) return;
 
