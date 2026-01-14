@@ -64,12 +64,12 @@
         "id": 1768237668238,
         "content": "Review the network contact list to identify and compile a spreadsheet of key contacts for ASIJ, L&C, and PnP by the end of this week.",
         "rating": {
-          "score": 6,
-          "time": "1h 30m",
-          "emoji": "🟡",
-          "rawMinutes": 90
+          "score": 7,
+          "time": "1 hr",
+          "emoji": "🟢",
+          "rawMinutes": 60
         },
-        "editingTime": true
+        "editingTime": false
       },
       {
         "id": 1768236841837,
@@ -108,5 +108,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-14T14:59:37.860Z"
+  "lastSynced": "2026-01-14T15:33:20.872Z"
 }
