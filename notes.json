@@ -14,7 +14,7 @@
           "emoji": "🟡",
           "rawMinutes": 120
         },
-        "editingTime": false
+        "editingTime": true
       }
     ],
     "family": [
@@ -35,7 +35,7 @@
           "emoji": "🟡",
           "rawMinutes": 90
         },
-        "editingTime": false
+        "editingTime": true
       }
     ],
     "internship": [
@@ -89,7 +89,7 @@
           "emoji": "🟢",
           "rawMinutes": 60
         },
-        "editingTime": false
+        "editingTime": true
       },
       {
         "id": 1768348955866,
@@ -106,5 +106,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-14T00:03:49.095Z"
+  "lastSynced": "2026-01-14T00:24:27.065Z"
 }
