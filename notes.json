@@ -86,10 +86,10 @@
         "id": 1768312691094,
         "content": "Write a poem in a specific style, such as a haiku or sonnet, focusing on a clearly defined topic or theme.",
         "rating": {
-          "score": 7,
-          "time": "1 hr",
+          "score": 9,
+          "time": "30 min",
           "emoji": "🟢",
-          "rawMinutes": 60
+          "rawMinutes": 30
         },
         "editingTime": true
       },
@@ -108,5 +108,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-14T15:40:10.853Z"
+  "lastSynced": "2026-01-14T15:42:56.483Z"
 }
