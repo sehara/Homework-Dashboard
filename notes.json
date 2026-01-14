@@ -14,7 +14,7 @@
           "emoji": "🟡",
           "rawMinutes": 120
         },
-        "editingTime": true
+        "editingTime": false
       }
     ],
     "family": [
@@ -64,10 +64,10 @@
         "id": 1768237668238,
         "content": "Review the network contact list to identify and compile a spreadsheet of key contacts for ASIJ, L&C, and PnP by the end of this week.",
         "rating": {
-          "score": 7,
-          "time": "1 hr",
-          "emoji": "🟢",
-          "rawMinutes": 60
+          "score": 6,
+          "time": "1h 30m",
+          "emoji": "🟡",
+          "rawMinutes": 90
         },
         "editingTime": false
       },
@@ -80,7 +80,7 @@
           "emoji": "🟢",
           "rawMinutes": 60
         },
-        "editingTime": true
+        "editingTime": false
       },
       {
         "id": 1768312691094,
@@ -108,5 +108,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-14T15:33:20.872Z"
+  "lastSynced": "2026-01-14T15:34:33.283Z"
 }
