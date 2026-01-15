@@ -2420,15 +2420,7 @@ function renderTaskCards(noteType) {
             // Get scheduled time if exists
             let scheduledTimeText = '';
             if (isScheduled) {
-                const sTime = scheduledTimes[scheduledKey];
-                if (sTime) {
-                    const d = new Date(sTime);
-                    const monthDay = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                    const timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-                    scheduledTimeText = `${monthDay} ${timeStr}`;
-                } else {
-                    scheduledTimeText = '✓';
-                }
+                scheduledTimeText = '✓';
             }
 
             return `
