@@ -1016,7 +1016,7 @@ body {
 /* Actions Section */
 .task-card-actions {
     position: absolute;
-    right: -52px !important;
+    right: -46px !important;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
