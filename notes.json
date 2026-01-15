@@ -30,12 +30,12 @@
         "id": 1768172874417,
         "content": "Send March spring break plans to parents via LINE",
         "rating": {
-          "score": 9,
-          "time": "30 min",
+          "score": 7,
+          "time": "1 hr",
           "emoji": "🟢",
-          "rawMinutes": 30
+          "rawMinutes": 60
         },
-        "editingTime": false,
+        "editingTime": true,
         "editingTitle": false,
         "title": "March Plans"
       }
@@ -108,5 +108,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-15T06:29:27.329Z"
+  "lastSynced": "2026-01-15T15:15:18.551Z"
 }
