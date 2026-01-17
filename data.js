@@ -431,6 +431,12 @@ const courseData = {
                     time: 1.5,
                     points: 4,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments"
+                },
+                {
+                    title: "Class participation Week 5",
+                    time: 0.5,
+                    points: 1.5,
+                    link: "https://canvas.uchicago.edu/courses/67742/assignments"
                 }
             ],
             reading: [],
@@ -490,6 +496,12 @@ const courseData = {
                     title: "Thought paper 5 Week 6",
                     time: 1.5,
                     points: 4,
+                    link: "https://canvas.uchicago.edu/courses/67742/assignments"
+                },
+                {
+                    title: "Class participation Week 6",
+                    time: 0.5,
+                    points: 1.5,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments"
                 }
             ],
@@ -551,6 +563,12 @@ const courseData = {
                     time: 1.5,
                     points: 4,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments"
+                },
+                {
+                    title: "Class participation Week 7",
+                    time: 0.5,
+                    points: 1.5,
+                    link: "https://canvas.uchicago.edu/courses/67742/assignments"
                 }
             ],
             reading: [],
@@ -595,6 +613,12 @@ const courseData = {
                     title: "Thought paper 7 Week 8",
                     time: 1.5,
                     points: 4,
+                    link: "https://canvas.uchicago.edu/courses/67742/assignments"
+                },
+                {
+                    title: "Class participation Week 8",
+                    time: 0.5,
+                    points: 1.5,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments"
                 }
             ],
@@ -656,6 +680,12 @@ const courseData = {
                     time: 1.5,
                     points: 4,
                     link: "https://canvas.uchicago.edu/courses/67742/assignments"
+                },
+                {
+                    title: "Class participation Week 9",
+                    time: 0.5,
+                    points: 1.5,
+                    link: "https://canvas.uchicago.edu/courses/67742/assignments"
                 }
             ],
             reading: [],
@@ -677,6 +707,36 @@ const courseData = {
             required: [],
             optional: []
         }
+    },
+    "Thursday, March 12, 2026": {
+        "Negotiation|||Due: Thursday, Mar 12 at 11:59 PM": {
+            submit: [
+                {
+                    title: "Negotiations in Media",
+                    time: 2.0,
+                    points: 20,
+                    link: "https://canvas.uchicago.edu/courses/67439/assignments"
+                }
+            ],
+            reading: [],
+            required: [],
+            optional: []
+        }
+    },
+    "Friday, March 13, 2026": {
+        "Corporate Governance|||Due: Friday, Mar 13 at 12:00 PM": {
+            submit: [
+                {
+                    title: "Week 10 Write-Up: Democratization",
+                    time: 2.0,
+                    points: 12,
+                    link: "https://canvas.uchicago.edu/courses/69195/assignments"
+                }
+            ],
+            reading: [],
+            required: [],
+            optional: []
+        }
     }
 };
 
@@ -687,17 +747,17 @@ const courseInfo = {
         assignmentsUrl: "https://canvas.uchicago.edu/courses/65932/assignments"
     },
     "Managing in Organizations": {
-        due: "Tuesday, Jan 27 at 8:30 AM",
+        due: "Monday, Jan 20 at 8:30 AM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/67742/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/67742/assignments"
     },
     "Negotiation": {
-        due: "Wednesday, Jan 14 at 11:59 PM",
+        due: "Tuesday, Jan 21 at 11:59 PM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/67439/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/67439/assignments"
     },
     "Corporate Governance": {
-        due: "Friday, Jan 16 at 12:00 PM",
+        due: "Thursday, Jan 23 at 12:00 PM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/69195/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/69195/assignments"
     }
@@ -710,6 +770,12 @@ const classEndTimes = {
     'Corporate Governance': { day: 5, hour: 11, minute: 30 }
 };
 
+const lastUpdated = "2026-01-17T12:00:00";
+
+if (typeof window !== 'undefined') {
+    window.lastUpdated = lastUpdated;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { courseData, courseInfo, classEndTimes };
+    module.exports = { courseData, courseInfo, classEndTimes, lastUpdated };
 }
