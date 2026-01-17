@@ -773,6 +773,9 @@ const classEndTimes = {
 const lastUpdated = "2026-01-17T12:00:00";
 
 if (typeof window !== 'undefined') {
+    window.courseData = courseData;
+    window.courseInfo = courseInfo;
+    window.classEndTimes = classEndTimes;
     window.lastUpdated = lastUpdated;
 }
 

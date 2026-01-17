@@ -52,30 +52,6 @@ let deletedCategories = JSON.parse(localStorage.getItem('deletedCategories')) ||
 let categoryOrder = JSON.parse(localStorage.getItem('categoryOrder')) || {};
 let taskOrder = JSON.parse(localStorage.getItem('taskOrder')) || {};
 
-// Course information
-const courseInfo = {
-    "Managing in Organizations": {
-        syllabusUrl: ""
-    },
-    "PE VC Lab": {
-        syllabusUrl: ""
-    },
-    "Negotiation": {
-        syllabusUrl: ""
-    },
-    "Corporate Governance": {
-        syllabusUrl: ""
-    }
-};
-
-// Class end times (hour and minute when assignments are due)
-const classEndTimes = {
-    "Managing in Organizations": { hour: 8, minute: 30 },
-    "PE VC Lab": { hour: 18, minute: 0 },
-    "Negotiation": { hour: 23, minute: 59 },
-    "Corporate Governance": { hour: 12, minute: 0 }
-};
-
 // Utility functions
 function formatTime(hours) {
     const totalMinutes = Math.round(hours * 60);
