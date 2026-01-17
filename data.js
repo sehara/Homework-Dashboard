@@ -1,4 +1,5 @@
-const courseData = {
+// Assign directly to window/global scope to make accessible to scripts.js
+window.courseData = {
     "Monday, January 6, 2026": {
         "Managing in Organizations|||Due: Monday, Jan 6 at 8:30 AM": {
             submit: [
@@ -740,7 +741,7 @@ const courseData = {
     }
 };
 
-const courseInfo = {
+window.courseInfo = {
     "PE VC Lab": {
         due: "Monday, Jan 26 at 6:00 PM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/65932/assignments/syllabus",
@@ -763,7 +764,7 @@ const courseInfo = {
     }
 };
 
-const classEndTimes = {
+window.classEndTimes = {
     'Managing in Organizations': { day: 2, hour: 11, minute: 30 },
     'PE VC Lab': { day: 1, hour: 21, minute: 0 },
     'Negotiation': { day: 4, hour: 11, minute: 30 },
@@ -773,12 +774,14 @@ const classEndTimes = {
 const lastUpdated = "2026-01-17T12:00:00";
 
 if (typeof window !== 'undefined') {
-    window.courseData = courseData;
-    window.courseInfo = courseInfo;
-    window.classEndTimes = classEndTimes;
     window.lastUpdated = lastUpdated;
 }
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { courseData, courseInfo, classEndTimes, lastUpdated };
+    module.exports = {
+        courseData: window.courseData,
+        courseInfo: window.courseInfo,
+        classEndTimes: window.classEndTimes,
+        lastUpdated
+    };
 }
