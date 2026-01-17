@@ -52,6 +52,11 @@ let deletedCategories = JSON.parse(localStorage.getItem('deletedCategories')) ||
 let categoryOrder = JSON.parse(localStorage.getItem('categoryOrder')) || {};
 let taskOrder = JSON.parse(localStorage.getItem('taskOrder')) || {};
 
+// Reference data from window (loaded by data.js)
+const courseData = window.courseData;
+const courseInfo = window.courseInfo;
+const classEndTimes = window.classEndTimes;
+
 // Utility functions
 function formatTime(hours) {
     const totalMinutes = Math.round(hours * 60);

@@ -771,17 +771,13 @@ window.classEndTimes = {
     'Corporate Governance': { day: 5, hour: 11, minute: 30 }
 };
 
-const lastUpdated = "2026-01-17T12:00:00";
-
-if (typeof window !== 'undefined') {
-    window.lastUpdated = lastUpdated;
-}
+// lastUpdated is already set by timestamp.js, no need to redeclare
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         courseData: window.courseData,
         courseInfo: window.courseInfo,
         classEndTimes: window.classEndTimes,
-        lastUpdated
+        lastUpdated: window.lastUpdated
     };
 }
