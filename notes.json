@@ -87,7 +87,9 @@
           "emoji": "🟡",
           "rawMinutes": 90
         },
-        "editingTime": false
+        "editingTime": true,
+        "editingTitle": true,
+        "title": "Task 1"
       },
       {
         "id": 1768236841837,
@@ -98,7 +100,7 @@
           "emoji": "🟢",
           "rawMinutes": 60
         },
-        "editingTime": false
+        "editingTime": true
       },
       {
         "id": 1768312691094,
@@ -126,5 +128,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-17T19:59:59.997Z"
+  "lastSynced": "2026-01-18T03:51:16.533Z"
 }
