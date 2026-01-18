@@ -1840,8 +1840,8 @@ const taskCards = {
 };
 
 // Common time options in minutes
-// Time options in minutes (0.5 to 8 hours in 0.5 hour increments, matching Canvas tasks)
-const TIME_OPTIONS = [30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480];
+// Time options in 15-minute intervals for task cards
+const TIME_OPTIONS = [15, 30, 45, 60, 75, 90];
 
 // Initialize task cards on page load
 function initTaskCards() {
@@ -2425,11 +2425,8 @@ function renderTaskCards(noteType) {
             const scheduledKey = `taskCard_${noteType}_${card.id}`;
             const isScheduled = scheduledTaskIds.includes(scheduledKey);
 
-            // Get scheduled time if exists
-            let scheduledTimeText = '';
-            if (isScheduled) {
-                scheduledTimeText = '✓';
-            }
+            // Get scheduled button text
+            let scheduleButtonText = isScheduled ? 'Scheduled' : 'Schedule';
 
             return `
                 <div id="taskCard${card.id}" class="task-card ${isScheduled ? 'scheduled' : ''}" data-card-id="${card.id}" draggable="true" ontouchstart="this.classList.toggle('mobile-active')" onclick="this.classList.toggle('mobile-active')">
@@ -2448,33 +2445,12 @@ function renderTaskCards(noteType) {
                             ` : `
                                 <span class="task-number" onclick="editTaskTitle('${noteType}', ${card.id}); event.stopPropagation();" title="Click to edit title">${escapeHtml(card.title || `Task ${index + 1}`)}</span>
                             `}
-                            ${isScheduled ? `<span class="scheduled-badge">${scheduledTimeText}</span>` : ''}
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            ${ratingHtml}
-                            <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
-                                ✕
+                            <button class="schedule-header-btn ${isScheduled ? 'scheduled' : ''}" onclick="${isScheduled ? `scheduleTaskCard('${noteType}', ${card.id}, 'unschedule'); event.stopPropagation();` : `toggleScheduleDropdownHeader(${card.id}); event.stopPropagation();`}" id="scheduleHeaderBtn${card.id}" title="${isScheduled ? 'View/Unschedule event' : 'Schedule to Google Calendar'}">
+                                ${scheduleButtonText}
                             </button>
-                        </div>
-                    </div>
-
-                    <textarea
-                        class="task-card-content"
-                        placeholder="Type your task here... (can be multiple lines)"
-                        oninput="updateTaskCard('${noteType}', ${card.id}, this.value)"
-                        onfocus="this.parentElement.classList.add('focused')"
-                        onblur="this.parentElement.classList.remove('focused')"
-                    >${escapeHtml(card.content)}</textarea>
-
-                    <div class="task-card-actions">
-                        <button class="action-btn btn-details" onclick="checkTaskRating('${noteType}', ${card.id})" title="View task details and AI suggestions">
-                            💡
-                        </button>
-                        <div class="schedule-dropdown-container">
-                            <button class="action-btn btn-schedule ${isScheduled ? 'scheduled' : ''}" onclick="${isScheduled ? `scheduleTaskCard('${noteType}', ${card.id}, 'unschedule')` : `toggleScheduleDropdown(${card.id})`}" id="scheduleBtn${card.id}" title="${isScheduled ? 'View/Unschedule event' : 'Schedule to Google Calendar'}">
-                                ${isScheduled ? scheduledTimeText : '📅'}
-                            </button>
-                            <div id="scheduleDropdown${card.id}" class="schedule-dropdown-menu hidden">
+                            <div id="scheduleDropdownHeader${card.id}" class="schedule-dropdown-menu hidden" style="position: absolute; right: 0; top: 100%; margin-top: 5px; z-index: 1000;">
                                 <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'today')">
                                     📅 Today
                                 </div>
@@ -2497,6 +2473,38 @@ function renderTaskCards(noteType) {
                                     ⚡ Anytime
                                 </div>
                             </div>
+                            <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+
+                    <textarea
+                        class="task-card-content"
+                        placeholder="Type your task here... (can be multiple lines)"
+                        oninput="updateTaskCard('${noteType}', ${card.id}, this.value)"
+                        onfocus="this.parentElement.classList.add('focused')"
+                        onblur="this.parentElement.classList.remove('focused')"
+                    >${escapeHtml(card.content)}</textarea>
+
+                    <div class="task-card-actions">
+                        <button class="action-btn btn-details" onclick="checkTaskRating('${noteType}', ${card.id})" title="View task details and AI suggestions">
+                            💡
+                        </button>
+                        <div class="time-dropdown-container">
+                            ${card.editingTime ? `
+                                <select id="timeDropdownAction${card.id}" class="action-btn time-dropdown-action" onchange="saveTimeEdit('${noteType}', ${card.id}); event.stopPropagation();" onclick="event.stopPropagation();">
+                                    ${TIME_OPTIONS.map(mins =>
+                                        `<option value="${mins}" ${mins === card.rating.rawMinutes ? 'selected' : ''}>
+                                            ${formatTimeMinutes(mins)}
+                                        </option>`
+                                    ).join('')}
+                                </select>
+                            ` : `
+                                <button class="action-btn btn-time" onclick="editTimeAction('${noteType}', ${card.id}); event.stopPropagation();" title="Edit task duration">
+                                    ${card.rating ? card.rating.time : '⏱️'}
+                                </button>
+                            `}
                         </div>
                         <button class="action-btn btn-done" onclick="markTaskDone('${noteType}', ${card.id})" title="Mark as done and archive">
                             ✅
@@ -2640,6 +2648,37 @@ function toggleScheduleDropdown(cardId) {
 
     // Toggle this dropdown
     dropdown.classList.toggle('hidden');
+}
+
+// Toggle schedule dropdown in header
+function toggleScheduleDropdownHeader(cardId) {
+    const dropdown = document.getElementById(`scheduleDropdownHeader${cardId}`);
+    if (!dropdown) return;
+
+    // Close all other dropdowns first
+    document.querySelectorAll('.schedule-dropdown-menu').forEach(d => {
+        if (d.id !== `scheduleDropdownHeader${cardId}`) {
+            d.classList.add('hidden');
+        }
+    });
+
+    // Toggle this dropdown
+    dropdown.classList.toggle('hidden');
+}
+
+// Edit time in actions area
+function editTimeAction(noteType, cardId) {
+    const card = taskCards[noteType].find(c => c.id === cardId);
+    if (card) {
+        card.editingTime = true;
+        renderTaskCards(noteType);
+
+        // Focus dropdown after render
+        setTimeout(() => {
+            const dropdown = document.getElementById(`timeDropdownAction${cardId}`);
+            if (dropdown) dropdown.focus();
+        }, 50);
+    }
 }
 
 // Google Calendar scheduling implementation
