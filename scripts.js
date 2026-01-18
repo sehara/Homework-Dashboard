@@ -3057,11 +3057,7 @@ function getRatingClass(score) {
 
 // Format time (minutes)
 function formatTimeMinutes(minutes) {
-    if (minutes < 60) return `${minutes} min`;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (mins === 0) return `${hours} hr${hours > 1 ? 's' : ''}`;
-    return `${hours}h ${mins}m`;
+    return `${minutes}min`;
 }
 
 // Escape HTML
