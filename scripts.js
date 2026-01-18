@@ -770,55 +770,19 @@ function renderTasks() {
                         } else {
                             calendarBtn.textContent = '📅 Schedule';
 
-                            // Create dropdown for timeframe
+                            // Directly open Google Calendar
                             calendarBtn.onclick = (e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
 
-                                // Close other dropdowns
-                                document.querySelectorAll('.schedule-dropdown-menu').forEach(d => d.classList.add('hidden'));
-
-                                const dropdown = document.createElement('div');
-                                dropdown.className = 'schedule-dropdown-menu';
-                                dropdown.style.position = 'absolute';
-                                dropdown.style.zIndex = '99999';
-                                dropdown.style.background = 'white';
-                                dropdown.style.border = '1px solid #ccc';
-                                dropdown.style.borderRadius = '8px';
-                                dropdown.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-                                dropdown.style.padding = '8px 0';
-                                dropdown.style.marginTop = '5px';
-
-                                const options = [
-                                    { label: 'Today', value: 'today' },
-                                    { label: 'Tomorrow', value: 'tomorrow' },
-                                    { label: 'This Work Week', value: 'week' }
-                                ];
-
-                                options.forEach(opt => {
-                                    const optEl = document.createElement('div');
-                                    optEl.textContent = opt.label;
-                                    optEl.style.padding = '8px 16px';
-                                    optEl.style.cursor = 'pointer';
-                                    optEl.onmouseover = () => optEl.style.background = '#f0f0f0';
-                                    optEl.onmouseout = () => optEl.style.background = 'transparent';
-                                    optEl.onclick = (ev) => {
-                                        ev.stopPropagation();
-                                        dropdown.remove();
-                                        // Pass task data for scheduling
-                                        const taskData = {
-                                            title: customTitle,
-                                            duration: currentTime,
-                                            link: item.link,
-                                            courseName: courseName
-                                        };
-                                        scheduleCanvasTask(taskId, opt.value, taskData);
-                                    };
-                                    dropdown.appendChild(optEl);
-                                });
-
-                                calendarBtn.parentElement.style.position = 'relative';
-                                calendarBtn.parentElement.appendChild(dropdown);
+                                // Pass task data for scheduling with 'today' as default
+                                const taskData = {
+                                    title: customTitle,
+                                    duration: currentTime,
+                                    link: item.link,
+                                    courseName: courseName
+                                };
+                                scheduleCanvasTask(taskId, 'today', taskData);
                             };
                         }
 
@@ -2447,32 +2411,9 @@ function renderTaskCards(noteType) {
                             `}
                         </div>
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <button class="schedule-header-btn ${isScheduled ? 'scheduled' : ''}" onclick="${isScheduled ? `scheduleTaskCard('${noteType}', ${card.id}, 'unschedule'); event.stopPropagation();` : `toggleScheduleDropdownHeader(${card.id}); event.stopPropagation();`}" id="scheduleHeaderBtn${card.id}" title="${isScheduled ? 'View/Unschedule event' : 'Schedule to Google Calendar'}">
+                            <button class="schedule-header-btn ${isScheduled ? 'scheduled' : ''}" onclick="scheduleTaskCard('${noteType}', ${card.id}, ${isScheduled ? '\'unschedule\'' : '\'today\''}); event.stopPropagation();" id="scheduleHeaderBtn${card.id}" title="${isScheduled ? 'View/Unschedule event' : 'Schedule to Google Calendar'}">
                                 ${scheduleButtonText}
                             </button>
-                            <div id="scheduleDropdownHeader${card.id}" class="schedule-dropdown-menu hidden" style="position: absolute; right: 0; top: 100%; margin-top: 5px; z-index: 1000;">
-                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'today')">
-                                    📅 Today
-                                </div>
-                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'tomorrow')">
-                                    📅 Tomorrow
-                                </div>
-                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'thisWorkWeek')">
-                                    📅 This Work Week
-                                </div>
-                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'thisWeekend')">
-                                    📅 This Weekend
-                                </div>
-                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'nextWeekday')">
-                                    📅 Next Weekday
-                                </div>
-                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'custom')">
-                                    🗓️ Custom...
-                                </div>
-                                <div class="schedule-option" onclick="scheduleTaskCard('${noteType}', ${card.id}, 'anytime')">
-                                    ⚡ Anytime
-                                </div>
-                            </div>
                             <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
                                 ✕
                             </button>
@@ -2632,38 +2573,6 @@ function renderArchive(noteType) {
             </div>
         `;
     }).join('');
-}
-
-// Toggle schedule dropdown visibility
-function toggleScheduleDropdown(cardId) {
-    const dropdown = document.getElementById(`scheduleDropdown${cardId}`);
-    if (!dropdown) return;
-
-    // Close all other dropdowns first
-    document.querySelectorAll('.schedule-dropdown-menu').forEach(d => {
-        if (d.id !== `scheduleDropdown${cardId}`) {
-            d.classList.add('hidden');
-        }
-    });
-
-    // Toggle this dropdown
-    dropdown.classList.toggle('hidden');
-}
-
-// Toggle schedule dropdown in header
-function toggleScheduleDropdownHeader(cardId) {
-    const dropdown = document.getElementById(`scheduleDropdownHeader${cardId}`);
-    if (!dropdown) return;
-
-    // Close all other dropdowns first
-    document.querySelectorAll('.schedule-dropdown-menu').forEach(d => {
-        if (d.id !== `scheduleDropdownHeader${cardId}`) {
-            d.classList.add('hidden');
-        }
-    });
-
-    // Toggle this dropdown
-    dropdown.classList.toggle('hidden');
 }
 
 // Edit time in actions area
@@ -3057,11 +2966,7 @@ function getRatingClass(score) {
 
 // Format time (minutes)
 function formatTimeMinutes(minutes) {
-    if (minutes < 60) return `${minutes} min`;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    if (mins === 0) return `${hours} hr${hours > 1 ? 's' : ''}`;
-    return `${hours}h ${mins}m`;
+    return `${minutes}min`;
 }
 
 // Escape HTML
