@@ -2288,8 +2288,9 @@ function editTime(noteType, cardId) {
 function saveTimeEdit(noteType, cardId) {
     const card = taskCards[noteType].find(c => c.id === cardId);
     if (!card) return;
-    
-    const dropdown = document.getElementById(`timeDropdown${cardId}`);
+
+    const dropdown = document.getElementById(`timeDropdown${cardId}`) || document.getElementById(`timeDropdownAction${cardId}`);
+    if (!dropdown) return;
     const newMinutes = parseInt(dropdown.value);
     
     const score = timeToScore(newMinutes);
@@ -2436,7 +2437,7 @@ function renderTaskCards(noteType) {
                             ${card.editingTime ? `
                                 <select id="timeDropdownAction${card.id}" class="action-btn time-dropdown-action" onchange="saveTimeEdit('${noteType}', ${card.id}); event.stopPropagation();" onclick="event.stopPropagation();">
                                     ${TIME_OPTIONS.map(mins =>
-                                        `<option value="${mins}" ${mins === card.rating.rawMinutes ? 'selected' : ''}>
+                                        `<option value="${mins}" ${mins === (card.rating?.rawMinutes || 30) ? 'selected' : ''}>
                                             ${formatTimeMinutes(mins)}
                                         </option>`
                                     ).join('')}
