@@ -1,6 +1,6 @@
 {
   "personalNotes": "Develop a browser script for the \"test\" page that extracts content from the \"task box,\" uses AI to estimate completion time, and identifies an optimal Google Calendar slot based on available gaps and peak cognitive performance. The tool must feature a \"Sync\" button to create the Google Calendar event and a \"Mark as Done\" function that moves the task to a bottom-of-page archive while automatically deleting the corresponding calendar event. Full implementation is required by the end of the day.",
-  "familyNotes": "test japan\n\n---\n\nSend March spring break plans to parents via LINE\n\n---\n\ntake off",
+  "familyNotes": "test japan\n\n---\n\nSend March spring break plans to parents via LINE\n\n---\n\ntake down shelf door",
   "jobHuntingNotes": "Review the network contact list to identify and compile a spreadsheet of key contacts for ASIJ, L&C, and PnP by the end of this week.\n\n---\n\nResearch and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. DENA, Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.",
   "internshipNotes": "List-up My Social Capital\n\n---\n\nSend a brief email to the KV Partner.",
   "taskCards": {
@@ -44,8 +44,8 @@
         "doneAt": "2026-01-17T19:59:57.995Z"
       },
       {
-        "id": 1768923900564,
-        "content": "take off ",
+        "id": 1768923965306,
+        "content": "take down shelf door",
         "rating": null,
         "editingTime": false
       }
@@ -102,5 +102,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-20T15:45:05.766Z"
+  "lastSynced": "2026-01-20T15:46:10.752Z"
 }
