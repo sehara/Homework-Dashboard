@@ -2273,9 +2273,24 @@ function checkTaskRating(noteType, cardId) {
 function editTime(noteType, cardId) {
     const card = taskCards[noteType].find(c => c.id === cardId);
     if (card) {
+        // If no rating exists, create a default one with 30min
+        if (!card.rating) {
+            const defaultMinutes = 30;
+            const score = timeToScore(defaultMinutes);
+            const emoji = scoreToEmoji(score);
+            const timeStr = formatTimeMinutes(defaultMinutes);
+            card.rating = {
+                score,
+                time: timeStr,
+                emoji,
+                rawMinutes: defaultMinutes
+            };
+            saveTaskCards(noteType);
+        }
+
         card.editingTime = true;
         renderTaskCards(noteType);
-        
+
         // Focus dropdown after render
         setTimeout(() => {
             const dropdown = document.getElementById(`timeDropdown${cardId}`);
@@ -2580,6 +2595,21 @@ function renderArchive(noteType) {
 function editTimeAction(noteType, cardId) {
     const card = taskCards[noteType].find(c => c.id === cardId);
     if (card) {
+        // If no rating exists, create a default one with 30min
+        if (!card.rating) {
+            const defaultMinutes = 30;
+            const score = timeToScore(defaultMinutes);
+            const emoji = scoreToEmoji(score);
+            const timeStr = formatTimeMinutes(defaultMinutes);
+            card.rating = {
+                score,
+                time: timeStr,
+                emoji,
+                rawMinutes: defaultMinutes
+            };
+            saveTaskCards(noteType);
+        }
+
         card.editingTime = true;
         renderTaskCards(noteType);
 
@@ -2656,7 +2686,7 @@ function scheduleTaskCard(noteType, cardId, timeframe) {
     }
 
     if (!durationText || durationText.includes('undefined')) {
-        alert('No time estimate found. Please click 💡 Details button first to get AI time estimate.');
+        alert('No time estimate found. Please click the ⏱️ time button to select an estimated duration, or click 💡 Details for AI suggestions.');
         return;
     }
 
