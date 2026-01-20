@@ -1,7 +1,7 @@
 {
   "personalNotes": "Develop a browser script for the \"test\" page that extracts content from the \"task box,\" uses AI to estimate completion time, and identifies an optimal Google Calendar slot based on available gaps and peak cognitive performance. The tool must feature a \"Sync\" button to create the Google Calendar event and a \"Mark as Done\" function that moves the task to a bottom-of-page archive while automatically deleting the corresponding calendar event. Full implementation is required by the end of the day.",
   "familyNotes": "test japan\n\n---\n\nSend March spring break plans to parents via LINE",
-  "jobHuntingNotes": "Review the network contact list to identify and compile a spreadsheet of key contacts for ASIJ, L&C, and PnP by the end of this week.\n\n---\n\nResearch and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. DENA, Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.\n\n---\n\nResearch and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. DENA, Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.",
+  "jobHuntingNotes": "Review the network contact list to identify and compile a spreadsheet of key contacts for ASIJ, L&C, and PnP by the end of this week.\n\n---\n\nResearch and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. DENA, Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.",
   "internshipNotes": "List-up My Social Capital\n\n---\n\nSend a brief email to the KV Partner.",
   "taskCards": {
     "personal": [
@@ -91,21 +91,10 @@
         "editingTime": true,
         "done": true,
         "doneAt": "2026-01-18T04:46:14.802Z"
-      },
-      {
-        "id": 1768348955866,
-        "content": "Research and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. DENA, Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.",
-        "rating": {
-          "score": 6,
-          "time": "1h 30m",
-          "emoji": "🟡",
-          "rawMinutes": 90
-        },
-        "editingTime": true
       }
     ]
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-18T20:50:26.453Z"
+  "lastSynced": "2026-01-20T15:43:54.309Z"
 }
