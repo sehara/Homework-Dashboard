@@ -52,8 +52,13 @@
       {
         "id": 1768923965306,
         "content": "take down shelf door",
-        "rating": null,
-        "editingTime": false
+        "rating": {
+          "score": 9,
+          "time": "30min",
+          "emoji": "🟢",
+          "rawMinutes": 30
+        },
+        "editingTime": true
       }
     ],
     "internship": [
@@ -108,5 +113,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-20T15:48:16.340Z"
+  "lastSynced": "2026-01-20T18:08:27.425Z"
 }
