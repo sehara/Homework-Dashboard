@@ -22,7 +22,9 @@
         "id": 1768924077026,
         "content": "make it so its possible to add estimated time without having to run the bright icon",
         "rating": null,
-        "editingTime": true
+        "editingTime": true,
+        "done": true,
+        "doneAt": "2026-01-24T16:36:32.091Z"
       }
     ],
     "family": [
@@ -115,5 +117,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-20T19:42:07.804Z"
+  "lastSynced": "2026-01-24T16:36:34.094Z"
 }
