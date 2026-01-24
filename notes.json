@@ -1,7 +1,7 @@
 {
   "personalNotes": "Develop a browser script for the \"test\" page that extracts content from the \"task box,\" uses AI to estimate completion time, and identifies an optimal Google Calendar slot based on available gaps and peak cognitive performance. The tool must feature a \"Sync\" button to create the Google Calendar event and a \"Mark as Done\" function that moves the task to a bottom-of-page archive while automatically deleting the corresponding calendar event. Full implementation is required by the end of the day.\n\n---\n\nmake it so its possible to add estimated time without having to run the bright icon",
   "familyNotes": "test japan\n\n---\n\nSend March spring break plans to parents via LINE\n\n---\n\ntake down shelf door",
-  "jobHuntingNotes": "Review the network contact list to identify and compile a spreadsheet of key contacts for ASIJ, L&C, and PnP by the end of this week.\n\n---\n\nResearch and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. DENA, Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.",
+  "jobHuntingNotes": "WiL - determine which team is best for me\n\n---\n\nReview the network contact list to identify and compile a spreadsheet of key contacts for ASIJ, L&C, and PnP by the end of this week.\n\n---\n\nResearch and document open US-based and startup-focused job positions for Anthropic (Claude), Manus, and Perplexity. DENA, Enter the findings directly into this spreadsheet (https://docs.google.com/spreadsheets/d/18R8iSHGwvlB6mIMEw8ORmHNT5elPAk8Q8sF64O0ZAZE/edit?gid=67745993#gid=67745993) by the end of today.",
   "internshipNotes": "List-up My Social Capital\n\n---\n\nSend a brief email to the KV Partner.",
   "taskCards": {
     "personal": [
@@ -88,6 +88,17 @@
     ],
     "jobHunting": [
       {
+        "id": 1769272604191,
+        "content": "WiL - determine which team is best for me",
+        "rating": {
+          "score": 8,
+          "time": "45min",
+          "emoji": "🟢",
+          "rawMinutes": 45
+        },
+        "editingTime": false
+      },
+      {
         "id": 1768237668238,
         "content": "Review the network contact list to identify and compile a spreadsheet of key contacts for ASIJ, L&C, and PnP by the end of this week.",
         "rating": {
@@ -117,5 +128,5 @@
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-24T16:36:34.094Z"
+  "lastSynced": "2026-01-24T16:37:38.415Z"
 }
