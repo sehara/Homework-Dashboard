@@ -76,7 +76,7 @@ window.courseData = {
             ]
         }
     },
-    "Friday, January 9, 2026": {
+    "Thursday, January 9, 2026": {
         "Corporate Governance|||Due: Thursday, Jan 9 at 12:01 AM": {
             submit: [
                 {
@@ -358,8 +358,8 @@ window.courseData = {
             optional: []
         }
     },
-    "Tuesday, January 27, 2026": {
-        "Managing in Organizations|||Due: Tuesday, Jan 27 at 8:30 AM": {
+    "Monday, January 27, 2026": {
+        "Managing in Organizations|||Due: Monday, Jan 27 at 8:30 AM": {
             submit: [
                 {
                     title: "Thought paper 3 Week 4",
@@ -379,8 +379,8 @@ window.courseData = {
             optional: []
         }
     },
-    "Wednesday, January 28, 2026": {
-        "Negotiation|||Due: Wednesday, Jan 28 at 11:59 PM": {
+    "Tuesday, January 28, 2026": {
+        "Negotiation|||Due: Tuesday, Jan 28 at 11:59 PM": {
             submit: [
                 {
                     title: "Prep Sheet Tipal Dam",
@@ -394,8 +394,8 @@ window.courseData = {
             optional: []
         }
     },
-    "Friday, January 30, 2026": {
-        "Corporate Governance|||Due: Friday, Jan 30 at 12:00 PM": {
+    "Thursday, January 30, 2026": {
+        "Corporate Governance|||Due: Thursday, Jan 30 at 12:00 PM": {
             submit: [
                 {
                     title: "Week 4: Enron and WorldCom",
@@ -409,8 +409,8 @@ window.courseData = {
             optional: []
         }
     },
-    "Monday, February 2, 2026": {
-        "PE VC Lab|||Due: Monday, Feb 2 at 6:00 PM": {
+    "Sunday, February 2, 2026": {
+        "PE VC Lab|||Due: Sunday, Feb 2 at 6:00 PM": {
             submit: [
                 {
                     title: "Assignment 2: Cap Table Calisthenics",
@@ -424,8 +424,8 @@ window.courseData = {
             optional: []
         }
     },
-    "Tuesday, February 3, 2026": {
-        "Managing in Organizations|||Due: Tuesday, Feb 3 at 8:30 AM": {
+    "Monday, February 3, 2026": {
+        "Managing in Organizations|||Due: Monday, Feb 3 at 8:30 AM": {
             submit: [
                 {
                     title: "Thought paper 4 Week 5",
@@ -452,6 +452,12 @@ window.courseData = {
                     title: "Prep Sheet Moms",
                     time: 1.0,
                     points: 3,
+                    link: "https://canvas.uchicago.edu/courses/67439/assignments"
+                },
+                {
+                    title: "TKI Assessment",
+                    time: 0.5,
+                    points: 0,
                     link: "https://canvas.uchicago.edu/courses/67439/assignments"
                 }
             ],
@@ -743,22 +749,22 @@ window.courseData = {
 
 window.courseInfo = {
     "PE VC Lab": {
-        due: "Monday, Jan 26 at 6:00 PM",
+        due: "Sunday, Feb 2 at 6:00 PM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/65932/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/65932/assignments"
     },
     "Managing in Organizations": {
-        due: "Monday, Jan 20 at 8:30 AM",
+        due: "Monday, Jan 27 at 8:30 AM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/67742/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/67742/assignments"
     },
     "Negotiation": {
-        due: "Tuesday, Jan 21 at 11:59 PM",
+        due: "Tuesday, Jan 28 at 11:59 PM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/67439/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/67439/assignments"
     },
     "Corporate Governance": {
-        due: "Thursday, Jan 23 at 12:00 PM",
+        due: "Thursday, Jan 30 at 12:00 PM",
         syllabusUrl: "https://canvas.uchicago.edu/courses/69195/assignments/syllabus",
         assignmentsUrl: "https://canvas.uchicago.edu/courses/69195/assignments"
     }
@@ -770,8 +776,6 @@ window.classEndTimes = {
     'Negotiation': { day: 4, hour: 11, minute: 30 },
     'Corporate Governance': { day: 5, hour: 11, minute: 30 }
 };
-
-// lastUpdated is already set by timestamp.js, no need to redeclare
 
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
