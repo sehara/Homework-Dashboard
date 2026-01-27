@@ -129,12 +129,17 @@
       {
         "id": 1769476233959,
         "content": "Send JD to Rayner",
-        "rating": null,
+        "rating": {
+          "score": 8,
+          "time": "45min",
+          "emoji": "🟢",
+          "rawMinutes": 45
+        },
         "editingTime": false
       }
     ]
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-27T01:21:26.387Z"
+  "lastSynced": "2026-01-27T02:12:52.899Z"
 }
