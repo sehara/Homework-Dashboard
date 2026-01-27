@@ -109,7 +109,9 @@
         },
         "editingTime": true,
         "editingTitle": true,
-        "title": "Task 1"
+        "title": "Task 1",
+        "done": true,
+        "doneAt": "2026-01-27T01:10:32.591Z"
       },
       {
         "id": 1768236841837,
@@ -123,10 +125,16 @@
         "editingTime": true,
         "done": true,
         "doneAt": "2026-01-18T04:46:14.802Z"
+      },
+      {
+        "id": 1769476233959,
+        "content": "",
+        "rating": null,
+        "editingTime": false
       }
     ]
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-24T16:37:38.415Z"
+  "lastSynced": "2026-01-27T01:10:35.962Z"
 }
