@@ -135,11 +135,13 @@
           "emoji": "🟢",
           "rawMinutes": 45
         },
-        "editingTime": false
+        "editingTime": false,
+        "done": true,
+        "doneAt": "2026-01-28T15:44:28.992Z"
       }
     ]
   },
   "taskStates": {},
   "archivedCourses": [],
-  "lastSynced": "2026-01-27T02:12:52.899Z"
+  "lastSynced": "2026-01-28T15:44:30.995Z"
 }
