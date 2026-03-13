@@ -777,7 +777,7 @@ window.classEndTimes = {
       'Corporate Governance': { day: 5, hour: 11, minute: 30 }
 };
 
-window.lastUpdated = "2/14/2026 3:39 PM CT";
+window.lastUpdated = "2026-02-14T15:39:00-06:00";
 
 if (typeof module !== 'undefined' && module.exports) {
       module.exports = {
