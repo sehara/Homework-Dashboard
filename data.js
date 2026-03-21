@@ -402,7 +402,7 @@ window.classEndTimes = {
       'Brand Management in a Digital Age': { day: 1, hour: 21, minute: 0 }
 };
 
-window.lastUpdated = "2026-03-21T18:15:00-05:00";
+window.lastUpdated = "2026-03-21T16:16:08-05:00";
 
 if (typeof module !== 'undefined' && module.exports) {
       module.exports = {
