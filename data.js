@@ -7,46 +7,13 @@ window.courseData = {
                                           title: "Bio Information",
                                           time: 0.5,
                                           points: 0,
-                                          link: "https://canvas.uchicago.edu/courses/70209/assignments/3077221"
+                                          link: "https://canvas.uchicago.edu/courses/70209/assignments/869316"
                             }
                                   ],
                         reading: [
                             {
                                           title: "Woodson and Marshall, Chapters 1-3",
                                           time: 2.0,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/70209/modules"
-                            },
-                            {
-                                          title: "Rosplock, Chapters 1 and 2",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/70209/modules"
-                            },
-                            {
-                                          title: "Case: To SFO or Not To SFO: The Tolman Family",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/70209/modules"
-                            },
-                            {
-                                          title: "Case: An Heir with No Spare: The Deitch Family Office",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/70209/modules"
-                            }
-                                  ],
-                        required: [],
-                        optional: [
-                            {
-                                          title: "The Rise and Rise of the Family Office",
-                                          time: 0.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/70209/modules"
-                            },
-                            {
-                                          title: "Deloitte Private: Defining the Family Office Landscape, 2024",
-                                          time: 1.0,
                                           points: null,
                                           link: "https://canvas.uchicago.edu/courses/70209/modules"
                             },
@@ -62,40 +29,64 @@ window.courseData = {
                                           points: null,
                                           link: "https://canvas.uchicago.edu/courses/70209/modules"
                             }
-                                  ]
+                                  ],
+                        required: [],
+                        optional: []
+              }
+      },
+      "Thursday, March 26, 2026": {
+              "Value Creation in Small Businesses|||Due: Thursday, Mar 26 at 6:00 PM": {
+                        submit: [
+                            {
+                                          title: "Introductory Slide (Individual Assignment)",
+                                          time: 0.5,
+                                          points: 1,
+                                          link: "https://canvas.uchicago.edu/courses/70224/assignments/849965"
+                            },
+                            {
+                                          title: "Tide Rock Case Submission (Individual Assignment)",
+                                          time: 1.5,
+                                          points: 1,
+                                          link: "https://canvas.uchicago.edu/courses/70224/assignments/849968"
+                            }
+                                  ],
+                        reading: [
+                            {
+                                          title: "Winning Moves Ch. 1, 2, and 17",
+                                          time: 2.0,
+                                          points: null,
+                                          link: "https://canvas.uchicago.edu/courses/70224/modules"
+                            }
+                                  ],
+                        required: [],
+                        optional: []
               }
       },
       "Monday, March 30, 2026": {
               "Brand Management in a Digital Age|||Due: Monday, Mar 30 at 5:00 PM": {
                         submit: [
                             {
-                                          title: "Submit Group & Brand Selection",
-                                          time: 0.5,
-                                          points: 0,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
-                            },
-                            {
                                           title: "Week 2: IKEA Invades America",
                                           time: 1.5,
                                           points: 10,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865523"
                             }
                                   ],
-                        reading: [
+                        reading: [],
+                        required: [
                             {
-                                          title: "Marketing Success Through Differentiation - Of Anything by Theodore Levitt",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            }
-                                  ],
-                        required: [],
-                        optional: [
-                            {
-                                          title: "Optional - Marketing in the Wild - Week 2",
+                                          title: "Submit Group & Brand Selection",
                                           time: 0.5,
                                           points: 0,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865522"
+                            }
+                                  ],
+                        optional: [
+                            {
+                                          title: "Marketing in the Wild - Week 2",
+                                          time: 0.5,
+                                          points: 0,
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865515"
                             }
                                   ]
               }
@@ -105,24 +96,12 @@ window.courseData = {
                         submit: [
                             {
                                           title: "Cases for Week 2",
-                                          time: 2.0,
+                                          time: 1.5,
                                           points: 20,
-                                          link: "https://canvas.uchicago.edu/courses/70209/assignments/3077220"
+                                          link: "https://canvas.uchicago.edu/courses/70209/assignments/869318"
                             }
                                   ],
                         reading: [
-                            {
-                                          title: "Woodson and Marshall, Chapters 7, 11 and 12",
-                                          time: 2.0,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/70209/modules"
-                            },
-                            {
-                                          title: "Rosplock, Chapters 3, 4, 5 and 11",
-                                          time: 2.0,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/70209/modules"
-                            },
                             {
                                           title: "Case: All Options on the Table: The Haber Family",
                                           time: 1.5,
@@ -143,12 +122,6 @@ window.courseData = {
                                           time: 1.0,
                                           points: null,
                                           link: "https://canvas.uchicago.edu/courses/70209/modules"
-                            },
-                            {
-                                          title: "The Family Office Boom: Contrast Between East and West",
-                                          time: 1.0,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/70209/modules"
                             }
                                   ]
               }
@@ -160,83 +133,66 @@ window.courseData = {
                                           title: "Week 3: Cialis Case Study: Getting Ready to Market",
                                           time: 1.5,
                                           points: 10,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865524"
                             },
                             {
                                           title: "Week 3: Porsche: The Cayenne Launch",
                                           time: 1.5,
                                           points: 10,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865525"
                             }
                                   ],
-                        reading: [
-                            {
-                                          title: "Theodore Leavitt, Marketing Myopia",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            },
-                            {
-                                          title: "Kotler and Keller, Chapter 4",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            },
-                            {
-                                          title: "Kotler and Keller, Chapter 13",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            },
-                            {
-                                          title: "Clayton Christensen, Know Your Customer's Jobs to Be Done",
-                                          time: 1.0,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            }
-                                  ],
+                        reading: [],
                         required: [],
                         optional: [
                             {
-                                          title: "Optional - Marketing in the Wild - Week 3",
+                                          title: "Marketing in the Wild - Week 3",
                                           time: 0.5,
                                           points: 0,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865516"
                             }
                                   ]
+              }
+      },
+      "Friday, April 10, 2026": {
+              "Value Creation in Small Businesses|||Due: Friday, Apr 10 at 6:00 PM": {
+                        submit: [
+                            {
+                                          title: "Client Project Assignment #1",
+                                          time: 2.0,
+                                          points: 1,
+                                          link: "https://canvas.uchicago.edu/courses/70224/assignments/849962"
+                            }
+                                  ],
+                        reading: [],
+                        required: [],
+                        optional: []
               }
       },
       "Monday, April 13, 2026": {
               "Brand Management in a Digital Age|||Due: Monday, Apr 13 at 5:00 PM": {
                         submit: [
                             {
+                                          title: "Week 4: J.C. Penney's \"Fair and Square\" Strategy",
+                                          time: 1.5,
+                                          points: 10,
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865526"
+                            },
+                            {
                                           title: "Week 4: Sephora Direct - Investing in Social Media, Video and Mobile",
                                           time: 1.5,
                                           points: 10,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
-                            },
-                            {
-                                          title: "Week 4: J.C. Penney's Fair and Square Strategy",
-                                          time: 1.5,
-                                          points: 10,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865527"
                             }
                                   ],
-                        reading: [
-                            {
-                                          title: "Kotler and Keller, Chapter 16",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            }
-                                  ],
+                        reading: [],
                         required: [],
                         optional: [
                             {
-                                          title: "Optional - Marketing in the Wild - Week 4",
+                                          title: "Marketing in the Wild - Week 4",
                                           time: 0.5,
                                           points: 0,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865517"
                             }
                                   ]
               }
@@ -246,9 +202,9 @@ window.courseData = {
                         submit: [
                             {
                                           title: "Mid-Term Check-In",
-                                          time: 3.0,
+                                          time: 2.0,
                                           points: 70,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865514"
                             }
                                   ],
                         reading: [],
@@ -263,30 +219,17 @@ window.courseData = {
                                           title: "Week 6: Dove: Evolution of a Brand",
                                           time: 1.5,
                                           points: 10,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865528"
                             }
                                   ],
-                        reading: [
-                            {
-                                          title: "Kotler and Keller, Chapter 11",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            },
-                            {
-                                          title: "Lululemon (Short Case)",
-                                          time: 1.0,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            }
-                                  ],
+                        reading: [],
                         required: [],
                         optional: [
                             {
-                                          title: "Optional - Marketing in the Wild - Week 6",
+                                          title: "Marketing in the Wild - Week 6",
                                           time: 0.5,
                                           points: 0,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865518"
                             }
                                   ]
               }
@@ -298,24 +241,17 @@ window.courseData = {
                                           title: "Week 7: MINI USA: Finding a New Advertising Agency",
                                           time: 1.5,
                                           points: 10,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865529"
                             }
                                   ],
-                        reading: [
-                            {
-                                          title: "Kotler and Keller, Chapter 17",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            }
-                                  ],
+                        reading: [],
                         required: [],
                         optional: [
                             {
-                                          title: "Optional - Marketing in the Wild - Week 7",
+                                          title: "Marketing in the Wild - Week 7",
                                           time: 0.5,
                                           points: 0,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865519"
                             }
                                   ]
               }
@@ -327,38 +263,34 @@ window.courseData = {
                                           title: "Week 8: Glossier: Co-Creating a Cult Brand with a Digital Community",
                                           time: 1.5,
                                           points: 10,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865530"
                             }
                                   ],
-                        reading: [
-                            {
-                                          title: "Use New Tools To Build Traditional Consumer Relationships by Hafen and Knight",
-                                          time: 1.0,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            },
-                            {
-                                          title: "Netflix Documentary: The Social Dilemma",
-                                          time: 1.5,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            }
-                                  ],
+                        reading: [],
                         required: [],
                         optional: [
                             {
-                                          title: "Supplemental Case: Marcus by Goldman Sachs",
-                                          time: 1.0,
-                                          points: null,
-                                          link: "https://canvas.uchicago.edu/courses/71422/modules"
-                            },
-                            {
-                                          title: "Optional - Marketing in the Wild - Week 8",
+                                          title: "Marketing in the Wild - Week 8",
                                           time: 0.5,
                                           points: 0,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865520"
                             }
                                   ]
+              }
+      },
+      "Friday, May 15, 2026": {
+              "Value Creation in Small Businesses|||Due: Friday, May 15 at 6:00 PM": {
+                        submit: [
+                            {
+                                          title: "Client Project Assignment #2 - Value Driver Mapping",
+                                          time: 2.0,
+                                          points: 1,
+                                          link: "https://canvas.uchicago.edu/courses/70224/assignments/849963"
+                            }
+                                  ],
+                        reading: [],
+                        required: [],
+                        optional: []
               }
       },
       "Monday, May 18, 2026": {
@@ -368,7 +300,22 @@ window.courseData = {
                                           title: "Final Brand Management Project",
                                           time: 3.0,
                                           points: 140,
-                                          link: "https://canvas.uchicago.edu/courses/71422/assignments"
+                                          link: "https://canvas.uchicago.edu/courses/71422/assignments/865512"
+                            }
+                                  ],
+                        reading: [],
+                        required: [],
+                        optional: []
+              }
+      },
+      "Wednesday, May 27, 2026": {
+              "Value Creation in Small Businesses|||Due: Wednesday, May 27 at 6:00 PM": {
+                        submit: [
+                            {
+                                          title: "Client Project: Final Assignment",
+                                          time: 3.0,
+                                          points: 1,
+                                          link: "https://canvas.uchicago.edu/courses/70224/assignments/849964"
                             }
                                   ],
                         reading: [],
@@ -385,7 +332,7 @@ window.courseInfo = {
               assignmentsUrl: "https://canvas.uchicago.edu/courses/70209/assignments"
       },
       "Value Creation in Small Businesses": {
-              due: "TBD (dates not yet updated in Canvas)",
+              due: "Thursday, Mar 26 at 6:00 PM",
               syllabusUrl: "https://canvas.uchicago.edu/courses/70224/assignments/syllabus",
               assignmentsUrl: "https://canvas.uchicago.edu/courses/70224/assignments"
       },
@@ -397,12 +344,12 @@ window.courseInfo = {
 };
 
 window.classEndTimes = {
-      'The Family Office': { day: 2, hour: 17, minute: 0 },
-      'Value Creation in Small Businesses': { day: 3, hour: 21, minute: 0 },
-      'Brand Management in a Digital Age': { day: 1, hour: 21, minute: 0 }
+      "The Family Office": { day: 2, hour: 17, minute: 0 },
+      "Value Creation in Small Businesses": { day: 3, hour: 21, minute: 0 },
+      "Brand Management in a Digital Age": { day: 1, hour: 21, minute: 0 }
 };
 
-window.lastUpdated = "2026-03-21T16:16:08-05:00";
+window.lastUpdated = "2026-03-22T20:24:03.452Z";
 
 if (typeof module !== 'undefined' && module.exports) {
       module.exports = {
