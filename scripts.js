@@ -39,7 +39,7 @@ if (!currentVersion || currentVersion !== TRACKER_VERSION) {
         localStorage.removeItem('deletedCategories');
         localStorage.removeItem('categoryOrder');
         
-        console.log('â Cleared old prepare data for reading compatibility');
+        console.log('‚úÖ Cleared old prepare data for reading compatibility');
     }
     
     // Set version flag
@@ -438,27 +438,27 @@ function renderCourseCards() {
             const dueText = info && info.due ? info.due : 'TBD';
             card.innerHTML = `
                 <div class="course-card-title">${courseName}</div>
-                <div class="course-card-hours">—</div>
+                <div class="course-card-hours">‚Äî</div>
                 <div class="course-card-hours-label">NO DATA YET</div>
                 <div class="course-card-tasks">Assignments not posted on Canvas</div>
-                <div class="course-card-due">📅 ${dueText}</div>
+                <div class="course-card-due">üìÖ ${dueText}</div>
             `;
         } else if (stats.remaining === 0) {
             card.innerHTML = `
                 <div class="course-card-title">${courseName}</div>
-                <div class="course-card-hours">â</div>
+                <div class="course-card-hours">‚úÖ</div>
                 <div class="course-card-hours-label">COMPLETE</div>
                 <div class="course-card-tasks">${stats.total} tasks done</div>
-                <div class="course-card-due">ð ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : 'No upcoming class'}</div>
+                <div class="course-card-due">üìÖ ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : 'No upcoming class'}</div>
             `;
         } else {
             let statusHTML = '';
             if (stats.unscheduled === 0) {
-                statusHTML = `<div class="course-card-status under-control">â ${stats.scheduled} scheduled</div>`;
+                statusHTML = `<div class="course-card-status under-control">‚úì ${stats.scheduled} scheduled</div>`;
             } else if (stats.scheduled === 0) {
-                statusHTML = `<div class="course-card-status needs-scheduling">â ï¸ ${stats.unscheduled} unscheduled</div>`;
+                statusHTML = `<div class="course-card-status needs-scheduling">‚ö†Ô∏è ${stats.unscheduled} unscheduled</div>`;
             } else {
-                statusHTML = `<div class="course-card-status partial">â ${stats.scheduled} scheduled | â ï¸ ${stats.unscheduled} unscheduled</div>`;
+                statusHTML = `<div class="course-card-status partial">‚úì ${stats.scheduled} scheduled | ‚ö†Ô∏è ${stats.unscheduled} unscheduled</div>`;
             }
             
             card.innerHTML = `
@@ -467,7 +467,7 @@ function renderCourseCards() {
                 <div class="course-card-hours-label">HOURS LEFT</div>
                 <div class="course-card-tasks">${stats.remaining}/${stats.total} tasks remaining</div>
                 ${statusHTML}
-                <div class="course-card-due">ð ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : 'No upcoming class'}</div>
+                <div class="course-card-due">üìÖ ${nextClassDates[courseName] ? formatDueDate(nextClassDates[courseName], courseName) : 'No upcoming class'}</div>
             `;
         }
 
@@ -491,7 +491,7 @@ function renderTasks() {
         if (collapsedDays.includes(day)) {
             dayHeader.classList.add('collapsed');
         }
-        dayHeader.innerHTML = `<span>${day}</span><span class="arrow">â¼</span>`;
+        dayHeader.innerHTML = `<span>${day}</span><span class="arrow">‚ñº</span>`;
         dayHeader.addEventListener('click', () => toggleDay(day));
         daySection.appendChild(dayHeader);
 
@@ -519,11 +519,11 @@ function renderTasks() {
                 <div>
                     <div class="course-title">
                         ${courseName === "Managing in Organizations" ? "Managing in Organizations (no AI)" : courseName}
-                        ${syllabusUrl ? `<a href="${syllabusUrl}" target="_blank" class="course-syllabus-link" onclick="event.stopPropagation()" title="View Syllabus">ð</a>` : ''}
+                        ${syllabusUrl ? `<a href="${syllabusUrl}" target="_blank" class="course-syllabus-link" onclick="event.stopPropagation()" title="View Syllabus">üìÑ</a>` : ''}
                     </div>
                     <div class="course-due">${due}</div>
                 </div>
-                <span class="course-arrow">â¼</span>
+                <span class="course-arrow">‚ñº</span>
             `;
             courseHeader.addEventListener('click', () => toggleCourse(courseId));
             courseSection.appendChild(courseHeader);
@@ -538,10 +538,10 @@ function renderTasks() {
             const order = categoryOrder[courseId] || defaultOrder;
 
             const categoryTitles = {
-                'submit': 'ð¯ SUBMIT (Actual Submission Required)',
-                'reading': 'ð READING (Required for Class)',
-                'required': 'ð REQUIRED READINGS',
-                'optional': 'ð¡ OPTIONAL READINGS'
+                'submit': 'üéØ SUBMIT (Actual Submission Required)',
+                'reading': 'üìñ READING (Required for Class)',
+                'required': 'üìñ REQUIRED READINGS',
+                'optional': 'üí° OPTIONAL READINGS'
             };
 
             const deletedInCourse = [];
@@ -576,12 +576,12 @@ function renderTasks() {
                     categoryTitle.classList.add('grayed-out');
                 }
                 
-                const statusIcon = (allCompleted && !isEmpty) ? 'â ' : '';
+                const statusIcon = (allCompleted && !isEmpty) ? '‚úì ' : '';
                 
                 const leftDiv = document.createElement('div');
                 leftDiv.className = 'category-title-left';
                 const assignmentsUrl = courseInfo[courseName] ? courseInfo[courseName].assignmentsUrl : '';
-                const assignmentsLink = (category === 'submit' && assignmentsUrl) ? `<a href="${assignmentsUrl}" target="_blank" class="category-assignments-link" onclick="event.stopPropagation()" title="View Assignments">ð</a>` : '';
+                const assignmentsLink = (category === 'submit' && assignmentsUrl) ? `<a href="${assignmentsUrl}" target="_blank" class="category-assignments-link" onclick="event.stopPropagation()" title="View Assignments">üîó</a>` : '';
                 leftDiv.innerHTML = `
                     <span class="category-status">${statusIcon}</span>
                     <span>${categoryTitles[category]}</span>
@@ -596,7 +596,7 @@ function renderTasks() {
                 
                 const upBtn = document.createElement('button');
                 upBtn.className = 'category-btn';
-                upBtn.textContent = 'â';
+                upBtn.textContent = '‚Üë';
                 upBtn.onclick = (e) => {
                     e.stopPropagation();
                     moveCategoryUp(day, courseKey, category);
@@ -604,7 +604,7 @@ function renderTasks() {
                 
                 const downBtn = document.createElement('button');
                 downBtn.className = 'category-btn';
-                downBtn.textContent = 'â';
+                downBtn.textContent = '‚Üì';
                 downBtn.onclick = (e) => {
                     e.stopPropagation();
                     moveCategoryDown(day, courseKey, category);
@@ -616,7 +616,7 @@ function renderTasks() {
                 if (shouldGrayOut) {
                     const deleteBtn = document.createElement('button');
                     deleteBtn.className = 'category-btn delete-btn';
-                    deleteBtn.textContent = 'ðï¸';
+                    deleteBtn.textContent = 'üóëÔ∏è';
                     deleteBtn.onclick = (e) => {
                         e.stopPropagation();
                         deleteCategory(day, courseKey, category);
@@ -628,7 +628,7 @@ function renderTasks() {
                 
                 const arrow = document.createElement('span');
                 arrow.className = 'category-arrow';
-                arrow.textContent = 'â¼';
+                arrow.textContent = '‚ñº';
                 rightDiv.appendChild(arrow);
 
                 categoryTitle.appendChild(leftDiv);
@@ -716,7 +716,7 @@ function renderTasks() {
                         const linkIcon = document.createElement('a');
                         linkIcon.href = item.link;
                         linkIcon.target = '_blank';
-                        linkIcon.textContent = 'ð';
+                        linkIcon.textContent = 'üîó';
                         linkIcon.style.fontSize = '0.9em';
                         linkIcon.style.opacity = '0.5';
                         linkIcon.style.textDecoration = 'none';
@@ -737,7 +737,7 @@ function renderTasks() {
                         timeOptions.forEach(optTime => {
                             const option = document.createElement('option');
                             option.value = optTime;
-                            option.textContent = `â±ï¸ ${formatTime(optTime)}`;
+                            option.textContent = `‚è±Ô∏è ${formatTime(optTime)}`;
                             if (optTime === currentTime) {
                                 option.selected = true;
                             }
@@ -763,9 +763,9 @@ function renderTasks() {
                                 const d = new Date(sTime);
                                 const dayName = d.toLocaleDateString([], { weekday: 'short' });
                                 const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                                calendarBtn.textContent = `ð ${dayName} ${timeStr}`;
+                                calendarBtn.textContent = `üìÖ ${dayName} ${timeStr}`;
                             } else {
-                                calendarBtn.textContent = 'â Scheduled';
+                                calendarBtn.textContent = '‚úì Scheduled';
                             }
 
                             // Click to unschedule and open search
@@ -794,7 +794,7 @@ function renderTasks() {
                                 renderTasks();
                             };
                         } else {
-                            calendarBtn.textContent = 'ð Schedule';
+                            calendarBtn.textContent = 'üìÖ Schedule';
 
                             // Directly open Google Calendar
                             calendarBtn.onclick = (e) => {
@@ -818,7 +818,7 @@ function renderTasks() {
                         if (hasNotes) {
                             notesBtn.classList.add('has-notes');
                         }
-                        notesBtn.textContent = hasNotes ? 'ð Notes' : 'ð';
+                        notesBtn.textContent = hasNotes ? 'üìù Notes' : 'üìù';
                         notesBtn.onclick = (e) => {
                             e.stopPropagation();
                             const notesArea = taskItem.querySelector('.task-notes-area');
@@ -875,7 +875,7 @@ function renderTasks() {
 
                         const taskUpBtn = document.createElement('button');
                         taskUpBtn.className = 'task-btn';
-                        taskUpBtn.textContent = 'â';
+                        taskUpBtn.textContent = '‚Üë';
                         taskUpBtn.onclick = (e) => {
                             e.stopPropagation();
                             moveTaskUp(day, courseKey, category, itemIndex);
@@ -883,7 +883,7 @@ function renderTasks() {
 
                         const taskDownBtn = document.createElement('button');
                         taskDownBtn.className = 'task-btn';
-                        taskDownBtn.textContent = 'â';
+                        taskDownBtn.textContent = '‚Üì';
                         taskDownBtn.onclick = (e) => {
                             e.stopPropagation();
                             moveTaskDown(day, courseKey, category, itemIndex);
@@ -910,7 +910,7 @@ function renderTasks() {
                 
                 const restoreTitle = document.createElement('div');
                 restoreTitle.className = 'restore-title';
-                restoreTitle.textContent = 'ð Deleted Sections (Click to Restore)';
+                restoreTitle.textContent = 'üîÑ Deleted Sections (Click to Restore)';
                 restoreSection.appendChild(restoreTitle);
 
                 deletedInCourse.forEach(({ category, title }) => {
@@ -945,7 +945,7 @@ function renderTasks() {
         if (archiveCollapsed) {
             archiveHeader.classList.add('collapsed');
         }
-        archiveHeader.innerHTML = `<span>ð¦ Archived Tasks (Past Due)</span><span class="arrow">â¼</span>`;
+        archiveHeader.innerHTML = `<span>üì¶ Archived Tasks (Past Due)</span><span class="arrow">‚ñº</span>`;
         archiveHeader.addEventListener('click', () => toggleDay('__archive__'));
         archiveSection.appendChild(archiveHeader);
 
@@ -979,7 +979,7 @@ function renderTasks() {
                     <div>
                         <div class="course-title" style="color: #856404;">${courseName} - ${new Date(day).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</div>
                     </div>
-                    <span class="course-arrow">â¼</span>
+                    <span class="course-arrow">‚ñº</span>
                 `;
                 courseHeader.addEventListener('click', () => toggleCourse(courseId));
                 courseSection.appendChild(courseHeader);
@@ -1118,7 +1118,7 @@ function startUpdateCountdown() {
         const minutes = Math.floor(secondsLeft / 60);
         const seconds = secondsLeft % 60;
         banner.innerHTML = `
-            <div style="margin-bottom: 10px;">â³ Updating homework...</div>
+            <div style="margin-bottom: 10px;">‚è≥ Updating homework...</div>
             <div style="font-size: 2em; text-align: center;">${minutes}:${seconds.toString().padStart(2, '0')}</div>
             <div style="font-size: 0.8em; opacity: 0.8; margin-top: 10px; text-align: center;">Auto-refresh in progress</div>
         `;
@@ -1133,13 +1133,13 @@ function startUpdateCountdown() {
         
         if (secondsLeft <= 0) {
             clearInterval(countdownInterval);
-            banner.innerHTML = '<div>ð Refreshing...</div>';
+            banner.innerHTML = '<div>üîÑ Refreshing...</div>';
             
             setTimeout(() => {
                 if (Notification.permission === 'granted') {
-                    new Notification('ð Homework Updated!', {
+                    new Notification('üéì Homework Updated!', {
                         body: 'Your tracker has been refreshed with new assignments.',
-                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">ð</text></svg>'
+                        icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">üìö</text></svg>'
                     });
                 }
                 location.reload();
@@ -1148,7 +1148,7 @@ function startUpdateCountdown() {
     }, 1000);
     
     const cancelBtn = document.createElement('button');
-    cancelBtn.textContent = 'â Cancel';
+    cancelBtn.textContent = '‚ùå Cancel';
     cancelBtn.style.cssText = `
         background: white;
         color: #800000;
@@ -1249,9 +1249,9 @@ CRITICAL:
     `.trim();
     
     modalContent.innerHTML = `
-        <h2 style="color: #800000; margin-bottom: 20px;">ð Update Homework</h2>
+        <h2 style="color: #800000; margin-bottom: 20px;">üîÑ Update Homework</h2>
         <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-            <p style="margin: 0; font-weight: bold; color: #856404;">ð IMPORTANT: When you paste into Manus, attach your current <code>homework_tracker_updated.html</code> file!</p>
+            <p style="margin: 0; font-weight: bold; color: #856404;">üìé IMPORTANT: When you paste into Manus, attach your current <code>homework_tracker_updated.html</code> file!</p>
         </div>
         <p style="margin-bottom: 20px; font-size: 1.1em;">Copy these instructions and paste them in a new Manus chat:</p>
         <textarea readonly id="instructionsText" style="
@@ -1303,7 +1303,7 @@ CRITICAL:
                 font-weight: bold;
                 border-radius: 8px;
                 cursor: pointer;
-            ">ð Copy & Open Manus</button>
+            ">üìã Copy & Open Manus</button>
         </div>
     `;
     
@@ -1350,7 +1350,7 @@ function handleNoteInput(noteType, textareaId) {
     textarea.classList.add('unsaved');
     btn.classList.add('unsaved');
     btn.classList.remove('saved');
-    btn.textContent = 'â ï¸ Unsaved Changes';
+    btn.textContent = '‚ö†Ô∏è Unsaved Changes';
     
     // Auto-expand
     autoExpandNote(textareaId);
@@ -1370,12 +1370,12 @@ function saveNote(noteType, textareaId, btnId) {
     textarea.classList.remove('unsaved');
     btn.classList.remove('unsaved');
     btn.classList.add('saved');
-    btn.textContent = 'â Saved!';
+    btn.textContent = '‚úì Saved!';
     
     // Reset after 2 seconds
     setTimeout(() => {
         btn.classList.remove('saved');
-        btn.textContent = 'ð¾ Save';
+        btn.textContent = 'üíæ Save';
     }, 2000);
 }
 
@@ -1538,7 +1538,7 @@ async function saveNotesToGitHub(notesData, retryCount = 0) {
             return false;
         }
         
-        console.log('â Saved to GitHub successfully');
+        console.log('‚úÖ Saved to GitHub successfully');
         return true;
     } catch (error) {
         console.error('Error saving to GitHub:', error);
@@ -1586,7 +1586,7 @@ async function loadFromGitHub() {
         localStorage.setItem('taskCards_internship', JSON.stringify(taskCards.internship));
         localStorage.setItem('taskCards_jobHunting', JSON.stringify(taskCards.jobHunting));
         
-        console.log('â Loaded task cards from GitHub:', {
+        console.log('‚úÖ Loaded task cards from GitHub:', {
             personal: taskCards.personal.length,
             family: taskCards.family.length,
             internship: taskCards.internship.length,
@@ -1606,7 +1606,7 @@ async function loadFromGitHub() {
     updateHiddenTextarea('internship');
     updateHiddenTextarea('jobHunting');
     
-    console.log('â Loaded from GitHub');
+    console.log('‚úÖ Loaded from GitHub');
 }
 
 // Save all data to GitHub
@@ -1643,11 +1643,11 @@ function openSettings() {
     updateGoogleCalendarStatus();
     const token = getGitHubToken();
     if (token) {
-        document.getElementById('tokenInput').value = 'â¢â¢â¢â¢â¢â¢â¢â¢' + token.slice(-8);
+        document.getElementById('tokenInput').value = '‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢' + token.slice(-8);
     }
     const geminiToken = getGeminiApiKey();
     if (geminiToken) {
-        document.getElementById('geminiTokenInput').value = 'â¢â¢â¢â¢â¢â¢â¢â¢' + geminiToken.slice(-8);
+        document.getElementById('geminiTokenInput').value = '‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢' + geminiToken.slice(-8);
     }
 }
 
@@ -1659,7 +1659,7 @@ function saveToken() {
     const input = document.getElementById('tokenInput');
     const token = input.value.trim();
     
-    if (!token || token.startsWith('â¢â¢â¢â¢')) {
+    if (!token || token.startsWith('‚Ä¢‚Ä¢‚Ä¢‚Ä¢')) {
         alert('Please enter a valid token');
         return;
     }
@@ -1670,7 +1670,7 @@ function saveToken() {
     }
     
     setGitHubToken(token);
-    alert('â Token saved! Your notes will now sync to GitHub.');
+    alert('‚úÖ Token saved! Your notes will now sync to GitHub.');
     updateSyncStatus();
     loadFromGitHub();
 }
@@ -1688,7 +1688,7 @@ function saveGeminiToken() {
     const input = document.getElementById('geminiTokenInput');
     const token = input.value.trim();
     
-    if (!token || token.startsWith('â¢â¢â¢â¢')) {
+    if (!token || token.startsWith('‚Ä¢‚Ä¢‚Ä¢‚Ä¢')) {
         alert('Please enter a valid API key');
         return;
     }
@@ -1699,7 +1699,7 @@ function saveGeminiToken() {
     }
     
     setGeminiApiKey(token);
-    alert('â Gemini API key saved! AI clarification is now enabled.');
+    alert('‚úÖ Gemini API key saved! AI clarification is now enabled.');
     updateGeminiSyncStatus();
 }
 
@@ -1716,10 +1716,10 @@ function updateGeminiSyncStatus() {
     const statusDiv = document.getElementById('geminiSyncStatus');
     if (isGeminiConfigured()) {
         statusDiv.className = 'sync-status active';
-        statusDiv.textContent = 'â Gemini AI Active - Smart clarification enabled';
+        statusDiv.textContent = '‚úÖ Gemini AI Active - Smart clarification enabled';
     } else {
         statusDiv.className = 'sync-status inactive';
-        statusDiv.textContent = 'â ï¸ Gemini API Not Configured - Using simple form';
+        statusDiv.textContent = '‚ö†Ô∏è Gemini API Not Configured - Using simple form';
     }
 }
 
@@ -1727,10 +1727,10 @@ function updateSyncStatus() {
     const statusDiv = document.getElementById('syncStatus');
     if (isGitHubConfigured()) {
         statusDiv.className = 'sync-status active';
-        statusDiv.textContent = 'â GitHub Sync Active - Your notes sync automatically';
+        statusDiv.textContent = '‚úÖ GitHub Sync Active - Your notes sync automatically';
     } else {
         statusDiv.className = 'sync-status inactive';
-        statusDiv.textContent = 'â ï¸ GitHub Sync Not Configured - Notes saved locally only';
+        statusDiv.textContent = '‚ö†Ô∏è GitHub Sync Not Configured - Notes saved locally only';
     }
 }
 
@@ -2020,7 +2020,7 @@ function showLoadingModal(message) {
             border-radius: 15px;
             text-align: center;
         ">
-            <div style="font-size: 3em; margin-bottom: 15px;">ð¤</div>
+            <div style="font-size: 3em; margin-bottom: 15px;">ü§ñ</div>
             <div style="font-size: 1.2em; color: #667eea;">${message}</div>
         </div>
     `;
@@ -2074,7 +2074,7 @@ function showQuestionModal(noteType, cardId, currentText, questions) {
             max-height: 80vh;
             overflow-y: auto;
         ">
-            <h3 style="color: #667eea; margin-top: 0;">ð¤ Let's clarify: "${currentText}"</h3>
+            <h3 style="color: #667eea; margin-top: 0;">ü§ñ Let's clarify: "${currentText}"</h3>
             ${questionsHtml}
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button id="cancelBtn" style="
@@ -2094,7 +2094,7 @@ function showQuestionModal(noteType, cardId, currentText, questions) {
                     border-radius: 8px;
                     cursor: pointer;
                     font-weight: bold;
-                ">â Refine Task</button>
+                ">‚úì Refine Task</button>
             </div>
         </div>
     `;
@@ -2203,7 +2203,7 @@ function showSimpleClarificationForm(noteType, cardId, currentText) {
             border-radius: 15px;
             max-width: 600px;
         ">
-            <h3 style="color: #667eea; margin-top: 0;">â Let's clarify this task</h3>
+            <h3 style="color: #667eea; margin-top: 0;">‚ùì Let's clarify this task</h3>
             <p style="color: #666; margin-bottom: 20px;">Current: "${currentText}"</p>
             
             <textarea id="clarificationInput" style="
@@ -2237,7 +2237,7 @@ function showSimpleClarificationForm(noteType, cardId, currentText) {
                     border-radius: 8px;
                     cursor: pointer;
                     font-weight: bold;
-                ">â Update</button>
+                ">‚úì Update</button>
             </div>
         </div>
     `;
@@ -2457,7 +2457,7 @@ function renderTaskCards(noteType) {
                                 ${scheduleButtonText}
                             </button>
                             <button class="delete-btn" onclick="deleteTaskCard('${noteType}', ${card.id})" title="Delete task permanently">
-                                â
+                                ‚úï
                             </button>
                         </div>
                     </div>
@@ -2472,7 +2472,7 @@ function renderTaskCards(noteType) {
 
                     <div class="task-card-actions">
                         <button class="action-btn btn-details" onclick="checkTaskRating('${noteType}', ${card.id})" title="View task details and AI suggestions">
-                            ð¡
+                            üí°
                         </button>
                         <div class="time-dropdown-container">
                             ${card.editingTime ? `
@@ -2485,12 +2485,12 @@ function renderTaskCards(noteType) {
                                 </select>
                             ` : `
                                 <button class="action-btn btn-time" onclick="editTimeAction('${noteType}', ${card.id}); event.stopPropagation();" title="Edit task duration">
-                                    ${card.rating ? card.rating.time : 'â±ï¸'}
+                                    ${card.rating ? card.rating.time : '‚è±Ô∏è'}
                                 </button>
                             `}
                         </div>
                         <button class="action-btn btn-done" onclick="markTaskDone('${noteType}', ${card.id})" title="Mark as done and archive">
-                            â
+                            ‚úÖ
                         </button>
                     </div>
                 </div>
@@ -2609,7 +2609,7 @@ function renderArchive(noteType) {
                 <div class="archive-task-meta">
                     <span class="archive-task-date">Done: ${doneDate}</span>
                     <button class="archive-undo-btn" onclick="undoTaskDone('${noteType}', ${card.id})">
-                        â©ï¸ Undo
+                        ‚Ü©Ô∏è Undo
                     </button>
                 </div>
             </div>
@@ -2712,7 +2712,7 @@ function scheduleTaskCard(noteType, cardId, timeframe) {
     }
 
     if (!durationText || durationText.includes('undefined')) {
-        alert('No time estimate found. Please click the â±ï¸ time button to select an estimated duration, or click ð¡ Details for AI suggestions.');
+        alert('No time estimate found. Please click the ‚è±Ô∏è time button to select an estimated duration, or click üí° Details for AI suggestions.');
         return;
     }
 
@@ -2862,11 +2862,11 @@ function toggleArchive(noteType) {
 
     if (isCollapsed) {
         archiveContainer.classList.remove('collapsed');
-        arrow.textContent = 'â²';
+        arrow.textContent = '‚ñ≤';
         localStorage.setItem(`${noteType}ArchiveCollapsed`, 'false');
     } else {
         archiveContainer.classList.add('collapsed');
-        arrow.textContent = 'â¼';
+        arrow.textContent = '‚ñº';
         localStorage.setItem(`${noteType}ArchiveCollapsed`, 'true');
     }
 }
@@ -2882,10 +2882,10 @@ function toggleAllArchives() {
 
     if (isCollapsed) {
         grid.classList.remove('collapsed');
-        arrow.textContent = 'â²';
+        arrow.textContent = '‚ñ≤';
     } else {
         grid.classList.add('collapsed');
-        arrow.textContent = 'â¼';
+        arrow.textContent = '‚ñº';
     }
 }
 
@@ -2899,10 +2899,10 @@ function initArchiveStates() {
         if (archiveContainer && arrow) {
             if (isCollapsed) {
                 archiveContainer.classList.add('collapsed');
-                arrow.textContent = 'â¼';
+                arrow.textContent = '‚ñº';
             } else {
                 archiveContainer.classList.remove('collapsed');
-                arrow.textContent = 'â²';
+                arrow.textContent = '‚ñ≤';
             }
         }
     });
@@ -3005,11 +3005,11 @@ function timeToScore(minutes) {
 
 // Get emoji based on score
 function scoreToEmoji(score) {
-    if (score >= 9) return 'ð¢';
-    if (score >= 7) return 'ð¢';
-    if (score >= 5) return 'ð¡';
-    if (score >= 3) return 'ð ';
-    return 'ð´';
+    if (score >= 9) return 'üü¢';
+    if (score >= 7) return 'üü¢';
+    if (score >= 5) return 'üü°';
+    if (score >= 3) return 'üü†';
+    return 'üî¥';
 }
 
 // Get CSS class based on score
@@ -3090,22 +3090,22 @@ function updateGoogleCalendarStatus() {
             
             if (!isExpired) {
                 statusDiv.className = 'sync-status active';
-                statusDiv.textContent = `â Connected${email ? ` as ${email}` : ''}`;
+                statusDiv.textContent = `‚úÖ Connected${email ? ` as ${email}` : ''}`;
                 statusDiv.style.color = '#28a745';
-                connectBtn.textContent = 'ð Disconnect';
+                connectBtn.textContent = 'üîì Disconnect';
                 connectBtn.onclick = disconnectGoogleCalendar;
             } else {
                 statusDiv.className = 'sync-status inactive';
-                statusDiv.textContent = 'â ï¸ Token Expired - Reconnect';
+                statusDiv.textContent = '‚ö†Ô∏è Token Expired - Reconnect';
                 statusDiv.style.color = '#dc3545';
-                connectBtn.textContent = 'ð Reconnect';
+                connectBtn.textContent = 'üîó Reconnect';
                 connectBtn.onclick = connectGoogleCalendar;
             }
         } else {
             statusDiv.className = 'sync-status inactive';
-            statusDiv.textContent = 'â ï¸ Not Connected';
+            statusDiv.textContent = '‚ö†Ô∏è Not Connected';
             statusDiv.style.color = '#dc3545';
-            connectBtn.textContent = 'ð Connect Google Calendar';
+            connectBtn.textContent = 'üîó Connect Google Calendar';
             connectBtn.onclick = connectGoogleCalendar;
         }
     }
@@ -3445,7 +3445,7 @@ function showMarkScheduled(taskId, suggestedTime) {
     if (taskItem) {
         const btn = taskItem.querySelector('.task-calendar-link');
         if (btn) {
-            btn.textContent = 'ð Mark Scheduled';
+            btn.textContent = 'üìÖ Mark Scheduled';
             btn.classList.add('mark-scheduled');
             btn.onclick = (e) => {
                 e.preventDefault();
