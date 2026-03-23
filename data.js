@@ -2,9 +2,7 @@
 window.courseData = {
       "Tuesday, March 24, 2026": {
             "The Family Office|||Due: Tuesday, Mar 24 at 5:00 PM": {
-                  "submit": [],
-                  "reading": [],
-                  "required": [
+                  "submit": [
                         {
                               "title": "Bio Information",
                               "time": 0.5,
@@ -12,6 +10,45 @@ window.courseData = {
                               "link": "https://canvas.uchicago.edu/courses/70209/assignments/869316"
                         }
                   ],
+                  "reading": [
+                        {
+                              "title": "Woodson and Marshall Chapters 1-3",
+                              "time": 1.75,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        },
+                        {
+                              "title": "Rosplock, Chapters 1 and 2",
+                              "time": 1.75,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        },
+                        {
+                              "title": "\"The Rise and Rise of the Family Office\"",
+                              "time": 0.5,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        },
+                        {
+                              "title": "Deloitte Private: \"Defining the Family Office Landscape, 2024\"",
+                              "time": 0.5,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        },
+                        {
+                              "title": "Kenyon-Rouvines and Park, 2020, \"Family Office Research Review\" The Journal of Wealth Management",
+                              "time": 0.5,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        },
+                        {
+                              "title": "Handler, \"21st Century Family Office Structures\" Family Office Association",
+                              "time": 0.5,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        }
+                  ],
+                  "required": [],
                   "optional": []
             }
       },
@@ -75,7 +112,32 @@ window.courseData = {
                               "link": "https://canvas.uchicago.edu/courses/70209/assignments/869318"
                         }
                   ],
-                  "reading": [],
+                  "reading": [
+                        {
+                              "title": "Woodson and Marshall Chapters 7, 11 and 12",
+                              "time": 1.75,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        },
+                        {
+                              "title": "Rosploch Chapter 3, 4, 5 and 11",
+                              "time": 1.75,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        },
+                        {
+                              "title": "Handler, \"21st Century Family Office Structures,\". Family Office Association",
+                              "time": 0.5,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        },
+                        {
+                              "title": "\"The Family Office Boom: Contrast Between East and West,\" The Economist Intelligence Unit, 2020",
+                              "time": 0.5,
+                              "points": null,
+                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
+                        }
+                  ],
                   "required": [],
                   "optional": []
             }
@@ -315,7 +377,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-03-23T22:03:22.008Z";
+window.lastUpdated = "2026-03-23T23:01:29.821Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
