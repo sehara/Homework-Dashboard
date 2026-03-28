@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homework - UChicago MBA</title>
-    <link rel="stylesheet" href="style.css?v=20260324">
+    <link rel="stylesheet" href="style.css?v=20260328">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📚 Homework</h1>
-            <button id="settingsBtn" class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
+            <h1>ð Homework</h1>
+            <button id="settingsBtn" class="settings-btn" onclick="openSettings()">âï¸ Settings</button>
 
             <div id="settingsModal" class="modal">
                 <div class="modal-content">
                     <span class="close" onclick="closeSettings()">&times;</span>
-                    <h2>⚙️ Dashboard Settings</h2>
+                    <h2>âï¸ Dashboard Settings</h2>
                     
                     <div class="settings-section">
-                        <h3>☁️ GitHub Sync</h3>
+                        <h3>âï¸ GitHub Sync</h3>
                         <p>Sync your notes and task states across all devices using GitHub.</p>
                         
                         <div id="syncStatus" class="sync-status"></div>
@@ -26,8 +26,8 @@
                         <label for="tokenInput">GitHub Personal Access Token:</label>
                         <input type="password" id="tokenInput" placeholder="github_pat_..." class="token-input">
                         
-                        <button onclick="saveToken()" class="save-token-btn">💾 Save Token</button>
-                        <button onclick="clearToken()" class="clear-token-btn">🗑️ Clear Token</button>
+                        <button onclick="saveToken()" class="save-token-btn">ð¾ Save Token</button>
+                        <button onclick="clearToken()" class="clear-token-btn">ðï¸ Clear Token</button>
                         
                         <div class="help-text">
                             <p><strong>How to get a token:</strong></p>
@@ -42,8 +42,8 @@
                     </div>
 
                     <div style="margin-top: 30px; padding-top: 30px; border-top: 2px solid #e9ecef;">
-                        <h3 style="color: #667eea; margin-bottom: 15px;">🤖 AI Clarification (Gemini)</h3>
-                        <div id="geminiSyncStatus" class="sync-status inactive">⚠️ Gemini API Not Configured</div>
+                        <h3 style="color: #667eea; margin-bottom: 15px;">ð¤ AI Clarification (Gemini)</h3>
+                        <div id="geminiSyncStatus" class="sync-status inactive">â ï¸ Gemini API Not Configured</div>
                         
                         <div style="margin-top: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: bold;">Gemini API Key:</label>
@@ -69,7 +69,7 @@
                                     border-radius: 8px;
                                     cursor: pointer;
                                     font-weight: bold;
-                                ">💾 Save Key</button>
+                                ">ð¾ Save Key</button>
                                 <button onclick="clearGeminiToken()" style="
                                     background: #dc3545;
                                     color: white;
@@ -78,7 +78,7 @@
                                     border-radius: 8px;
                                     cursor: pointer;
                                     font-weight: bold;
-                                ">🗑️ Clear Key</button>
+                                ">ðï¸ Clear Key</button>
                             </div>
                             <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
                                 Get your free API key at: <a href="https://aistudio.google.com/app/apikey" target="_blank">https://aistudio.google.com/app/apikey</a>
@@ -87,10 +87,10 @@
                     </div>
 
                     <div style="margin-top: 30px; padding-top: 30px; border-top: 2px solid #e9ecef;">
-                        <h3 style="color: #4285f4;">📅 Google Calendar Integration</h3>
-                        <div id="googleCalendarStatus" class="sync-status inactive">⚠️ Not Connected</div>
+                        <h3 style="color: #4285f4;">ð Google Calendar Integration</h3>
+                        <div id="googleCalendarStatus" class="sync-status inactive">â ï¸ Not Connected</div>
                         <button id="connectGoogleBtn" onclick="connectGoogleCalendar()" style="background: #4285f4; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 15px; font-weight: bold;">
-                            🔗 Connect Google Calendar
+                            ð Connect Google Calendar
                         </button>
                         <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
                             Connect to schedule tasks with AI-suggested optimal times.
@@ -101,7 +101,7 @@
             <p id="dateRange">UChicago MBA | Next 14 Days</p>
         </div>
         <div class="summary-section">
-            <div class="summary-title">⚠️ Remaining Work This Week</div>
+            <div class="summary-title">â ï¸ Remaining Work This Week</div>
             
             <div class="course-cards" id="courseCards">
                 <!-- Course cards dynamically generated -->
@@ -109,34 +109,34 @@
             
             <div class="notes-grid">
                 <div class="note-section personal">
-                    <div class="note-title">📌 Personal Notes</div>
+                    <div class="note-title">ð Personal Notes</div>
                     <div id="personalTaskCards" class="task-cards-container"></div>
                     <button class="add-task-btn" onclick="addTaskCard('personal')">+ Add Task</button>
-                    <button id="personalSaveBtn" class="note-save-btn" onclick="saveNote('personal', 'personalNotesText', 'personalSaveBtn')">💾 Save All</button>
+                    <button id="personalSaveBtn" class="note-save-btn" onclick="saveNote('personal', 'personalNotesText', 'personalSaveBtn')">ð¾ Save All</button>
                     <textarea id="personalNotesText" class="note-textarea" style="display: none;"></textarea>
                 </div>
             
                 <div class="note-section family">
-                    <div class="note-title">👨‍👩‍👧‍👦 Family Notes</div>
+                    <div class="note-title">ð¨âð©âð§âð¦ Family Notes</div>
                     <div id="familyTaskCards" class="task-cards-container"></div>
                     <button class="add-task-btn" onclick="addTaskCard('family')">+ Add Task</button>
-                    <button id="familySaveBtn" class="note-save-btn" onclick="saveNote('family', 'familyNotesText', 'familySaveBtn')">💾 Save All</button>
+                    <button id="familySaveBtn" class="note-save-btn" onclick="saveNote('family', 'familyNotesText', 'familySaveBtn')">ð¾ Save All</button>
                     <textarea id="familyNotesText" class="note-textarea" style="display: none;"></textarea>
                 </div>
             
                 <div class="note-section jobHunting">
-                    <div class="note-title">💼 Job Hunting</div>
+                    <div class="note-title">ð¼ Job Hunting</div>
                     <div id="jobHuntingTaskCards" class="task-cards-container"></div>
                     <button class="add-task-btn" onclick="addTaskCard('jobHunting')">+ Add Task</button>
-                    <button id="jobHuntingSaveBtn" class="note-save-btn" onclick="saveNote('jobHunting', 'jobHuntingNotesText', 'jobHuntingSaveBtn')">💾 Save All</button>
+                    <button id="jobHuntingSaveBtn" class="note-save-btn" onclick="saveNote('jobHunting', 'jobHuntingNotesText', 'jobHuntingSaveBtn')">ð¾ Save All</button>
                     <textarea id="jobHuntingNotesText" class="note-textarea" style="display: none;"></textarea>
                 </div>
             
                 <div class="note-section internship">
-                    <div class="note-title">🎯 Internship</div>
+                    <div class="note-title">ð¯ Internship</div>
                     <div id="internshipTaskCards" class="task-cards-container"></div>
                     <button class="add-task-btn" onclick="addTaskCard('internship')">+ Add Task</button>
-                    <button id="internshipSaveBtn" class="note-save-btn" onclick="saveNote('internship', 'internshipNotesText', 'internshipSaveBtn')">💾 Save All</button>
+                    <button id="internshipSaveBtn" class="note-save-btn" onclick="saveNote('internship', 'internshipNotesText', 'internshipSaveBtn')">ð¾ Save All</button>
                     <textarea id="internshipNotesText" class="note-textarea" style="display: none;"></textarea>
                 </div>
             </div>
@@ -147,47 +147,47 @@
 
         <div class="archive-wrapper">
             <div class="archive-main-header" onclick="toggleAllArchives()">
-                <span>📦 Archived Tasks (Non-School)</span>
-                <span class="archive-main-arrow">▼</span>
+                <span>ð¦ Archived Tasks (Non-School)</span>
+                <span class="archive-main-arrow">â¼</span>
             </div>
 
             <div id="archiveGrid" class="archive-grid">
                 <div class="archive-column">
                     <div class="archive-column-header" onclick="toggleArchive('personal')">
-                        <span>📦 Personal Archive</span>
-                        <span class="archive-arrow" id="personalArchiveArrow">▼</span>
+                        <span>ð¦ Personal Archive</span>
+                        <span class="archive-arrow" id="personalArchiveArrow">â¼</span>
                     </div>
                     <div id="personalArchive" class="archive-content collapsed"></div>
                 </div>
 
                 <div class="archive-column">
                     <div class="archive-column-header" onclick="toggleArchive('family')">
-                        <span>📦 Family Archive</span>
-                        <span class="archive-arrow" id="familyArchiveArrow">▼</span>
+                        <span>ð¦ Family Archive</span>
+                        <span class="archive-arrow" id="familyArchiveArrow">â¼</span>
                     </div>
                     <div id="familyArchive" class="archive-content collapsed"></div>
                 </div>
 
                 <div class="archive-column">
                     <div class="archive-column-header" onclick="toggleArchive('jobHunting')">
-                        <span>📦 Job Hunting Archive</span>
-                        <span class="archive-arrow" id="jobHuntingArchiveArrow">▼</span>
+                        <span>ð¦ Job Hunting Archive</span>
+                        <span class="archive-arrow" id="jobHuntingArchiveArrow">â¼</span>
                     </div>
                     <div id="jobHuntingArchive" class="archive-content collapsed"></div>
                 </div>
 
                 <div class="archive-column">
                     <div class="archive-column-header" onclick="toggleArchive('internship')">
-                        <span>📦 Internship Archive</span>
-                        <span class="archive-arrow" id="internshipArchiveArrow">▼</span>
+                        <span>ð¦ Internship Archive</span>
+                        <span class="archive-arrow" id="internshipArchiveArrow">â¼</span>
                     </div>
                     <div id="internshipArchive" class="archive-content collapsed"></div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="timestamp.js?v=20260324"></script>
-    <script src="data.js?v=20260324"></script>
-    <script src="scripts.js?v=20260324"></script>
+    <script src="timestamp.js?v=20260328"></script>
+    <script src="data.js?v=20260328"></script>
+    <script src="scripts.js?v=20260328"></script>
 </body>
 </html>
