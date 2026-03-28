@@ -5,7 +5,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Cases for Week 2",
-          "hours": 1.5
+          "time": 1.5
         }
       ],
       "reading": [],
@@ -18,7 +18,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Biscom Case Submission",
-          "hours": 1.5
+          "time": 1.5
         }
       ],
       "reading": [],
@@ -31,7 +31,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Client Project Assignment #1",
-          "hours": 3
+          "time": 3
         }
       ],
       "reading": [],
@@ -44,7 +44,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Client Project Assignment #2 - Value Driver Mapping",
-          "hours": 3
+          "time": 3
         }
       ],
       "reading": [],
@@ -57,7 +57,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Client Project: Final Assignment",
-          "hours": 3
+          "time": 3
         }
       ],
       "reading": [],
@@ -70,20 +70,20 @@ window.courseData = {
       "submit": [
         {
           "title": "Week 2: IKEA Invades America",
-          "hours": 1.5
+          "time": 1.5
         }
       ],
       "reading": [],
       "required": [
         {
           "title": "Submit Group & Brand Selection",
-          "hours": 0.5
+          "time": 0.5
         }
       ],
       "optional": [
         {
           "title": "Optional - Marketing in the Wild - Week 2",
-          "hours": 0.5
+          "time": 0.5
         }
       ]
     }
@@ -93,11 +93,11 @@ window.courseData = {
       "submit": [
         {
           "title": "Week 3: Cialis Case Study: Getting Ready to Market",
-          "hours": 1.5
+          "time": 1.5
         },
         {
           "title": "Week 3: Porsche: The Cayenne Launch",
-          "hours": 1.5
+          "time": 1.5
         }
       ],
       "reading": [],
@@ -105,7 +105,7 @@ window.courseData = {
       "optional": [
         {
           "title": "Optional - Marketing in the Wild - Week 3",
-          "hours": 0.5
+          "time": 0.5
         }
       ]
     }
@@ -115,11 +115,11 @@ window.courseData = {
       "submit": [
         {
           "title": "Week 4: J.C. Penney's \"Fair and Square\" Strategy",
-          "hours": 1.5
+          "time": 1.5
         },
         {
           "title": "Week 4: Sephora Direct - Investing in Social Media, Video and Mobile",
-          "hours": 1.5
+          "time": 1.5
         }
       ],
       "reading": [],
@@ -127,7 +127,7 @@ window.courseData = {
       "optional": [
         {
           "title": "Optional - Marketing in the Wild - Week 4",
-          "hours": 0.5
+          "time": 0.5
         }
       ]
     }
@@ -137,7 +137,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Mid-Term Check-In",
-          "hours": 0.5
+          "time": 0.5
         }
       ],
       "reading": [],
@@ -150,7 +150,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Week 6: Dove: Evolution of a Brand",
-          "hours": 1.5
+          "time": 1.5
         }
       ],
       "reading": [],
@@ -158,7 +158,7 @@ window.courseData = {
       "optional": [
         {
           "title": "Optional - Marketing in the Wild - Week 6",
-          "hours": 0.5
+          "time": 0.5
         }
       ]
     }
@@ -168,7 +168,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Week 7: MINI USA: Finding a New Advertising Agency",
-          "hours": 1.5
+          "time": 1.5
         }
       ],
       "reading": [],
@@ -176,7 +176,7 @@ window.courseData = {
       "optional": [
         {
           "title": "Optional - Marketing in the Wild - Week 7",
-          "hours": 0.5
+          "time": 0.5
         }
       ]
     }
@@ -186,7 +186,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Week 8: Glossier: Co-Creating a Cult Brand with a Digital Community",
-          "hours": 1.5
+          "time": 1.5
         }
       ],
       "reading": [],
@@ -194,7 +194,7 @@ window.courseData = {
       "optional": [
         {
           "title": "Optional - Marketing in the Wild - Week 8",
-          "hours": 0.5
+          "time": 0.5
         }
       ]
     }
@@ -204,7 +204,7 @@ window.courseData = {
       "submit": [
         {
           "title": "Final Brand Management Project",
-          "hours": 1
+          "time": 1
         }
       ],
       "reading": [],
@@ -250,7 +250,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-03-28T21:41:55.834Z";
+window.lastUpdated = "2026-03-28T21:48:41.202Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
