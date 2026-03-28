@@ -1,383 +1,226 @@
-// Assign directly to window/global scope to make accessible to scripts.js
 window.courseData = {
-      "Tuesday, March 24, 2026": {
-            "The Family Office|||Due: Tuesday, Mar 24 at 5:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Bio Information",
-                              "time": 0.5,
-                              "points": 0,
-                              "link": "https://canvas.uchicago.edu/courses/70209/assignments/869316"
-                        }
-                  ],
-                  "reading": [
-                        {
-                              "title": "Woodson and Marshall Chapters 1-3",
-                              "time": 1.75,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        },
-                        {
-                              "title": "Rosplock, Chapters 1 and 2",
-                              "time": 1.75,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        },
-                        {
-                              "title": "\"The Rise and Rise of the Family Office\"",
-                              "time": 0.5,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        },
-                        {
-                              "title": "Deloitte Private: \"Defining the Family Office Landscape, 2024\"",
-                              "time": 0.5,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        },
-                        {
-                              "title": "Kenyon-Rouvines and Park, 2020, \"Family Office Research Review\" The Journal of Wealth Management",
-                              "time": 0.5,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        },
-                        {
-                              "title": "Handler, \"21st Century Family Office Structures\" Family Office Association",
-                              "time": 0.5,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        }
-                  ],
-                  "required": [],
-                  "optional": []
-            }
-      },
-      "Thursday, March 26, 2026": {
-            "Value Creation in Small Businesses|||Due: Thursday, Mar 26 at 6:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Introductory Slide (Individual Assignment)",
-                              "time": 0.5,
-                              "points": 1,
-                              "link": "https://canvas.uchicago.edu/courses/70224/assignments/849965"
-                        },
-                        {
-                              "title": "Tide Rock Case Submission (Individual Assignment)",
-                              "time": 1.5,
-                              "points": 1,
-                              "link": "https://canvas.uchicago.edu/courses/70224/assignments/849968"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": []
-            }
-      },
-      "Monday, March 30, 2026": {
-            "Brand Management in a Digital Age|||Due: Monday, Mar 30 at 5:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Week 2: IKEA Invades America",
-                              "time": 0.5,
-                              "points": 10,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865523"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [
-                        {
-                              "title": "Submit Group & Brand Selection",
-                              "time": 0.5,
-                              "points": 0,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865522"
-                        }
-                  ],
-                  "optional": [
-                        {
-                              "title": "Marketing in the Wild - Week 2",
-                              "time": 0.5,
-                              "points": 0,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865515"
-                        }
-                  ]
-            }
-      },
-      "Wednesday, April 1, 2026": {
-            "The Family Office|||Due: Wednesday, Apr 1 at 8:30 AM": {
-                  "submit": [
-                        {
-                              "title": "Cases for Week 2",
-                              "time": 1.5,
-                              "points": 20,
-                              "link": "https://canvas.uchicago.edu/courses/70209/assignments/869318"
-                        }
-                  ],
-                  "reading": [
-                        {
-                              "title": "Woodson and Marshall Chapters 7, 11 and 12",
-                              "time": 1.75,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        },
-                        {
-                              "title": "Rosploch Chapter 3, 4, 5 and 11",
-                              "time": 1.75,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        },
-                        {
-                              "title": "Handler, \"21st Century Family Office Structures,\". Family Office Association",
-                              "time": 0.5,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        },
-                        {
-                              "title": "\"The Family Office Boom: Contrast Between East and West,\" The Economist Intelligence Unit, 2020",
-                              "time": 0.5,
-                              "points": null,
-                              "link": "https://canvas.uchicago.edu/courses/70209/modules"
-                        }
-                  ],
-                  "required": [],
-                  "optional": []
-            }
-      },
-      "Monday, April 6, 2026": {
-            "Brand Management in a Digital Age|||Due: Monday, Apr 6 at 5:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Week 3: Cialis Case Study: Getting Ready to Market",
-                              "time": 1.5,
-                              "points": 10,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865524"
-                        },
-                        {
-                              "title": "Week 3: Porsche: The Cayenne Launch",
-                              "time": 0.5,
-                              "points": 10,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865525"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": [
-                        {
-                              "title": "Marketing in the Wild - Week 3",
-                              "time": 0.5,
-                              "points": 0,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865516"
-                        }
-                  ]
-            }
-      },
-      "Friday, April 10, 2026": {
-            "Value Creation in Small Businesses|||Due: Friday, Apr 10 at 6:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Client Project Assignment #1",
-                              "time": 2,
-                              "points": 1,
-                              "link": "https://canvas.uchicago.edu/courses/70224/assignments/849962"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": []
-            }
-      },
-      "Monday, April 13, 2026": {
-            "Brand Management in a Digital Age|||Due: Monday, Apr 13 at 5:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Week 4: J.C. Penney's \"Fair and Square\" Strategy",
-                              "time": 0.5,
-                              "points": 10,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865526"
-                        },
-                        {
-                              "title": "Week 4: Sephora Direct - Investing in Social Media, Video and Mobile",
-                              "time": 0.5,
-                              "points": 10,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865527"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": [
-                        {
-                              "title": "Marketing in the Wild - Week 4",
-                              "time": 0.5,
-                              "points": 0,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865517"
-                        }
-                  ]
-            }
-      },
-      "Monday, April 20, 2026": {
-            "Brand Management in a Digital Age|||Due: Monday, Apr 20 at 5:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Mid-Term Check-In",
-                              "time": 0.5,
-                              "points": 70,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865514"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": []
-            }
-      },
-      "Monday, April 27, 2026": {
-            "Brand Management in a Digital Age|||Due: Monday, Apr 27 at 5:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Week 6: Dove: Evolution of a Brand",
-                              "time": 0.5,
-                              "points": 10,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865528"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": [
-                        {
-                              "title": "Marketing in the Wild - Week 6",
-                              "time": 0.5,
-                              "points": 0,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865518"
-                        }
-                  ]
-            }
-      },
-      "Monday, May 4, 2026": {
-            "Brand Management in a Digital Age|||Due: Monday, May 4 at 5:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Week 7: MINI USA: Finding a New Advertising Agency",
-                              "time": 0.5,
-                              "points": 10,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865529"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": [
-                        {
-                              "title": "Marketing in the Wild - Week 7",
-                              "time": 0.5,
-                              "points": 0,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865519"
-                        }
-                  ]
-            }
-      },
-      "Monday, May 11, 2026": {
-            "Brand Management in a Digital Age|||Due: Monday, May 11 at 5:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Week 8: Glossier: Co-Creating a Cult Brand with a Digital Community",
-                              "time": 0.5,
-                              "points": 10,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865530"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": [
-                        {
-                              "title": "Marketing in the Wild - Week 8",
-                              "time": 0.5,
-                              "points": 0,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865520"
-                        }
-                  ]
-            }
-      },
-      "Friday, May 15, 2026": {
-            "Value Creation in Small Businesses|||Due: Friday, May 15 at 6:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Client Project Assignment #2 - Value Driver Mapping",
-                              "time": 2,
-                              "points": 1,
-                              "link": "https://canvas.uchicago.edu/courses/70224/assignments/849963"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": []
-            }
-      },
-      "Monday, May 18, 2026": {
-            "Brand Management in a Digital Age|||Due: Monday, May 18 at 5:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Final Brand Management Project",
-                              "time": 3,
-                              "points": 140,
-                              "link": "https://canvas.uchicago.edu/courses/71422/assignments/865512"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": []
-            }
-      },
-      "Wednesday, May 27, 2026": {
-            "Value Creation in Small Businesses|||Due: Wednesday, May 27 at 6:00 PM": {
-                  "submit": [
-                        {
-                              "title": "Client Project: Final Assignment",
-                              "time": 3,
-                              "points": 1,
-                              "link": "https://canvas.uchicago.edu/courses/70224/assignments/849964"
-                        }
-                  ],
-                  "reading": [],
-                  "required": [],
-                  "optional": []
-            }
+  "The Family Office|||Due: Wed, Apr 1, 8:30 AM": {
+    "submit": [
+      {
+        "name": "Cases for Week 2",
+        "estimatedHours": 1.5
       }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": []
+  },
+  "Value Creation in Small Businesses|||Due: Thu, Apr 2, 6:00 PM": {
+    "submit": [
+      {
+        "name": "Biscom Case Submission",
+        "estimatedHours": 1
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": []
+  },
+  "Value Creation in Small Businesses|||Due: Fri, Apr 10, 6:00 PM": {
+    "submit": [
+      {
+        "name": "Client Project Assignment #1",
+        "estimatedHours": 3
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": []
+  },
+  "Value Creation in Small Businesses|||Due: Fri, May 15, 6:00 PM": {
+    "submit": [
+      {
+        "name": "Client Project Assignment #2 - Value Driver Mapping",
+        "estimatedHours": 3
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": []
+  },
+  "Value Creation in Small Businesses|||Due: Wed, May 27, 6:00 PM": {
+    "submit": [
+      {
+        "name": "Client Project: Final Assignment",
+        "estimatedHours": 3
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": []
+  },
+  "Brand Management in a Digital Age|||Due: Mon, Mar 30, 5:00 PM": {
+    "submit": [
+      {
+        "name": "Week 2: IKEA Invades America",
+        "estimatedHours": 1
+      }
+    ],
+    "reading": [],
+    "required": [
+      {
+        "name": "Submit Group & Brand Selection",
+        "estimatedHours": 0.5
+      }
+    ],
+    "optional": [
+      {
+        "name": "Optional - Marketing in the Wild - Week 2",
+        "estimatedHours": 0.5
+      }
+    ]
+  },
+  "Brand Management in a Digital Age|||Due: Mon, Apr 6, 5:00 PM": {
+    "submit": [
+      {
+        "name": "Week 3: Cialis Case Study: Getting Ready to Market",
+        "estimatedHours": 1.5
+      },
+      {
+        "name": "Week 3: Porsche: The Cayenne Launch ",
+        "estimatedHours": 1
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": [
+      {
+        "name": "Optional - Marketing in the Wild - Week 3",
+        "estimatedHours": 0.5
+      }
+    ]
+  },
+  "Brand Management in a Digital Age|||Due: Mon, Apr 13, 5:00 PM": {
+    "submit": [
+      {
+        "name": "Week 4: J.C. Penney's \"Fair and Square\" Strategy",
+        "estimatedHours": 1
+      },
+      {
+        "name": "Week 4: Sephora Direct - Investing in Social Media, Video and Mobile",
+        "estimatedHours": 1
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": [
+      {
+        "name": "Optional - Marketing in the Wild - Week 4",
+        "estimatedHours": 0.5
+      }
+    ]
+  },
+  "Brand Management in a Digital Age|||Due: Mon, Apr 20, 5:00 PM": {
+    "submit": [
+      {
+        "name": "Mid-Term Check-In",
+        "estimatedHours": 1
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": []
+  },
+  "Brand Management in a Digital Age|||Due: Mon, Apr 27, 5:00 PM": {
+    "submit": [
+      {
+        "name": "Week 6: Dove: Evolution of a Brand",
+        "estimatedHours": 1
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": [
+      {
+        "name": "Optional - Marketing in the Wild - Week 6",
+        "estimatedHours": 0.5
+      }
+    ]
+  },
+  "Brand Management in a Digital Age|||Due: Mon, May 4, 5:00 PM": {
+    "submit": [
+      {
+        "name": "Week 7: MINI USA: Finding a New Advertising Agency",
+        "estimatedHours": 1
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": [
+      {
+        "name": "Optional - Marketing in the Wild - Week 7",
+        "estimatedHours": 0.5
+      }
+    ]
+  },
+  "Brand Management in a Digital Age|||Due: Mon, May 11, 5:00 PM": {
+    "submit": [
+      {
+        "name": "Week 8: Glossier: Co-Creating a Cult Brand with a Digital Community",
+        "estimatedHours": 1
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": [
+      {
+        "name": "Optional - Marketing in the Wild - Week 8",
+        "estimatedHours": 0.5
+      }
+    ]
+  },
+  "Brand Management in a Digital Age|||Due: Mon, May 18, 5:00 PM": {
+    "submit": [
+      {
+        "name": "Final Brand Management Project",
+        "estimatedHours": 3
+      }
+    ],
+    "reading": [],
+    "required": [],
+    "optional": []
+  }
 };
 
 window.courseInfo = {
-  "The Family Office": {
-    "due": "Tuesday, Mar 24 at 5:00 PM",
-    "syllabusUrl": "https://canvas.uchicago.edu/courses/70209/assignments/syllabus",
-    "assignmentsUrl": "https://canvas.uchicago.edu/courses/70209/assignments"
+  "70209": {
+    "name": "The Family Office",
+    "color": "#4A90D9"
   },
-  "Value Creation in Small Businesses": {
-    "due": "Thursday, Mar 26 at 6:00 PM",
-    "syllabusUrl": "https://canvas.uchicago.edu/courses/70224/assignments/syllabus",
-    "assignmentsUrl": "https://canvas.uchicago.edu/courses/70224/assignments"
+  "70224": {
+    "name": "Value Creation in Small Businesses",
+    "color": "#7B68EE"
   },
-  "Brand Management in a Digital Age": {
-    "due": "Monday, Mar 30 at 5:00 PM",
-    "syllabusUrl": "https://canvas.uchicago.edu/courses/71422/assignments/syllabus",
-    "assignmentsUrl": "https://canvas.uchicago.edu/courses/71422/assignments"
+  "71422": {
+    "name": "Brand Management in a Digital Age",
+    "color": "#E8813A"
   }
 };
 
 window.classEndTimes = {
-  "The Family Office": {
+  "70209": {
     "day": 2,
     "hour": 17,
     "minute": 0
   },
-  "Value Creation in Small Businesses": {
+  "70224": {
     "day": 3,
     "hour": 21,
     "minute": 0
   },
-  "Brand Management in a Digital Age": {
+  "71422": {
     "day": 1,
     "hour": 21,
     "minute": 0
   }
 };
 
-window.lastUpdated = "2026-03-23T23:01:29.821Z";
+window.lastUpdated = "2026-03-28T21:28:15.010Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
