@@ -1,5 +1,28 @@
 // Assign directly to window/global scope to make accessible to scripts.js
 window.courseData = {
+  "Monday, March 30, 2026": {
+    "Brand Management in a Digital Age|||Due: Mon, Mar 30 at 5:00 PM": {
+      "submit": [
+        {
+          "title": "Week 2: IKEA Invades America",
+          "time": 1.5
+        }
+      ],
+      "reading": [],
+      "required": [
+        {
+          "title": "Submit Group & Brand Selection",
+          "time": 0.5
+        }
+      ],
+      "optional": [
+        {
+          "title": "Optional - Marketing in the Wild - Week 2",
+          "time": 0.5
+        }
+      ]
+    }
+  },
   "Wednesday, April 1, 2026": {
     "The Family Office|||Due: Wed, Apr 1 at 8:30 AM": {
       "submit": [
@@ -26,68 +49,6 @@ window.courseData = {
       "optional": []
     }
   },
-  "Friday, April 10, 2026": {
-    "Value Creation in Small Businesses|||Due: Fri, Apr 10 at 6:00 PM": {
-      "submit": [
-        {
-          "title": "Client Project Assignment #1",
-          "time": 3
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
-  "Friday, May 15, 2026": {
-    "Value Creation in Small Businesses|||Due: Fri, May 15 at 6:00 PM": {
-      "submit": [
-        {
-          "title": "Client Project Assignment #2 - Value Driver Mapping",
-          "time": 3
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
-  "Wednesday, May 27, 2026": {
-    "Value Creation in Small Businesses|||Due: Wed, May 27 at 6:00 PM": {
-      "submit": [
-        {
-          "title": "Client Project: Final Assignment",
-          "time": 3
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
-  "Monday, March 30, 2026": {
-    "Brand Management in a Digital Age|||Due: Mon, Mar 30 at 5:00 PM": {
-      "submit": [
-        {
-          "title": "Week 2: IKEA Invades America",
-          "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [
-        {
-          "title": "Submit Group & Brand Selection",
-          "time": 0.5
-        }
-      ],
-      "optional": [
-        {
-          "title": "Optional - Marketing in the Wild - Week 2",
-          "time": 0.5
-        }
-      ]
-    }
-  },
   "Monday, April 6, 2026": {
     "Brand Management in a Digital Age|||Due: Mon, Apr 6 at 5:00 PM": {
       "submit": [
@@ -108,6 +69,19 @@ window.courseData = {
           "time": 0.5
         }
       ]
+    }
+  },
+  "Friday, April 10, 2026": {
+    "Value Creation in Small Businesses|||Due: Fri, Apr 10 at 6:00 PM": {
+      "submit": [
+        {
+          "title": "Client Project Assignment #1",
+          "time": 3
+        }
+      ],
+      "reading": [],
+      "required": [],
+      "optional": []
     }
   },
   "Monday, April 13, 2026": {
@@ -199,12 +173,38 @@ window.courseData = {
       ]
     }
   },
+  "Friday, May 15, 2026": {
+    "Value Creation in Small Businesses|||Due: Fri, May 15 at 6:00 PM": {
+      "submit": [
+        {
+          "title": "Client Project Assignment #2 - Value Driver Mapping",
+          "time": 3
+        }
+      ],
+      "reading": [],
+      "required": [],
+      "optional": []
+    }
+  },
   "Monday, May 18, 2026": {
     "Brand Management in a Digital Age|||Due: Mon, May 18 at 5:00 PM": {
       "submit": [
         {
           "title": "Final Brand Management Project",
           "time": 1
+        }
+      ],
+      "reading": [],
+      "required": [],
+      "optional": []
+    }
+  },
+  "Wednesday, May 27, 2026": {
+    "Value Creation in Small Businesses|||Due: Wed, May 27 at 6:00 PM": {
+      "submit": [
+        {
+          "title": "Client Project: Final Assignment",
+          "time": 3
         }
       ],
       "reading": [],
@@ -250,7 +250,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-03-28T21:48:41.202Z";
+window.lastUpdated = "2026-03-28T21:55:17.281Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
