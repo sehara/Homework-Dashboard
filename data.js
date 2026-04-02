@@ -1,18 +1,5 @@
 // Assign directly to window/global scope to make accessible to scripts.js
 window.courseData = {
-  "Wednesday, April 1, 2026": {
-    "The Family Office|||Due: Wed, Apr 1 at 8:30 AM": {
-      "submit": [
-        {
-          "title": "Cases for Week 2",
-          "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
   "Thursday, April 2, 2026": {
     "Value Creation in Small Businesses|||Due: Thu, Apr 2 at 6:00 PM": {
       "submit": [
@@ -46,6 +33,19 @@ window.courseData = {
           "time": 0.5
         }
       ]
+    }
+  },
+  "Wednesday, April 8, 2026": {
+    "The Family Office|||Due: Wed, Apr 8 at 8:30 AM": {
+      "submit": [
+        {
+          "title": "Case for Week 3",
+          "time": 1.5
+        }
+      ],
+      "reading": [],
+      "required": [],
+      "optional": []
     }
   },
   "Friday, April 10, 2026": {
@@ -227,7 +227,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-04-01T05:03:59.666Z";
+window.lastUpdated = "2026-04-02T05:04:26.131Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
