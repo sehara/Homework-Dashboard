@@ -1,53 +1,5 @@
 // Assign directly to window/global scope to make accessible to scripts.js
 window.courseData = {
-  "Monday, April 6, 2026": {
-    "Brand Management in a Digital Age|||Due: Mon, Apr 6 at 5:00 PM": {
-      "submit": [
-        {
-          "title": "Week 3: Cialis Case Study: Getting Ready to Market",
-          "time": 1.5
-        },
-        {
-          "title": "Week 3: Porsche: The Cayenne Launch",
-          "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": [
-        {
-          "title": "Optional - Marketing in the Wild - Week 3",
-          "time": 0.5
-        }
-      ]
-    }
-  },
-  "Wednesday, April 8, 2026": {
-    "The Family Office|||Due: Wed, Apr 8 at 8:30 AM": {
-      "submit": [
-        {
-          "title": "Case for Week 3",
-          "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
-  "Friday, April 10, 2026": {
-    "Value Creation in Small Businesses|||Due: Fri, Apr 10 at 6:00 PM": {
-      "submit": [
-        {
-          "title": "Client Project Assignment #1",
-          "time": 3
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
   "Monday, April 13, 2026": {
     "Brand Management in a Digital Age|||Due: Mon, Apr 13 at 5:00 PM": {
       "submit": [
@@ -68,6 +20,32 @@ window.courseData = {
           "time": 0.5
         }
       ]
+    }
+  },
+  "Wednesday, April 15, 2026": {
+    "The Family Office|||Due: Wed, Apr 15 at 8:30 AM": {
+      "submit": [
+        {
+          "title": "Cases for Week 4",
+          "time": 1.5
+        }
+      ],
+      "reading": [],
+      "required": [],
+      "optional": []
+    }
+  },
+  "Thursday, April 16, 2026": {
+    "Value Creation in Small Businesses|||Due: Thu, Apr 16 at 6:00 PM": {
+      "submit": [
+        {
+          "title": "Bluberi Case Submission",
+          "time": 1.5
+        }
+      ],
+      "reading": [],
+      "required": [],
+      "optional": []
     }
   },
   "Monday, April 20, 2026": {
@@ -214,7 +192,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-04-03T05:03:56.307Z";
+window.lastUpdated = "2026-04-13T05:04:24.001Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
