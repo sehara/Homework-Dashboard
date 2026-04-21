@@ -1,28 +1,11 @@
 // Assign directly to window/global scope to make accessible to scripts.js
 window.courseData = {
-  "Thursday, April 16, 2026": {
-    "Value Creation in Small Businesses|||Due: Thu, Apr 16 at 6:00 PM": {
+  "Thursday, April 23, 2026": {
+    "Value Creation in Small Businesses|||Due: Thu, Apr 23 at 11:59 PM": {
       "submit": [
         {
-          "title": "Anatomy of a VCP",
-          "time": 0.5
-        },
-        {
-          "title": "Bluberi Case Submission",
+          "title": "Kodiak Building Products Case Submission",
           "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
-  "Monday, April 20, 2026": {
-    "Brand Management in a Digital Age|||Due: Mon, Apr 20 at 5:00 PM": {
-      "submit": [
-        {
-          "title": "Mid-Term Check-In",
-          "time": 0.5
         }
       ],
       "reading": [],
@@ -161,7 +144,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-04-16T05:03:53.853Z";
+window.lastUpdated = "2026-04-21T11:39:33.399Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
