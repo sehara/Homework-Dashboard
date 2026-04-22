@@ -144,7 +144,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-04-21T11:39:33.399Z";
+window.lastUpdated = "2026-04-22T14:56:31.432Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
