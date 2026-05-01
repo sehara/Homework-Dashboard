@@ -1,18 +1,5 @@
 // Assign directly to window/global scope to make accessible to scripts.js
 window.courseData = {
-  "Thursday, April 30, 2026": {
-    "Value Creation in Small Businesses|||Due: Thu, Apr 30 at 6:00 PM": {
-      "submit": [
-        {
-          "title": "NCFDD Case Submission",
-          "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
   "Monday, May 4, 2026": {
     "Brand Management in a Digital Age|||Due: Mon, May 4 at 5:00 PM": {
       "submit": [
@@ -44,6 +31,19 @@ window.courseData = {
       "optional": []
     }
   },
+  "Thursday, May 7, 2026": {
+    "Value Creation in Small Businesses|||Due: Thu, May 7 at 6:00 PM": {
+      "submit": [
+        {
+          "title": "Week 7: Mission Veterinary Partners Case Submission",
+          "time": 1.5
+        }
+      ],
+      "reading": [],
+      "required": [],
+      "optional": []
+    }
+  },
   "Monday, May 11, 2026": {
     "Brand Management in a Digital Age|||Due: Mon, May 11 at 5:00 PM": {
       "submit": [
@@ -60,19 +60,6 @@ window.courseData = {
           "time": 0.5
         }
       ]
-    }
-  },
-  "Friday, May 15, 2026": {
-    "Value Creation in Small Businesses|||Due: Fri, May 15 at 6:00 PM": {
-      "submit": [
-        {
-          "title": "Client Project Assignment #2 - Value Driver Mapping",
-          "time": 3
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
     }
   },
   "Monday, May 18, 2026": {
@@ -139,7 +126,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-04-30T05:30:10.189Z";
+window.lastUpdated = "2026-05-01T05:04:12.534Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
