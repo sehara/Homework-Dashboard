@@ -1,23 +1,5 @@
 // Assign directly to window/global scope to make accessible to scripts.js
 window.courseData = {
-  "Monday, May 4, 2026": {
-    "Brand Management in a Digital Age|||Due: Mon, May 4 at 5:00 PM": {
-      "submit": [
-        {
-          "title": "Week 7: MINI USA: Finding a New Advertising Agency",
-          "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": [
-        {
-          "title": "Optional - Marketing in the Wild - Week 7",
-          "time": 0.5
-        }
-      ]
-    }
-  },
   "Wednesday, May 6, 2026": {
     "The Family Office|||Due: Wed, May 6 at 8:30 AM": {
       "submit": [
@@ -35,6 +17,10 @@ window.courseData = {
     "Value Creation in Small Businesses|||Due: Thu, May 7 at 6:00 PM": {
       "submit": [
         {
+          "title": "Submit Partner Company Call 3 Questions",
+          "time": 0.5
+        },
+        {
           "title": "Week 7: Mission Veterinary Partners Case Submission",
           "time": 1.5
         }
@@ -45,6 +31,17 @@ window.courseData = {
     }
   },
   "Monday, May 11, 2026": {
+    "Value Creation in Small Businesses|||Due: Mon, May 11 at 6:00 PM": {
+      "submit": [
+        {
+          "title": "Client Project Assignment #3 - Value Creation Readiness Assessment",
+          "time": 3
+        }
+      ],
+      "reading": [],
+      "required": [],
+      "optional": []
+    },
     "Brand Management in a Digital Age|||Due: Mon, May 11 at 5:00 PM": {
       "submit": [
         {
@@ -126,7 +123,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-05-01T05:04:12.534Z";
+window.lastUpdated = "2026-05-05T05:03:57.668Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
