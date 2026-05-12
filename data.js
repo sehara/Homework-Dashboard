@@ -1,14 +1,10 @@
 // Assign directly to window/global scope to make accessible to scripts.js
 window.courseData = {
-  "Thursday, May 7, 2026": {
-    "Value Creation in Small Businesses|||Due: Thu, May 7 at 6:00 PM": {
+  "Wednesday, May 13, 2026": {
+    "The Family Office|||Due: Wed, May 13 at 8:30 AM": {
       "submit": [
         {
-          "title": "Submit Partner Company Call 3 Questions",
-          "time": 0.5
-        },
-        {
-          "title": "Week 7: Mission Veterinary Partners Case Submission",
+          "title": "Case for Week 8",
           "time": 1.5
         }
       ],
@@ -17,19 +13,19 @@ window.courseData = {
       "optional": []
     }
   },
-  "Monday, May 11, 2026": {
-    "Value Creation in Small Businesses|||Due: Mon, May 11 at 6:00 PM": {
+  "Thursday, May 14, 2026": {
+    "Value Creation in Small Businesses|||Due: Thu, May 14 at 6:00 PM": {
       "submit": [
         {
-          "title": "Client Project Assignment #3 - Value Creation Readiness Assessment",
-          "time": 3
+          "title": "KidCare Case Submission",
+          "time": 1.5
         }
       ],
       "reading": [],
       "required": [],
       "optional": []
     },
-    "Brand Management in a Digital Age|||Due: Mon, May 11 at 5:00 PM": {
+    "Brand Management in a Digital Age|||Due: Thu, May 14 at 5:00 PM": {
       "submit": [
         {
           "title": "Week 8: Glossier: Co-Creating a Cult Brand with a Digital Community",
@@ -38,12 +34,7 @@ window.courseData = {
       ],
       "reading": [],
       "required": [],
-      "optional": [
-        {
-          "title": "Optional - Marketing in the Wild - Week 8",
-          "time": 0.5
-        }
-      ]
+      "optional": []
     }
   },
   "Monday, May 18, 2026": {
@@ -59,8 +50,8 @@ window.courseData = {
       "optional": []
     }
   },
-  "Wednesday, May 27, 2026": {
-    "Value Creation in Small Businesses|||Due: Wed, May 27 at 6:00 PM": {
+  "Monday, May 25, 2026": {
+    "Value Creation in Small Businesses|||Due: Mon, May 25 at 6:00 PM": {
       "submit": [
         {
           "title": "Client Project: Final Assignment",
@@ -110,7 +101,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-05-07T05:03:47.653Z";
+window.lastUpdated = "2026-05-12T05:04:10.642Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
