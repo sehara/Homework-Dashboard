@@ -1,42 +1,5 @@
 // Assign directly to window/global scope to make accessible to scripts.js
 window.courseData = {
-  "Wednesday, May 13, 2026": {
-    "The Family Office|||Due: Wed, May 13 at 8:30 AM": {
-      "submit": [
-        {
-          "title": "Case for Week 8",
-          "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
-  "Thursday, May 14, 2026": {
-    "Value Creation in Small Businesses|||Due: Thu, May 14 at 6:00 PM": {
-      "submit": [
-        {
-          "title": "KidCare Case Submission",
-          "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    },
-    "Brand Management in a Digital Age|||Due: Thu, May 14 at 5:00 PM": {
-      "submit": [
-        {
-          "title": "Week 8: Glossier: Co-Creating a Cult Brand with a Digital Community",
-          "time": 1.5
-        }
-      ],
-      "reading": [],
-      "required": [],
-      "optional": []
-    }
-  },
   "Monday, May 18, 2026": {
     "Brand Management in a Digital Age|||Due: Mon, May 18 at 5:00 PM": {
       "submit": [
@@ -101,7 +64,7 @@ window.classEndTimes = {
   }
 };
 
-window.lastUpdated = "2026-05-12T05:04:10.642Z";
+window.lastUpdated = "2026-05-16T04:24:52.330Z";
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { courseData: window.courseData, courseInfo: window.courseInfo, classEndTimes: window.classEndTimes, lastUpdated: window.lastUpdated };
